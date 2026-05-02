@@ -1917,6 +1917,61 @@
       updateDateLockState();
     }
 
+    function hasCurrentEntryDraft() {
+      const hasBasicData =
+        workerId.value ||
+        shift.value ||
+        rawWasteKg.value !== "" ||
+        notes.value.trim() ||
+        selectedImage;
+
+      const hasProductData = currentItems.some(item => {
+        return item.category ||
+          item.machineId ||
+          item.productId ||
+          Number(item.quantity || 0) > 0;
+      });
+
+      return !!(hasBasicData || hasProductData);
+    }
+
+    function syncCurrentEntryBeforeSave() {
+      if (!hasCurrentEntryDraft()) {
+        return true;
+      }
+
+      const entry = buildCurrentEntry();
+
+      if (!entry) {
+        return false;
+      }
+
+      const duplicateIndex = productionEntries.findIndex((savedEntry, index) => {
+        return index !== editingEntryIndex &&
+          String(savedEntry.workerId || "") === String(entry.workerId || "");
+      });
+
+      if (duplicateIndex !== -1) {
+        showMessage(t("duplicateWorkerEntry"), "error");
+        return false;
+      }
+
+      if (editingEntryIndex === null) {
+        productionEntries.push(entry);
+      } else {
+        productionEntries[editingEntryIndex] = entry;
+        editingEntryIndex = null;
+      }
+
+      clearCurrentEntryForm();
+      renderEntriesTable();
+      renderWorkers();
+      updateEntryButtonText();
+      updateDateLockState();
+
+      return true;
+    }
+
     function buildCurrentEntry() {
       const dateValue = productionDate.value;
       const shiftValue = shift.value;
@@ -2282,13 +2337,23 @@
       event.preventDefault();
       clearMessage();
 
+      const synced = syncCurrentEntryBeforeSave();
+
+      if (!synced) {
+        return;
+      }
+
       const payloads = buildPayloads();
 
-      if (!payloads) return;
+      if (!payloads) {
+        return;
+      }
 
       const confirmed = confirm(t("saveConfirm"));
 
-      if (!confirmed) return;
+      if (!confirmed) {
+        return;
+      }
 
       setSaving(true);
 
@@ -2389,9 +2454,16 @@
           "timePerUnit",
           "ProductionTime",
           "productionTime",
+          "ProductionTimeMinutes",
+          "ProductionTimePerUnit",
+          "UnitTime",
+          "TimeMinutesPerUnit",
           "وقت الإنتاج",
           "وقت الانتاج",
-          "ProductionTimePerUnit"
+          "وقت الإنتاج النظري",
+          "وقت الانتاج النظري",
+          "وقت الإنتاج (الزمن/الوحدة)",
+          "وقت الانتاج (الزمن/الوحدة)"
         ]);
 
         const wastePerUnit = getProductNumberValue(product, [
@@ -2399,9 +2471,13 @@
           "wasteKgPerUnit",
           "RawWasteKgPerUnit",
           "rawWasteKgPerUnit",
+          "RawWasteKg",
+          "WastePerUnit",
+          "WastePerUnitKg",
           "هدر الخام",
           "هدر المواد الخام",
-          "WastePerUnit"
+          "هدر الخام (كيلوجرام/الوحدة)",
+          "هدر المواد الخام (كيلوجرام/الوحدة)"
         ]);
 
         expectedTimeMinutes += timePerUnit * quantity;
@@ -2426,7 +2502,7 @@
         const key = possibleKeys[i];
 
         if (product[key] !== undefined && product[key] !== null && product[key] !== "") {
-          const number = Number(product[key]);
+          const number = Number(String(product[key]).replace(",", "."));
           return isNaN(number) ? 0 : number;
         }
       }
@@ -2589,7 +2665,7 @@
 
       messageTimer = setTimeout(() => {
         clearMessage();
-      }, 1000);
+      }, 3000);
     }
 
     function clearMessage() {
