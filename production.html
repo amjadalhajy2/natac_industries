@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>إدخال الإنتاج اليومي | نظام الإنتاج</title>
+  <title>إدخال الإنتاج | NATAC</title>
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,25 +13,33 @@
 
   <style>
     :root {
-      --bg: #f5f1ea;
-      --card: #ffffff;
-      --text: #2f241b;
-      --muted: #7b6a5c;
-      --primary: #8b5e34;
-      --primary-dark: #6f4727;
-      --primary-soft: rgba(139, 94, 52, 0.10);
-      --border: rgba(139, 94, 52, 0.18);
-      --danger: #b42318;
-      --success: #137333;
-      --warning: #b7791f;
-      --shadow: 0 18px 45px rgba(58, 35, 18, 0.10);
-      --radius: 22px;
+      --bg-1: #f7f9ff;
+      --bg-2: #eef4ff;
+      --bg-3: #f8efe7;
+      --text: #172033;
+      --muted: #6d7483;
+      --blue: #007aff;
+      --blue-dark: #005fd1;
+      --purple: #7c3aed;
+      --green: #34c759;
+      --orange: #ff9500;
+      --red: #ff3b30;
+      --glass-border: rgba(255, 255, 255, 0.72);
+      --shadow: 0 24px 70px rgba(50, 70, 110, 0.15);
+      --soft-shadow: 0 12px 34px rgba(50, 70, 110, 0.11);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
       --topbar-height: 78px;
-      --sidebar-width: 300px;
+      --sidebar-width: 310px;
     }
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -39,71 +48,90 @@
       font-family: "Tajawal", Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top right, rgba(139, 94, 52, 0.16), transparent 32%),
-        linear-gradient(135deg, #f7f2ea 0%, #eee3d4 100%);
+        radial-gradient(circle at 12% 18%, rgba(0, 122, 255, 0.20), transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(124, 58, 237, 0.14), transparent 30%),
+        radial-gradient(circle at 50% 92%, rgba(255, 149, 0, 0.16), transparent 34%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.34), transparent 34%, rgba(255,255,255,0.22)),
+        radial-gradient(circle at 60% 20%, rgba(255,255,255,0.34), transparent 22%);
+      z-index: -1;
     }
 
     .floating-topbar {
       position: fixed;
-      top: 14px;
-      right: 14px;
-      left: 14px;
+      top: 0;
+      right: 0;
+      left: 0;
       min-height: var(--topbar-height);
       z-index: 100;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      box-shadow: 0 18px 45px rgba(58, 35, 18, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(26px) saturate(180%);
+      -webkit-backdrop-filter: blur(26px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow: 0 18px 45px rgba(50, 70, 110, 0.10);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      padding: 12px 16px;
+      padding: 12px 22px;
     }
 
-    .topbar-right {
+    .topbar-side {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       min-width: 0;
     }
 
     .menu-btn {
-      width: 48px;
-      height: 48px;
+      width: 42px;
+      height: 42px;
       border: 0;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      font-size: 25px;
+      background: transparent;
+      color: var(--text);
+      font-size: 30px;
       font-weight: 900;
       cursor: pointer;
       display: grid;
       place-items: center;
-      box-shadow: 0 12px 24px rgba(111, 71, 39, 0.22);
+      padding: 0;
       flex-shrink: 0;
     }
 
     .factory-brand {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 12px;
       min-width: 0;
     }
 
     .factory-logo {
       width: 50px;
       height: 50px;
-      border-radius: 17px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      font-size: 24px;
-      font-weight: 900;
-      box-shadow: 0 10px 24px rgba(139, 94, 52, 0.20);
+      overflow: hidden;
+      background: rgba(255,255,255,0.35);
       flex-shrink: 0;
+    }
+
+    .factory-logo img,
+    .sidebar-logo img {
+      width: 86%;
+      height: 86%;
+      object-fit: contain;
+      display: block;
     }
 
     .factory-info {
@@ -112,8 +140,9 @@
 
     .factory-info strong {
       display: block;
-      font-size: 17px;
-      color: #2b1d13;
+      font-size: 19px;
+      font-weight: 900;
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -121,53 +150,42 @@
 
     .factory-info span {
       display: block;
+      margin-top: 2px;
       font-size: 13px;
       color: var(--muted);
-      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
     .language-select {
       height: 42px;
-      border: 1px solid var(--border);
-      background: #fff;
+      border: 0;
+      background: transparent;
       color: var(--text);
-      border-radius: 14px;
-      padding: 0 12px;
       font-family: inherit;
-      font-weight: 800;
+      font-weight: 900;
+      font-size: 15px;
       outline: none;
       cursor: pointer;
+      padding: 0;
     }
 
     .top-user-box {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(139, 94, 52, 0.08);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 8px 10px;
-      min-width: 200px;
+      gap: 9px;
+      min-width: 0;
     }
 
     .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      background: #fff;
-      color: var(--primary-dark);
+      background: linear-gradient(145deg, var(--blue), var(--purple));
+      color: #fff;
       font-weight: 900;
       flex-shrink: 0;
     }
@@ -176,23 +194,38 @@
       min-width: 0;
     }
 
-    .user-info strong {
+    .user-info strong,
+    .user-info span {
       display: block;
-      font-size: 14px;
-      color: #2b1d13;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
+    .user-info strong {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
     .user-info span {
-      display: block;
+      margin-top: 1px;
       font-size: 12px;
       color: var(--muted);
-      margin-top: 1px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(20, 28, 44, 0.26);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .overlay.show {
+      display: block;
     }
 
     .sidebar {
@@ -200,20 +233,31 @@
       top: 0;
       right: 0;
       width: var(--sidebar-width);
-      max-width: 86vw;
+      max-width: 88vw;
       height: 100vh;
       z-index: 200;
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(16px);
-      border-left: 1px solid var(--border);
-      box-shadow: -20px 0 50px rgba(58, 35, 18, 0.18);
       padding: 22px 18px;
       overflow-y: auto;
       transform: translateX(105%);
-      transition: 0.25s ease;
+      transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
+      background: rgba(255,255,255,0.72);
+      border-left: 1px solid rgba(255,255,255,0.78);
+      box-shadow: -28px 0 70px rgba(50, 70, 110, 0.18);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
     }
 
-    .sidebar.open {
+    html[dir="ltr"] .sidebar {
+      right: auto;
+      left: 0;
+      transform: translateX(-105%);
+      border-left: 0;
+      border-right: 1px solid rgba(255,255,255,0.78);
+      box-shadow: 28px 0 70px rgba(50, 70, 110, 0.18);
+    }
+
+    .sidebar.open,
+    html[dir="ltr"] .sidebar.open {
       transform: translateX(0);
     }
 
@@ -228,44 +272,42 @@
     .sidebar-title {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
       min-width: 0;
     }
 
     .sidebar-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 17px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
+      width: 49px;
+      height: 49px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      font-size: 23px;
-      font-weight: 900;
+      overflow: hidden;
+      background: rgba(255,255,255,0.42);
       flex-shrink: 0;
     }
 
     .sidebar-title strong {
       display: block;
       font-size: 16px;
-      color: #2b1d13;
+      font-weight: 900;
     }
 
     .sidebar-title span {
       display: block;
+      margin-top: 2px;
       font-size: 12px;
       color: var(--muted);
-      margin-top: 2px;
     }
 
     .close-sidebar {
-      width: 42px;
-      height: 42px;
+      width: 43px;
+      height: 43px;
       border: 0;
-      border-radius: 14px;
-      background: rgba(180, 35, 24, 0.08);
-      color: var(--danger);
-      font-size: 22px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.42);
+      color: var(--red);
+      font-size: 24px;
       cursor: pointer;
       flex-shrink: 0;
     }
@@ -277,126 +319,172 @@
 
     .nav a,
     .logout-btn {
+      width: 100%;
+      min-height: 51px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       text-decoration: none;
       color: var(--text);
-      padding: 13px 14px;
-      border-radius: 16px;
-      font-weight: 800;
-      border: 1px solid transparent;
-      background: transparent;
+      padding: 12px 13px;
+      border-radius: 19px;
       font-family: inherit;
       font-size: 15px;
+      font-weight: 900;
+      text-align: inherit;
       cursor: pointer;
-      width: 100%;
-      text-align: right;
+      border: 1px solid rgba(255,255,255,0.58);
+      background: rgba(255,255,255,0.38);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.68);
       transition: 0.18s ease;
+    }
+
+    .logout-btn {
+      border: 0;
     }
 
     .nav a:hover,
     .logout-btn:hover {
-      background: var(--primary-soft);
-      border-color: var(--border);
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.68);
     }
 
     .nav a.active {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: #fff;
-      box-shadow: 0 12px 26px rgba(111, 71, 39, 0.20);
+      border-color: rgba(255,255,255,0.54);
+      background:
+        radial-gradient(circle at 25% 12%, rgba(255,255,255,0.48), transparent 28%),
+        linear-gradient(145deg, #0a84ff, #7c3aed);
+      box-shadow: 0 18px 38px rgba(0, 122, 255, 0.20);
     }
 
     .nav-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 11px;
+      width: 32px;
+      height: 32px;
+      border-radius: 13px;
       display: grid;
       place-items: center;
-      background: rgba(139, 94, 52, 0.10);
+      background: rgba(255,255,255,0.58);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
       flex-shrink: 0;
     }
 
     .nav a.active .nav-icon {
-      background: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.22);
     }
 
     .sidebar-footer {
-      margin-top: 26px;
+      margin-top: 24px;
       padding: 14px;
-      border-radius: 18px;
-      background: rgba(139, 94, 52, 0.08);
-      border: 1px solid var(--border);
+      border-radius: 22px;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      z-index: 150;
-    }
-
-    .overlay.show {
-      display: block;
+      line-height: 1.8;
+      background: rgba(255,255,255,0.44);
+      border: 1px solid rgba(255,255,255,0.66);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
     }
 
     .main {
-      padding: 120px 24px 30px;
       width: 100%;
       max-width: 1450px;
       margin: 0 auto;
+      padding: 116px 24px 32px;
     }
 
-    .page-title {
-      margin-bottom: 22px;
+    .hero,
+    .panel {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.68), rgba(255,255,255,0.35)),
+        radial-gradient(circle at 12% 18%, rgba(0,122,255,0.16), transparent 28%),
+        radial-gradient(circle at 88% 20%, rgba(124,58,237,0.12), transparent 30%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+    }
+
+    .hero {
+      margin-bottom: 18px;
+      padding: 26px;
+    }
+
+    .hero::after,
+    .panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(125deg, rgba(255,255,255,0.34), transparent 32%, rgba(255,255,255,0.12) 66%, transparent);
+    }
+
+    .hero-content,
+    .panel-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
     }
 
     .page-title h1 {
       margin: 0;
-      font-size: 32px;
-      color: #2b1d13;
-      letter-spacing: -0.3px;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
     }
 
     .page-title p {
-      margin: 6px 0 0;
+      margin: 8px 0 0;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: var(--blue-dark);
+      font-weight: 900;
+      background: rgba(255,255,255,0.58);
+      border: 1px solid rgba(255,255,255,0.76);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.76);
+      white-space: nowrap;
     }
 
     .panel {
-      background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(255,255,255,0.9);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
       margin-bottom: 16px;
+      padding: 22px;
     }
 
     .panel-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
-      align-items: flex-start;
       margin-bottom: 18px;
     }
 
     .panel-header h2 {
       margin: 0;
       font-size: 22px;
-      color: #2b1d13;
-    }
-
-    .panel-header p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
     }
 
     .form-grid {
@@ -415,8 +503,8 @@
     }
 
     label {
-      font-weight: 800;
-      color: #3d2b1f;
+      font-weight: 900;
+      color: var(--text);
       font-size: 14px;
     }
 
@@ -424,21 +512,24 @@
     select,
     textarea {
       width: 100%;
-      min-height: 48px;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 0 13px;
+      min-height: 50px;
+      border: 1px solid rgba(255,255,255,0.78);
+      border-radius: 18px;
+      padding: 0 14px;
       font-family: inherit;
       font-size: 15px;
-      background: #fff;
+      background: rgba(255,255,255,0.54);
       color: var(--text);
       outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       transition: 0.18s ease;
     }
 
     textarea {
-      min-height: 96px;
-      padding: 13px;
+      min-height: 104px;
+      padding: 14px;
       resize: vertical;
       line-height: 1.7;
     }
@@ -446,90 +537,48 @@
     input:focus,
     select:focus,
     textarea:focus {
-      border-color: rgba(139, 94, 52, 0.65);
-      box-shadow: 0 0 0 4px rgba(139, 94, 52, 0.11);
+      border-color: rgba(0, 122, 255, 0.45);
+      box-shadow:
+        0 0 0 4px rgba(0, 122, 255, 0.10),
+        inset 0 1px 0 rgba(255,255,255,0.72);
+      background: rgba(255,255,255,0.72);
     }
 
     input[readonly] {
-      background: #f7f2ea;
       color: var(--muted);
       cursor: not-allowed;
     }
 
-    .hint {
+    .date-hint {
       color: var(--muted);
       font-size: 13px;
       line-height: 1.6;
     }
 
-    .products-table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: #fff;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 850px;
-    }
-
-    th {
-      background: rgba(139, 94, 52, 0.10);
-      color: #3d2b1f;
-      font-size: 14px;
-      text-align: right;
-      padding: 13px;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 10px;
-      border-top: 1px solid rgba(139, 94, 52, 0.12);
-      vertical-align: top;
-    }
-
-    td input,
-    td select {
-      min-height: 44px;
-      border-radius: 13px;
-    }
-
-    .row-number {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-      font-weight: 900;
+    .date-hint:empty {
+      display: none;
     }
 
     .file-box {
       display: grid;
-      gap: 10px;
-      border: 1px dashed rgba(139, 94, 52, 0.35);
-      background: rgba(139, 94, 52, 0.06);
-      padding: 14px;
-      border-radius: 18px;
+      gap: 12px;
     }
 
     .preview {
       display: none;
       align-items: center;
       gap: 12px;
-      padding: 10px;
-      border-radius: 15px;
-      background: #fff;
-      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.48);
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
     }
 
     .preview img {
-      width: 70px;
-      height: 70px;
-      border-radius: 14px;
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -540,20 +589,66 @@
       line-height: 1.6;
     }
 
+    .products-table-wrap {
+      overflow-x: auto;
+      border: 1px solid rgba(255,255,255,0.72);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.38);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.70);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th {
+      background: rgba(255,255,255,0.46);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 900;
+      text-align: inherit;
+      padding: 14px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px;
+      border-top: 1px solid rgba(255,255,255,0.58);
+      vertical-align: top;
+    }
+
+    td input,
+    td select {
+      min-height: 46px;
+      border-radius: 16px;
+    }
+
+    .row-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(255,255,255,0.85), rgba(238,244,255,0.68));
+      color: var(--blue-dark);
+      font-weight: 900;
+    }
+
     .actions {
       display: flex;
       gap: 12px;
       justify-content: flex-start;
       align-items: center;
       flex-wrap: wrap;
-      margin-top: 18px;
     }
 
     .btn {
-      min-height: 48px;
+      min-height: 50px;
       border: 0;
-      border-radius: 15px;
-      padding: 0 20px;
+      border-radius: 18px;
+      padding: 0 22px;
       font-family: inherit;
       font-size: 15px;
       font-weight: 900;
@@ -567,26 +662,26 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      background: linear-gradient(145deg, #0a84ff, #7c3aed);
       color: #fff;
-      box-shadow: 0 12px 24px rgba(111, 71, 39, 0.20);
+      box-shadow: 0 18px 38px rgba(0, 122, 255, 0.20);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 16px 30px rgba(111, 71, 39, 0.26);
     }
 
     .btn-secondary {
-      background: #fff;
-      color: var(--primary-dark);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.52);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
     }
 
     .btn-danger {
-      background: rgba(180, 35, 24, 0.08);
-      color: var(--danger);
-      border: 1px solid rgba(180, 35, 24, 0.16);
+      background: rgba(255, 59, 48, 0.10);
+      color: var(--red);
+      border: 1px solid rgba(255, 59, 48, 0.18);
     }
 
     .btn:disabled {
@@ -599,30 +694,32 @@
       display: none;
       margin-bottom: 16px;
       padding: 14px 16px;
-      border-radius: 16px;
+      border-radius: 20px;
       font-size: 15px;
       line-height: 1.7;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .message.error {
       display: block;
-      color: var(--danger);
-      background: rgba(180, 35, 24, 0.08);
-      border: 1px solid rgba(180, 35, 24, 0.16);
+      color: #b42318;
+      background: rgba(255, 59, 48, 0.10);
+      border: 1px solid rgba(255, 59, 48, 0.18);
     }
 
     .message.success {
       display: block;
-      color: var(--success);
-      background: rgba(19, 115, 51, 0.08);
-      border: 1px solid rgba(19, 115, 51, 0.16);
+      color: #0f7a35;
+      background: rgba(52, 199, 89, 0.12);
+      border: 1px solid rgba(52, 199, 89, 0.20);
     }
 
     .message.warning {
       display: block;
-      color: var(--warning);
-      background: rgba(183, 121, 31, 0.10);
-      border: 1px solid rgba(183, 121, 31, 0.18);
+      color: #9a6700;
+      background: rgba(255, 149, 0, 0.12);
+      border: 1px solid rgba(255, 149, 0, 0.22);
     }
 
     .loading {
@@ -630,17 +727,28 @@
       align-items: center;
       gap: 10px;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 16px;
+      padding: 13px 15px;
+      width: fit-content;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.50);
+      border: 1px solid rgba(255,255,255,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .spinner,
+    .mini-spinner {
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
     }
 
     .spinner {
       width: 20px;
       height: 20px;
-      border: 3px solid rgba(139, 94, 52, 0.18);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
+      border: 3px solid rgba(0, 122, 255, 0.16);
+      border-top-color: var(--blue);
     }
 
     .mini-spinner {
@@ -648,8 +756,6 @@
       height: 18px;
       border: 3px solid rgba(255,255,255,0.45);
       border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
       display: inline-block;
     }
 
@@ -659,66 +765,22 @@
       }
     }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .summary-card {
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: #fff;
-      padding: 14px;
-    }
-
-    .summary-card span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .summary-card strong {
-      display: block;
-      color: #2b1d13;
-      font-size: 24px;
-      font-weight: 900;
-    }
-
     @media (max-width: 1100px) {
       .form-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 760px) {
       .floating-topbar {
-        top: 10px;
-        right: 10px;
-        left: 10px;
-        height: auto;
-        min-height: 74px;
-        border-radius: 22px;
-        padding: 10px;
+        min-height: 72px;
+        padding: 10px 12px;
       }
 
+      .menu-btn,
       .factory-logo {
         width: 44px;
         height: 44px;
-        border-radius: 15px;
-        font-size: 21px;
-      }
-
-      .menu-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 15px;
       }
 
       .factory-info strong {
@@ -734,16 +796,31 @@
       }
 
       .language-select {
-        width: 78px;
+        width: auto;
         height: 40px;
+        font-size: 14px;
       }
 
       .main {
-        padding: 112px 16px 24px;
+        padding: 94px 14px 24px;
+      }
+
+      .hero {
+        padding: 20px;
+        border-radius: 26px;
+      }
+
+      .hero-content {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero-pill {
+        width: 100%;
       }
 
       .page-title h1 {
-        font-size: 25px;
+        font-size: 26px;
       }
 
       .panel {
@@ -769,13 +846,16 @@
         display: none;
       }
 
-      .language-select {
-        width: 70px;
-        padding: 0 8px;
+      .topbar-side {
+        gap: 9px;
       }
 
-      .topbar-left {
-        gap: 8px;
+      .factory-brand {
+        gap: 9px;
+      }
+
+      .page-title h1 {
+        font-size: 24px;
       }
     }
   </style>
@@ -783,19 +863,21 @@
 
 <body>
   <header class="floating-topbar">
-    <div class="topbar-right">
+    <div class="topbar-side">
       <button class="menu-btn" id="menuBtn" type="button" aria-label="فتح القائمة">☰</button>
 
       <div class="factory-brand">
-        <div class="factory-logo">P</div>
+        <div class="factory-logo">
+          <img src="assets/img/logo.png" alt="NATAC Logo">
+        </div>
         <div class="factory-info">
-          <strong id="factoryName">مصنع البلاستيك</strong>
-          <span>نظام متابعة الإنتاج اليومي</span>
+          <strong id="factoryName">ناتاك</strong>
+          <span id="factorySubtitle">نظام متابعة الإنتاج اليومي</span>
         </div>
       </div>
     </div>
 
-    <div class="topbar-left">
+    <div class="topbar-side">
       <select id="languageSelect" class="language-select" aria-label="اللغة">
         <option value="ar">العربية</option>
         <option value="en">English</option>
@@ -816,10 +898,12 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-head">
       <div class="sidebar-title">
-        <div class="sidebar-logo">P</div>
+        <div class="sidebar-logo">
+          <img src="assets/img/logo.png" alt="NATAC Logo">
+        </div>
         <div>
-          <strong>القائمة الرئيسية</strong>
-          <span>نظام الإنتاج</span>
+          <strong data-i18n="mainMenu">القائمة الرئيسية</strong>
+          <span data-i18n="productionSystem">نظام الإنتاج</span>
         </div>
       </div>
 
@@ -828,200 +912,334 @@
 
     <nav class="nav">
       <a href="dashboard.html">
-        <span>لوحة التحكم</span>
+        <span data-i18n="dashboard">لوحة التحكم</span>
         <span class="nav-icon">📊</span>
       </a>
 
       <a href="production.html" class="active">
-        <span>إدخال الإنتاج</span>
+        <span data-i18n="productionEntry">إدخال الإنتاج</span>
         <span class="nav-icon">🏭</span>
       </a>
 
       <a href="evaluation.html">
-        <span>تقييم المشرف</span>
+        <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
         <span class="nav-icon">⭐</span>
       </a>
 
       <a href="history.html">
-        <span>سجل الإنتاج</span>
+        <span data-i18n="productionHistory">سجل الإنتاج</span>
         <span class="nav-icon">📋</span>
       </a>
 
       <a href="workers.html">
-        <span>العمال</span>
+        <span data-i18n="workers">العمال</span>
         <span class="nav-icon">👷</span>
       </a>
 
       <a href="products.html" class="admin-only">
-        <span>المنتجات</span>
+        <span data-i18n="products">المنتجات</span>
         <span class="nav-icon">📦</span>
       </a>
 
       <a href="machines.html" class="admin-only">
-        <span>المكائن</span>
+        <span data-i18n="machines">المكائن</span>
         <span class="nav-icon">⚙️</span>
       </a>
 
       <button class="logout-btn" type="button" id="logoutBtn">
-        <span>تسجيل الخروج</span>
+        <span data-i18n="logout">تسجيل الخروج</span>
         <span class="nav-icon">🚪</span>
       </button>
     </nav>
 
-    <div class="sidebar-footer">
-      المشرف يمكنه إدخال إنتاج اليوم فقط. مدير النظام يمكنه إدخال الإنتاج لأي تاريخ.
+    <div class="sidebar-footer" data-i18n="sidebarNote">
+      القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.
     </div>
   </aside>
 
   <main class="main">
-    <section class="page-title">
-      <h1>إدخال الإنتاج اليومي</h1>
-      <p id="welcomeText">قم بتسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.</p>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="page-title">
+          <h1 data-i18n="productionEntry">إدخال الإنتاج</h1>
+          <p id="welcomeText">قم بتسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.</p>
+        </div>
+
+        <div class="hero-pill">
+          <span>●</span>
+          <span data-i18n="connected">متصل ببيانات Google Sheets</span>
+        </div>
+      </div>
     </section>
 
     <div id="loadingBox" class="loading">
       <span class="spinner"></span>
-      <span>جاري تحميل بيانات العمال والمنتجات والمكائن...</span>
+      <span data-i18n="loadingData">جاري تحميل بيانات العمال والمنتجات والمكائن...</span>
     </div>
 
     <div id="messageBox" class="message"></div>
 
     <form id="productionForm">
       <section class="panel">
-        <div class="panel-header">
-          <div>
-            <h2>بيانات الإنتاج الأساسية</h2>
-            <p>اختر التاريخ والشفت والعامل، ثم أدخل الهدر والملاحظات إن وجدت.</p>
-          </div>
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label for="productionDate">التاريخ</label>
-            <input type="date" id="productionDate" required>
-            <div class="hint" id="dateHint"></div>
+        <div class="panel-content">
+          <div class="panel-header">
+            <h2 data-i18n="basicProductionData">بيانات الإنتاج الأساسية</h2>
           </div>
 
-          <div class="field">
-            <label for="shift">الشفت</label>
-            <select id="shift" required>
-              <option value="">اختر الشفت</option>
-              <option value="صباحي">صباحي</option>
-              <option value="مسائي">مسائي</option>
-            </select>
-          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="productionDate" data-i18n="date">التاريخ</label>
+              <input type="date" id="productionDate" required>
+              <div class="date-hint" id="dateHint"></div>
+            </div>
 
-          <div class="field">
-            <label for="workerId">اسم العامل</label>
-            <select id="workerId" required>
-              <option value="">جاري التحميل...</option>
-            </select>
-          </div>
+            <div class="field">
+              <label for="shift" data-i18n="shift">الشفت</label>
+              <select id="shift" required>
+                <option value="" data-i18n="chooseShift">اختر الشفت</option>
+                <option value="صباحي" data-i18n="morning">صباحي</option>
+                <option value="مسائي" data-i18n="evening">مسائي</option>
+              </select>
+            </div>
 
-          <div class="field">
-            <label for="rawWasteKg">كمية هدر المواد الخام كجم</label>
-            <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="مثال: 2.5">
-          </div>
+            <div class="field">
+              <label for="workerId" data-i18n="workerName">اسم العامل</label>
+              <select id="workerId" required>
+                <option value="" data-i18n="loading">جاري التحميل...</option>
+              </select>
+            </div>
 
-          <div class="field full">
-            <label for="notes">الملاحظات</label>
-            <textarea id="notes" placeholder="اكتب أي ملاحظات مرتبطة بالإنتاج أو الخلل إن وجدت"></textarea>
-          </div>
+            <div class="field">
+              <label for="rawWasteKg" data-i18n="rawWasteKg">كمية هدر المواد الخام كجم</label>
+              <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="2.5">
+            </div>
 
-          <div class="field full">
-            <label for="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
+            <div class="field full">
+              <label for="notes" data-i18n="notes">الملاحظات</label>
+              <textarea id="notes"></textarea>
+            </div>
 
-            <div class="file-box">
-              <input type="file" id="defectImage" accept="image/*">
-              <div class="hint">
-                يفضل رفع صورة واضحة وبحجم مناسب. سيتم ضغط الصورة قبل إرسالها لتقليل حجم البيانات.
-              </div>
+            <div class="field full">
+              <label for="defectImage" data-i18n="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
 
-              <div class="preview" id="imagePreviewBox">
-                <img id="imagePreview" alt="معاينة الصورة">
-                <div>
-                  <strong id="imageName">---</strong>
-                  <br>
-                  <span id="imageSize">---</span>
+              <div class="file-box">
+                <input type="file" id="defectImage" accept="image/*">
+
+                <div class="preview" id="imagePreviewBox">
+                  <img id="imagePreview" alt="Preview">
+                  <div>
+                    <strong id="imageName">---</strong>
+                    <br>
+                    <span id="imageSize">---</span>
+                  </div>
                 </div>
-              </div>
 
-              <button class="btn btn-danger" type="button" id="removeImageBtn" style="display:none;">
-                حذف الصورة
-              </button>
+                <button class="btn btn-danger" type="button" id="removeImageBtn" style="display:none;" data-i18n="removeImage">
+                  حذف الصورة
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <section class="panel">
-        <div class="panel-header">
-          <div>
-            <h2>الإنتاج</h2>
-            <p>يمكن إدخال حتى 5 منتجات في نفس عملية الإنتاج. يجب إدخال منتج واحد على الأقل.</p>
-          </div>
-        </div>
-
-        <div class="products-table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>صنف المنتج</th>
-                <th>اسم المنتج</th>
-                <th>المكينة</th>
-                <th>الكمية</th>
-              </tr>
-            </thead>
-            <tbody id="itemsBody"></tbody>
-          </table>
-        </div>
-
-        <div class="summary-grid">
-          <div class="summary-card">
-            <span>عدد المنتجات المدخلة</span>
-            <strong id="enteredItemsCount">0</strong>
+        <div class="panel-content">
+          <div class="panel-header">
+            <h2 data-i18n="production">الإنتاج</h2>
           </div>
 
-          <div class="summary-card">
-            <span>إجمالي الكمية</span>
-            <strong id="totalQuantity">0</strong>
-          </div>
-
-          <div class="summary-card">
-            <span>الهدر المدخل كجم</span>
-            <strong id="wasteSummary">0</strong>
+          <div class="products-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th data-i18n="productCategory">صنف المنتج</th>
+                  <th data-i18n="productName">اسم المنتج</th>
+                  <th data-i18n="machine">المكينة</th>
+                  <th data-i18n="quantity">الكمية</th>
+                </tr>
+              </thead>
+              <tbody id="itemsBody"></tbody>
+            </table>
           </div>
         </div>
       </section>
 
       <section class="panel">
-        <div class="actions">
-          <button class="btn btn-primary" type="submit" id="saveBtn">
-            حفظ الإنتاج
-          </button>
+        <div class="panel-content">
+          <div class="actions">
+            <button class="btn btn-primary" type="submit" id="saveBtn" data-i18n="saveProduction">
+              حفظ الإنتاج
+            </button>
 
-          <button class="btn btn-secondary" type="button" id="resetBtn">
-            تفريغ النموذج
-          </button>
+            <button class="btn btn-secondary" type="button" id="resetBtn" data-i18n="resetForm">
+              تفريغ النموذج
+            </button>
 
-          <a class="btn btn-secondary" href="history.html">
-            عرض سجل الإنتاج
-          </a>
+            <a class="btn btn-secondary" href="history.html" data-i18n="viewHistory">
+              عرض سجل الإنتاج
+            </a>
+          </div>
         </div>
       </section>
     </form>
   </main>
 
   <script>
-    /*
-      ضع هنا رابط تطبيق Apps Script بعد النشر كـ Web App.
-      يجب أن يكون نفس الرابط المستخدم في index.html و dashboard.html.
-    */
     const API_URL = "https://script.google.com/macros/s/AKfycbwQYYmJiQH9sosRT5-lrNvJHd-LHo9Ntx9TV7rYT2ZbfLrsqpHMGyswsTSJzeRJXTL-/exec";
 
     const SESSION_KEY = "factoryUserSession";
+    const LANGUAGE_KEY = "factoryLanguage";
 
+    const i18n = {
+      ar: {
+        htmlLang: "ar",
+        dir: "rtl",
+        pageTitle: "إدخال الإنتاج | ناتاك",
+        factoryName: "ناتاك",
+        factorySubtitle: "نظام متابعة الإنتاج اليومي",
+        mainMenu: "القائمة الرئيسية",
+        productionSystem: "نظام الإنتاج",
+        dashboard: "لوحة التحكم",
+        productionEntry: "إدخال الإنتاج",
+        supervisorEvaluation: "تقييم المشرف",
+        productionHistory: "سجل الإنتاج",
+        workers: "العمال",
+        products: "المنتجات",
+        machines: "المكائن",
+        logout: "تسجيل الخروج",
+        sidebarNote: "القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.",
+        connected: "متصل ببيانات Google Sheets",
+        loadingData: "جاري تحميل بيانات العمال والمنتجات والمكائن...",
+        basicProductionData: "بيانات الإنتاج الأساسية",
+        date: "التاريخ",
+        shift: "الشفت",
+        chooseShift: "اختر الشفت",
+        morning: "صباحي",
+        evening: "مسائي",
+        workerName: "اسم العامل",
+        loading: "جاري التحميل...",
+        rawWasteKg: "كمية هدر المواد الخام كجم",
+        notes: "الملاحظات",
+        defectImage: "إرفاق صورة في حالة وجود خلل في المنتج",
+        removeImage: "حذف الصورة",
+        production: "الإنتاج",
+        productCategory: "صنف المنتج",
+        productName: "اسم المنتج",
+        machine: "المكينة",
+        quantity: "الكمية",
+        saveProduction: "حفظ الإنتاج",
+        resetForm: "تفريغ النموذج",
+        viewHistory: "عرض سجل الإنتاج",
+        chooseWorker: "اختر العامل",
+        chooseCategory: "اختر الصنف",
+        chooseProduct: "اختر المنتج",
+        chooseMachine: "اختر المكينة",
+        quantityPlaceholder: "الكمية",
+        roleAdmin: "مدير النظام",
+        roleSupervisor: "مشرف",
+        supervisorDateHint: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
+        welcome: name => "مرحبًا " + name + "، يمكنك إدخال إنتاج اليوم من هذه الصفحة.",
+        apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة production.html.",
+        tokenMissing: "لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.",
+        loadFailed: "تعذر تحميل البيانات الأساسية.",
+        noWorkers: "لا توجد عمال نشطون. أضف العمال أولًا من صفحة العمال.",
+        noProducts: "لا توجد منتجات نشطة. أضف المنتجات أولًا من صفحة المنتجات.",
+        noMachines: "لا توجد مكائن نشطة. أضف المكائن أولًا من صفحة المكائن.",
+        serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
+        invalidImage: "الملف المختار ليس صورة.",
+        largeImage: "حجم الصورة كبير جدًا. يرجى اختيار صورة أقل من 8MB.",
+        imageReady: size => "تم ضغط الصورة إلى حوالي " + size,
+        imageFailed: "تعذر تجهيز الصورة. جرّب صورة أخرى.",
+        resetConfirm: "هل تريد تفريغ النموذج؟",
+        saveConfirm: "هل أنت متأكد من حفظ بيانات الإنتاج؟",
+        chooseDate: "يرجى اختيار التاريخ.",
+        chooseShiftMsg: "يرجى اختيار الشفت.",
+        chooseWorkerMsg: "يرجى اختيار العامل.",
+        supervisorTodayOnly: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
+        needOneItem: "يرجى إدخال منتج واحد على الأقل مع الكمية.",
+        completeRow: row => "يرجى إكمال بيانات المنتج رقم " + row + " أو ترك الصف فارغًا بالكامل.",
+        saveSuccess: "تم حفظ بيانات الإنتاج بنجاح.",
+        saveFailed: "تعذر حفظ بيانات الإنتاج.",
+        saveServerError: "تعذر الاتصال بالخادم أثناء الحفظ. تحقق من رابط Apps Script أو اتصال الإنترنت.",
+        saving: "جاري الحفظ..."
+      },
+      en: {
+        htmlLang: "en",
+        dir: "ltr",
+        pageTitle: "Production Entry | NATAC",
+        factoryName: "NATAC",
+        factorySubtitle: "Daily Production Monitoring System",
+        mainMenu: "Main Menu",
+        productionSystem: "Production System",
+        dashboard: "Dashboard",
+        productionEntry: "Production Entry",
+        supervisorEvaluation: "Supervisor Evaluation",
+        productionHistory: "Production History",
+        workers: "Workers",
+        products: "Products",
+        machines: "Machines",
+        logout: "Logout",
+        sidebarNote: "The menu stays hidden and appears only when you press the menu button in the top bar.",
+        connected: "Connected to Google Sheets data",
+        loadingData: "Loading workers, products, and machines...",
+        basicProductionData: "Basic Production Data",
+        date: "Date",
+        shift: "Shift",
+        chooseShift: "Choose shift",
+        morning: "Morning",
+        evening: "Evening",
+        workerName: "Worker Name",
+        loading: "Loading...",
+        rawWasteKg: "Raw Material Waste Kg",
+        notes: "Notes",
+        defectImage: "Attach image if there is a product defect",
+        removeImage: "Remove Image",
+        production: "Production",
+        productCategory: "Product Category",
+        productName: "Product Name",
+        machine: "Machine",
+        quantity: "Quantity",
+        saveProduction: "Save Production",
+        resetForm: "Clear Form",
+        viewHistory: "View Production History",
+        chooseWorker: "Choose worker",
+        chooseCategory: "Choose category",
+        chooseProduct: "Choose product",
+        chooseMachine: "Choose machine",
+        quantityPlaceholder: "Quantity",
+        roleAdmin: "System Admin",
+        roleSupervisor: "Supervisor",
+        supervisorDateHint: "Supervisor can enter today’s production only.",
+        welcome: name => "Welcome " + name + ", you can enter today’s production from this page.",
+        apiMissing: "Please set the Apps Script URL inside API_URL in production.html.",
+        tokenMissing: "Session token not found. Make sure login page stores token in localStorage.",
+        loadFailed: "Unable to load master data.",
+        noWorkers: "No active workers. Add workers first from the workers page.",
+        noProducts: "No active products. Add products first from the products page.",
+        noMachines: "No active machines. Add machines first from the machines page.",
+        serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
+        invalidImage: "The selected file is not an image.",
+        largeImage: "Image size is too large. Please select an image under 8MB.",
+        imageReady: size => "Image compressed to about " + size,
+        imageFailed: "Unable to prepare the image. Try another image.",
+        resetConfirm: "Do you want to clear the form?",
+        saveConfirm: "Are you sure you want to save production data?",
+        chooseDate: "Please choose the date.",
+        chooseShiftMsg: "Please choose the shift.",
+        chooseWorkerMsg: "Please choose the worker.",
+        supervisorTodayOnly: "Supervisor can enter today’s production only.",
+        needOneItem: "Please enter at least one product with quantity.",
+        completeRow: row => "Please complete product row " + row + " or leave it fully empty.",
+        saveSuccess: "Production data saved successfully.",
+        saveFailed: "Unable to save production data.",
+        saveServerError: "Unable to connect to the server while saving. Check Apps Script URL or internet connection.",
+        saving: "Saving..."
+      }
+    };
+
+    let currentLang = localStorage.getItem(LANGUAGE_KEY) || "ar";
     let currentUser = null;
     let workers = [];
     let products = [];
@@ -1030,6 +1248,9 @@
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
+
+    const factoryName = document.getElementById("factoryName");
+    const factorySubtitle = document.getElementById("factorySubtitle");
 
     const productionForm = document.getElementById("productionForm");
     const productionDate = document.getElementById("productionDate");
@@ -1046,9 +1267,6 @@
     const removeImageBtn = document.getElementById("removeImageBtn");
 
     const itemsBody = document.getElementById("itemsBody");
-    const enteredItemsCount = document.getElementById("enteredItemsCount");
-    const totalQuantity = document.getElementById("totalQuantity");
-    const wasteSummary = document.getElementById("wasteSummary");
     const saveBtn = document.getElementById("saveBtn");
     const resetBtn = document.getElementById("resetBtn");
     const dateHint = document.getElementById("dateHint");
@@ -1066,6 +1284,7 @@
     const languageSelect = document.getElementById("languageSelect");
 
     document.addEventListener("DOMContentLoaded", () => {
+      applyLanguage(currentLang);
       protectPage();
       initSidebar();
       initLanguage();
@@ -1074,6 +1293,46 @@
       loadInitialData();
       bindEvents();
     });
+
+    function t(key) {
+      return i18n[currentLang][key];
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem(LANGUAGE_KEY, lang);
+
+      document.documentElement.lang = i18n[lang].htmlLang;
+      document.documentElement.dir = i18n[lang].dir;
+      document.title = i18n[lang].pageTitle;
+
+      factoryName.textContent = i18n[lang].factoryName;
+      factorySubtitle.textContent = i18n[lang].factorySubtitle;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (i18n[lang][key]) {
+          el.textContent = i18n[lang][key];
+        }
+      });
+
+      languageSelect.value = lang;
+
+      const session = getSession();
+      if (session) {
+        renderUser(session);
+      }
+
+      initDateRules();
+
+      if (workers.length) {
+        renderWorkers(true);
+      }
+
+      if (itemsBody.children.length) {
+        refreshAllRowsWithState();
+      }
+    }
 
     function protectPage() {
       const session = getSession();
@@ -1089,12 +1348,12 @@
     }
 
     function renderUser(session) {
-      const name = session.fullName || session.FullName || session.username || "مستخدم";
+      const name = session.fullName || session.FullName || session.username || "User";
       const role = session.role || session.Role || "---";
 
       userName.textContent = name;
       userRole.textContent = normalizeRoleLabel(role);
-      welcomeText.textContent = "مرحبًا " + name + "، يمكنك إدخال إنتاج اليوم من هذه الصفحة.";
+      welcomeText.textContent = t("welcome")(name);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
@@ -1102,8 +1361,8 @@
 
     function normalizeRoleLabel(role) {
       const cleanRole = String(role || "").toLowerCase();
-      if (cleanRole === "admin") return "مدير النظام";
-      if (cleanRole === "supervisor") return "مشرف";
+      if (cleanRole === "admin") return t("roleAdmin");
+      if (cleanRole === "supervisor") return t("roleSupervisor");
       return role || "---";
     }
 
@@ -1117,7 +1376,10 @@
 
     function initDateRules() {
       const today = getTodayISO();
-      productionDate.value = today;
+
+      if (!productionDate.value) {
+        productionDate.value = today;
+      }
 
       const role = String(currentUser?.role || "").toLowerCase();
 
@@ -1125,22 +1387,22 @@
         productionDate.min = today;
         productionDate.max = today;
         productionDate.readOnly = true;
-        dateHint.textContent = "المشرف يمكنه إدخال إنتاج اليوم فقط.";
+        dateHint.textContent = t("supervisorDateHint");
       } else {
-        dateHint.textContent = "مدير النظام يمكنه اختيار أي تاريخ.";
+        dateHint.textContent = "";
       }
     }
 
     async function loadInitialData() {
       if (!API_URL || API_URL.includes("ضع_رابط")) {
         hideLoading();
-        showMessage("يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة production.html.", "error");
+        showMessage(t("apiMissing"), "error");
         return;
       }
 
       if (!currentUser || !currentUser.token) {
         hideLoading();
-        showMessage("لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.", "error");
+        showMessage(t("tokenMissing"), "error");
         return;
       }
 
@@ -1153,7 +1415,7 @@
         hideLoading();
 
         if (!result.success) {
-          showMessage(result.message || "تعذر تحميل البيانات الأساسية.", "error");
+          showMessage(result.message || t("loadFailed"), "error");
           return;
         }
 
@@ -1165,17 +1427,17 @@
         refreshAllRows();
 
         if (!workers.length) {
-          showMessage("لا توجد عمال نشطون. أضف العمال أولًا من صفحة العمال.", "warning");
+          showMessage(t("noWorkers"), "warning");
           return;
         }
 
         if (!products.length) {
-          showMessage("لا توجد منتجات نشطة. أضف المنتجات أولًا من صفحة المنتجات.", "warning");
+          showMessage(t("noProducts"), "warning");
           return;
         }
 
         if (!machines.length) {
-          showMessage("لا توجد مكائن نشطة. أضف المكائن أولًا من صفحة المكائن.", "warning");
+          showMessage(t("noMachines"), "warning");
           return;
         }
 
@@ -1184,12 +1446,14 @@
       } catch (error) {
         console.error(error);
         hideLoading();
-        showMessage("تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.", "error");
+        showMessage(t("serverError"), "error");
       }
     }
 
-    function renderWorkers() {
-      workerId.innerHTML = '<option value="">اختر العامل</option>';
+    function renderWorkers(preserveValue = false) {
+      const current = workerId.value;
+
+      workerId.innerHTML = `<option value="">${t("chooseWorker")}</option>`;
 
       workers.forEach(worker => {
         const option = document.createElement("option");
@@ -1197,6 +1461,10 @@
         option.textContent = worker.WorkerName;
         workerId.appendChild(option);
       });
+
+      if (preserveValue && current) {
+        workerId.value = current;
+      }
     }
 
     function createProductRows() {
@@ -1210,24 +1478,24 @@
 
           <td>
             <select class="item-category" data-row="${i}">
-              <option value="">اختر الصنف</option>
+              <option value="">${t("chooseCategory")}</option>
             </select>
           </td>
 
           <td>
             <select class="item-product" data-row="${i}">
-              <option value="">اختر المنتج</option>
+              <option value="">${t("chooseProduct")}</option>
             </select>
           </td>
 
           <td>
             <select class="item-machine" data-row="${i}">
-              <option value="">اختر المكينة</option>
+              <option value="">${t("chooseMachine")}</option>
             </select>
           </td>
 
           <td>
-            <input class="item-quantity" data-row="${i}" type="number" min="0" step="1" placeholder="الكمية">
+            <input class="item-quantity" data-row="${i}" type="number" min="0" step="1" placeholder="${t("quantityPlaceholder")}">
           </td>
         `;
 
@@ -1249,10 +1517,42 @@
       });
     }
 
+    function refreshAllRowsWithState() {
+      const state = [];
+
+      for (let i = 1; i <= 5; i++) {
+        state.push({
+          category: document.querySelector(`.item-category[data-row="${i}"]`)?.value || "",
+          productId: document.querySelector(`.item-product[data-row="${i}"]`)?.value || "",
+          machineId: document.querySelector(`.item-machine[data-row="${i}"]`)?.value || "",
+          quantity: document.querySelector(`.item-quantity[data-row="${i}"]`)?.value || ""
+        });
+      }
+
+      createProductRows();
+
+      state.forEach((row, index) => {
+        const i = index + 1;
+        const categorySelect = document.querySelector(`.item-category[data-row="${i}"]`);
+        const productSelect = document.querySelector(`.item-product[data-row="${i}"]`);
+        const machineSelect = document.querySelector(`.item-machine[data-row="${i}"]`);
+        const quantityInput = document.querySelector(`.item-quantity[data-row="${i}"]`);
+
+        fillCategories(categorySelect);
+        fillMachines(machineSelect);
+        fillProducts(productSelect, row.category);
+
+        categorySelect.value = row.category;
+        productSelect.value = row.productId;
+        machineSelect.value = row.machineId;
+        quantityInput.value = row.quantity;
+      });
+    }
+
     function fillCategories(select) {
       const categories = [...new Set(products.map(p => p.ProductCategory).filter(Boolean))];
 
-      select.innerHTML = '<option value="">اختر الصنف</option>';
+      select.innerHTML = `<option value="">${t("chooseCategory")}</option>`;
 
       categories.forEach(category => {
         const option = document.createElement("option");
@@ -1264,7 +1564,7 @@
 
     function fillMachines(select) {
       const current = select.value;
-      select.innerHTML = '<option value="">اختر المكينة</option>';
+      select.innerHTML = `<option value="">${t("chooseMachine")}</option>`;
 
       machines.forEach(machine => {
         const option = document.createElement("option");
@@ -1280,7 +1580,7 @@
 
     function fillProducts(select, category) {
       const current = select.value;
-      select.innerHTML = '<option value="">اختر المنتج</option>';
+      select.innerHTML = `<option value="">${t("chooseProduct")}</option>`;
 
       const filtered = category
         ? products.filter(p => p.ProductCategory === category)
@@ -1312,7 +1612,6 @@
           fillProducts(productSelect, category);
           productSelect.value = "";
           machineSelect.value = "";
-          updateSummary();
         }
 
         if (target.classList.contains("item-product")) {
@@ -1324,22 +1623,9 @@
           if (product && product.MachineID) {
             machineSelect.value = product.MachineID;
           }
-
-          updateSummary();
-        }
-
-        if (target.classList.contains("item-machine")) {
-          updateSummary();
         }
       });
 
-      itemsBody.addEventListener("input", event => {
-        if (event.target.classList.contains("item-quantity")) {
-          updateSummary();
-        }
-      });
-
-      rawWasteKg.addEventListener("input", updateSummary);
       defectImage.addEventListener("change", handleImageSelect);
 
       removeImageBtn.addEventListener("click", () => {
@@ -1351,7 +1637,7 @@
       });
 
       resetBtn.addEventListener("click", () => {
-        if (confirm("هل تريد تفريغ النموذج؟")) {
+        if (confirm(t("resetConfirm"))) {
           resetForm();
         }
       });
@@ -1386,19 +1672,20 @@
       }
 
       if (!file.type.startsWith("image/")) {
-        showMessage("الملف المختار ليس صورة.", "error");
+        showMessage(t("invalidImage"), "error");
         defectImage.value = "";
         return;
       }
 
       if (file.size > 8 * 1024 * 1024) {
-        showMessage("حجم الصورة كبير جدًا. يرجى اختيار صورة أقل من 8MB.", "error");
+        showMessage(t("largeImage"), "error");
         defectImage.value = "";
         return;
       }
 
       try {
         const compressed = await compressImage(file, 1200, 0.75);
+
         selectedImage = {
           fileName: createImageFileName(file.name),
           mimeType: "image/jpeg",
@@ -1407,13 +1694,13 @@
 
         imagePreview.src = compressed.dataUrl;
         imageName.textContent = file.name;
-        imageSize.textContent = "تم ضغط الصورة إلى حوالي " + formatBytes(compressed.sizeBytes);
+        imageSize.textContent = t("imageReady")(formatBytes(compressed.sizeBytes));
         imagePreviewBox.style.display = "flex";
         removeImageBtn.style.display = "inline-flex";
 
       } catch (error) {
         console.error(error);
-        showMessage("تعذر تجهيز الصورة. جرّب صورة أخرى.", "error");
+        showMessage(t("imageFailed"), "error");
       }
     }
 
@@ -1425,7 +1712,7 @@
 
       if (!payload) return;
 
-      const confirmed = confirm("هل أنت متأكد من حفظ بيانات الإنتاج؟");
+      const confirmed = confirm(t("saveConfirm"));
 
       if (!confirmed) return;
 
@@ -1437,17 +1724,17 @@
         setSaving(false);
 
         if (!result.success) {
-          showMessage(result.message || "تعذر حفظ بيانات الإنتاج.", "error");
+          showMessage(result.message || t("saveFailed"), "error");
           return;
         }
 
-        showMessage("تم حفظ بيانات الإنتاج بنجاح.", "success");
+        showMessage(t("saveSuccess"), "success");
         resetForm();
 
       } catch (error) {
         console.error(error);
         setSaving(false);
-        showMessage("تعذر الاتصال بالخادم أثناء الحفظ. تحقق من رابط Apps Script أو اتصال الإنترنت.", "error");
+        showMessage(t("saveServerError"), "error");
       }
     }
 
@@ -1459,31 +1746,35 @@
       const notesValue = notes.value.trim();
 
       if (!dateValue) {
-        showMessage("يرجى اختيار التاريخ.", "error");
+        showMessage(t("chooseDate"), "error");
         return null;
       }
 
       if (!shiftValue) {
-        showMessage("يرجى اختيار الشفت.", "error");
+        showMessage(t("chooseShiftMsg"), "error");
         return null;
       }
 
       if (!workerValue) {
-        showMessage("يرجى اختيار العامل.", "error");
+        showMessage(t("chooseWorkerMsg"), "error");
         return null;
       }
 
       const role = String(currentUser?.role || "").toLowerCase();
 
       if (role === "supervisor" && dateValue !== getTodayISO()) {
-        showMessage("المشرف يمكنه إدخال إنتاج اليوم فقط.", "error");
+        showMessage(t("supervisorTodayOnly"), "error");
         return null;
       }
 
-      const items = collectItems();
+      const itemsResult = collectItems();
 
-      if (!items.length) {
-        showMessage("يرجى إدخال منتج واحد على الأقل مع الكمية.", "error");
+      if (!itemsResult.valid) {
+        return null;
+      }
+
+      if (!itemsResult.items.length) {
+        showMessage(t("needOneItem"), "error");
         return null;
       }
 
@@ -1498,7 +1789,7 @@
           notes: notesValue,
           image: selectedImage
         },
-        items: items
+        items: itemsResult.items
       };
     }
 
@@ -1519,8 +1810,11 @@
         }
 
         if (!productId || !machineId || quantity <= 0) {
-          showMessage("يرجى إكمال بيانات المنتج رقم " + i + " أو ترك الصف فارغًا بالكامل.", "error");
-          return [];
+          showMessage(t("completeRow")(i), "error");
+          return {
+            valid: false,
+            items: []
+          };
         }
 
         items.push({
@@ -1530,34 +1824,10 @@
         });
       }
 
-      return items;
-    }
-
-    function updateSummary() {
-      const items = collectItemsForSummary();
-      const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
-
-      enteredItemsCount.textContent = items.length;
-      totalQuantity.textContent = totalQty;
-      wasteSummary.textContent = Number(rawWasteKg.value || 0).toFixed(3).replace(/\.?0+$/, "");
-    }
-
-    function collectItemsForSummary() {
-      const items = [];
-
-      for (let i = 1; i <= 5; i++) {
-        const productId = document.querySelector(`.item-product[data-row="${i}"]`)?.value;
-        const quantity = Number(document.querySelector(`.item-quantity[data-row="${i}"]`)?.value || 0);
-
-        if (productId && quantity > 0) {
-          items.push({
-            productId,
-            quantity
-          });
-        }
-      }
-
-      return items;
+      return {
+        valid: true,
+        items: items
+      };
     }
 
     function resetForm() {
@@ -1573,13 +1843,7 @@
 
       createProductRows();
       refreshAllRows();
-      updateSummary();
-
-      if (String(currentUser?.role || "").toLowerCase() === "supervisor") {
-        productionDate.min = today;
-        productionDate.max = today;
-        productionDate.readOnly = true;
-      }
+      initDateRules();
     }
 
     async function apiPost(payload) {
@@ -1602,9 +1866,9 @@
       saveBtn.disabled = isSaving;
 
       if (isSaving) {
-        saveBtn.innerHTML = '<span class="mini-spinner"></span> جاري الحفظ...';
+        saveBtn.innerHTML = '<span class="mini-spinner"></span> ' + t("saving");
       } else {
-        saveBtn.textContent = "حفظ الإنتاج";
+        saveBtn.textContent = t("saveProduction");
       }
     }
 
@@ -1735,11 +1999,10 @@
     }
 
     function initLanguage() {
-      const savedLang = localStorage.getItem("factoryLanguage") || "ar";
-      languageSelect.value = savedLang;
+      languageSelect.value = currentLang;
 
       languageSelect.addEventListener("change", () => {
-        localStorage.setItem("factoryLanguage", languageSelect.value);
+        applyLanguage(languageSelect.value);
       });
     }
   </script>
