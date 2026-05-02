@@ -13,24 +13,24 @@
 
   <style>
     :root {
-      --bg-1: #f7f9ff;
-      --bg-2: #eef4ff;
-      --bg-3: #f8efe7;
-      --text: #172033;
-      --muted: #6d7483;
-      --blue: #007aff;
-      --blue-dark: #005fd1;
-      --purple: #7c3aed;
-      --green: #34c759;
-      --orange: #ff9500;
-      --red: #ff3b30;
-      --glass-border: rgba(255, 255, 255, 0.72);
-      --shadow: 0 24px 70px rgba(50, 70, 110, 0.15);
-      --soft-shadow: 0 12px 34px rgba(50, 70, 110, 0.11);
-      --radius-xl: 30px;
-      --radius-lg: 24px;
+      --bg-1: #eaf1ff;
+      --bg-2: #f7f1ea;
+      --text: #101827;
+      --muted: #667085;
+      --line: rgba(16, 24, 39, 0.12);
+      --card: rgba(255, 255, 255, 0.86);
+      --card-strong: rgba(255, 255, 255, 0.96);
+      --input: rgba(255, 255, 255, 0.98);
+      --blue: #0066ff;
+      --blue-dark: #004ec2;
+      --purple: #6d28d9;
+      --green: #16a34a;
+      --orange: #ea580c;
+      --red: #dc2626;
+      --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
       --topbar-height: 78px;
       --sidebar-width: 310px;
+      --radius-xl: 28px;
     }
 
     * {
@@ -48,23 +48,11 @@
       font-family: "Tajawal", Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 12% 18%, rgba(0, 122, 255, 0.20), transparent 28%),
-        radial-gradient(circle at 88% 12%, rgba(124, 58, 237, 0.14), transparent 30%),
-        radial-gradient(circle at 50% 92%, rgba(255, 149, 0, 0.16), transparent 34%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+        radial-gradient(circle at 10% 12%, rgba(0, 102, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(109, 40, 217, 0.20), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), #ffffff 52%, var(--bg-2));
       background-attachment: fixed;
       overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(120deg, rgba(255,255,255,0.34), transparent 34%, rgba(255,255,255,0.22)),
-        radial-gradient(circle at 60% 20%, rgba(255,255,255,0.34), transparent 22%);
-      z-index: -1;
     }
 
     .floating-topbar {
@@ -74,11 +62,11 @@
       left: 0;
       min-height: var(--topbar-height);
       z-index: 100;
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(26px) saturate(180%);
-      -webkit-backdrop-filter: blur(26px) saturate(180%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.82);
-      box-shadow: 0 18px 45px rgba(50, 70, 110, 0.10);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(16, 24, 39, 0.10);
+      box-shadow: 0 12px 32px rgba(16, 24, 39, 0.10);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -93,19 +81,30 @@
       min-width: 0;
     }
 
-    .menu-btn {
-      width: 42px;
-      height: 42px;
+    .menu-btn,
+    .language-toggle {
       border: 0;
       background: transparent;
       color: var(--text);
-      font-size: 30px;
+      font-family: inherit;
       font-weight: 900;
       cursor: pointer;
-      display: grid;
-      place-items: center;
       padding: 0;
       flex-shrink: 0;
+    }
+
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      font-size: 30px;
+      display: grid;
+      place-items: center;
+    }
+
+    .language-toggle {
+      min-width: 44px;
+      height: 42px;
+      font-size: 16px;
     }
 
     .factory-brand {
@@ -115,15 +114,26 @@
       min-width: 0;
     }
 
+    .factory-logo,
+    .sidebar-logo {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(16,24,39,0.08);
+      flex-shrink: 0;
+    }
+
     .factory-logo {
       width: 50px;
       height: 50px;
       border-radius: 18px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: rgba(255,255,255,0.35);
-      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      width: 49px;
+      height: 49px;
+      border-radius: 18px;
     }
 
     .factory-logo img,
@@ -158,19 +168,6 @@
       text-overflow: ellipsis;
     }
 
-    .language-select {
-      height: 42px;
-      border: 0;
-      background: transparent;
-      color: var(--text);
-      font-family: inherit;
-      font-weight: 900;
-      font-size: 15px;
-      outline: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
     .top-user-box {
       display: flex;
       align-items: center;
@@ -179,8 +176,8 @@
     }
 
     .avatar {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: grid;
       place-items: center;
@@ -188,6 +185,7 @@
       color: #fff;
       font-weight: 900;
       flex-shrink: 0;
+      box-shadow: 0 8px 18px rgba(0,102,255,0.20);
     }
 
     .user-info {
@@ -219,7 +217,7 @@
       position: fixed;
       inset: 0;
       z-index: 150;
-      background: rgba(20, 28, 44, 0.26);
+      background: rgba(16, 24, 39, 0.28);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
@@ -240,9 +238,9 @@
       overflow-y: auto;
       transform: translateX(105%);
       transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
-      background: rgba(255,255,255,0.72);
-      border-left: 1px solid rgba(255,255,255,0.78);
-      box-shadow: -28px 0 70px rgba(50, 70, 110, 0.18);
+      background: rgba(255,255,255,0.94);
+      border-left: 1px solid rgba(16,24,39,0.10);
+      box-shadow: -28px 0 70px rgba(16, 24, 39, 0.18);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
     }
@@ -252,8 +250,8 @@
       left: 0;
       transform: translateX(-105%);
       border-left: 0;
-      border-right: 1px solid rgba(255,255,255,0.78);
-      box-shadow: 28px 0 70px rgba(50, 70, 110, 0.18);
+      border-right: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 28px 0 70px rgba(16, 24, 39, 0.18);
     }
 
     .sidebar.open,
@@ -266,7 +264,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
     }
 
     .sidebar-title {
@@ -274,17 +274,6 @@
       align-items: center;
       gap: 11px;
       min-width: 0;
-    }
-
-    .sidebar-logo {
-      width: 49px;
-      height: 49px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: rgba(255,255,255,0.42);
-      flex-shrink: 0;
     }
 
     .sidebar-title strong {
@@ -304,8 +293,8 @@
       width: 43px;
       height: 43px;
       border: 0;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.42);
+      border-radius: 14px;
+      background: rgba(220, 38, 38, 0.08);
       color: var(--red);
       font-size: 24px;
       cursor: pointer;
@@ -314,76 +303,49 @@
 
     .nav {
       display: grid;
-      gap: 8px;
     }
 
     .nav a,
     .logout-btn {
       width: 100%;
-      min-height: 51px;
+      min-height: 54px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       text-decoration: none;
       color: var(--text);
-      padding: 12px 13px;
-      border-radius: 19px;
+      padding: 13px 4px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+      background: transparent;
       font-family: inherit;
       font-size: 15px;
       font-weight: 900;
       text-align: inherit;
       cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.58);
-      background: rgba(255,255,255,0.38);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.68);
       transition: 0.18s ease;
-    }
-
-    .logout-btn {
-      border: 0;
     }
 
     .nav a:hover,
     .logout-btn:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.68);
+      color: var(--blue-dark);
+      padding-inline-start: 10px;
     }
 
     .nav a.active {
-      color: #fff;
-      border-color: rgba(255,255,255,0.54);
-      background:
-        radial-gradient(circle at 25% 12%, rgba(255,255,255,0.48), transparent 28%),
-        linear-gradient(145deg, #0a84ff, #7c3aed);
-      box-shadow: 0 18px 38px rgba(0, 122, 255, 0.20);
+      color: var(--blue-dark);
     }
 
     .nav-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 13px;
-      display: grid;
+      width: auto;
+      height: auto;
+      display: inline-grid;
       place-items: center;
-      background: rgba(255,255,255,0.58);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+      background: transparent;
+      box-shadow: none;
       flex-shrink: 0;
-    }
-
-    .nav a.active .nav-icon {
-      background: rgba(255,255,255,0.22);
-    }
-
-    .sidebar-footer {
-      margin-top: 24px;
-      padding: 14px;
-      border-radius: 22px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-      background: rgba(255,255,255,0.44);
-      border: 1px solid rgba(255,255,255,0.66);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+      font-size: 20px;
     }
 
     .main {
@@ -399,23 +361,11 @@
       margin-bottom: 16px;
       padding: 22px;
       border-radius: var(--radius-xl);
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.68), rgba(255,255,255,0.35)),
-        radial-gradient(circle at 12% 18%, rgba(0,122,255,0.16), transparent 28%),
-        radial-gradient(circle at 88% 20%, rgba(124,58,237,0.12), transparent 30%);
-      border: 1px solid var(--glass-border);
+      background: var(--card);
+      border: 1px solid rgba(16,24,39,0.10);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-    }
-
-    .panel::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(125deg, rgba(255,255,255,0.34), transparent 32%, rgba(255,255,255,0.12) 66%, transparent);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
     }
 
     .panel-content {
@@ -425,6 +375,8 @@
 
     .page-title {
       margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
     }
 
     .page-title h1 {
@@ -452,7 +404,7 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -476,18 +428,16 @@
     select,
     textarea {
       width: 100%;
-      min-height: 50px;
-      border: 1px solid rgba(255,255,255,0.78);
-      border-radius: 18px;
+      min-height: 52px;
+      border: 1px solid rgba(16,24,39,0.18);
+      border-radius: 16px;
       padding: 0 14px;
       font-family: inherit;
       font-size: 15px;
-      background: rgba(255,255,255,0.54);
+      background: var(--input);
       color: var(--text);
       outline: none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 2px 0 rgba(16,24,39,0.03);
       transition: 0.18s ease;
     }
 
@@ -498,19 +448,23 @@
       line-height: 1.7;
     }
 
+    input::placeholder,
+    textarea::placeholder {
+      color: #98a2b3;
+    }
+
     input:focus,
     select:focus,
     textarea:focus {
-      border-color: rgba(0, 122, 255, 0.45);
-      box-shadow:
-        0 0 0 4px rgba(0, 122, 255, 0.10),
-        inset 0 1px 0 rgba(255,255,255,0.72);
-      background: rgba(255,255,255,0.72);
+      border-color: rgba(0, 102, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.13);
+      background: #fff;
     }
 
     input[readonly] {
       color: var(--muted);
       cursor: not-allowed;
+      background: #f2f4f7;
     }
 
     .date-hint {
@@ -533,16 +487,15 @@
       align-items: center;
       gap: 12px;
       padding: 12px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.48);
-      border: 1px solid rgba(255,255,255,0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+      border-radius: 18px;
+      background: #f9fafb;
+      border: 1px solid rgba(16,24,39,0.10);
     }
 
     .preview img {
       width: 72px;
       height: 72px;
-      border-radius: 18px;
+      border-radius: 16px;
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -560,10 +513,10 @@
 
     .product-card {
       padding: 16px;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.46);
-      border: 1px solid rgba(255,255,255,0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+      border-radius: 22px;
+      background: var(--card-strong);
+      border: 1px solid rgba(16,24,39,0.12);
+      box-shadow: 0 10px 24px rgba(16,24,39,0.06);
     }
 
     .product-card-head {
@@ -572,6 +525,8 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
     }
 
     .product-card-title {
@@ -584,10 +539,10 @@
     .row-number {
       width: 38px;
       height: 38px;
-      border-radius: 15px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
-      background: linear-gradient(145deg, rgba(255,255,255,0.88), rgba(238,244,255,0.70));
+      background: rgba(0,102,255,0.11);
       color: var(--blue-dark);
       font-weight: 900;
       flex-shrink: 0;
@@ -606,6 +561,77 @@
       justify-content: flex-start;
     }
 
+    .batch-table-wrap {
+      margin-top: 20px;
+      border-radius: 16px;
+      overflow-x: auto;
+      border: 1px solid rgba(16,24,39,0.16);
+      background: #fff;
+    }
+
+    .batch-title-row {
+      margin-top: 22px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .batch-title-row h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .batch-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: #fff;
+    }
+
+    .batch-table th,
+    .batch-table td {
+      border: 1px solid rgba(16,24,39,0.14);
+      padding: 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .batch-table th {
+      background: #eef4ff;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .batch-table td {
+      background: #fff;
+    }
+
+    .batch-table tr.active-entry td {
+      background: #f0f7ff;
+    }
+
+    .batch-table select {
+      min-height: 42px;
+      border-radius: 10px;
+    }
+
+    .product-count-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.12);
+      color: #0f7a35;
+      font-weight: 900;
+    }
+
     .actions {
       display: flex;
       gap: 12px;
@@ -617,7 +643,7 @@
     .btn {
       min-height: 50px;
       border: 0;
-      border-radius: 18px;
+      border-radius: 16px;
       padding: 0 22px;
       font-family: inherit;
       font-size: 15px;
@@ -633,31 +659,32 @@
     }
 
     .btn-primary {
-      background: linear-gradient(145deg, #0a84ff, #7c3aed);
+      background: linear-gradient(145deg, #0066ff, #5b21b6);
       color: #fff;
-      box-shadow: 0 18px 38px rgba(0, 122, 255, 0.20);
+      box-shadow: 0 14px 30px rgba(0, 102, 255, 0.22);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
+      box-shadow: 0 18px 36px rgba(0, 102, 255, 0.27);
     }
 
     .btn-secondary {
-      background: rgba(255,255,255,0.52);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+      background: #fff;
+      color: var(--blue-dark);
+      border: 1px solid rgba(0, 102, 255, 0.28);
+      box-shadow: 0 8px 20px rgba(16,24,39,0.06);
     }
 
     .btn-danger {
-      background: rgba(255, 59, 48, 0.10);
+      background: rgba(220, 38, 38, 0.10);
       color: var(--red);
-      border: 1px solid rgba(255, 59, 48, 0.18);
+      border: 1px solid rgba(220, 38, 38, 0.22);
     }
 
     .btn-small {
       min-height: 40px;
-      border-radius: 15px;
+      border-radius: 14px;
       padding: 0 14px;
       font-size: 14px;
     }
@@ -672,32 +699,31 @@
       display: none;
       margin-bottom: 16px;
       padding: 14px 16px;
-      border-radius: 20px;
+      border-radius: 18px;
       font-size: 15px;
       line-height: 1.7;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid transparent;
     }
 
     .message.error {
       display: block;
-      color: #b42318;
-      background: rgba(255, 59, 48, 0.10);
-      border: 1px solid rgba(255, 59, 48, 0.18);
+      color: #991b1b;
+      background: #fef2f2;
+      border-color: #fecaca;
     }
 
     .message.success {
       display: block;
-      color: #0f7a35;
-      background: rgba(52, 199, 89, 0.12);
-      border: 1px solid rgba(52, 199, 89, 0.20);
+      color: #166534;
+      background: #f0fdf4;
+      border-color: #bbf7d0;
     }
 
     .message.warning {
       display: block;
-      color: #9a6700;
-      background: rgba(255, 149, 0, 0.12);
-      border: 1px solid rgba(255, 149, 0, 0.22);
+      color: #9a3412;
+      background: #fff7ed;
+      border-color: #fed7aa;
     }
 
     .loading {
@@ -710,10 +736,9 @@
       padding: 13px 15px;
       width: fit-content;
       border-radius: 999px;
-      background: rgba(255,255,255,0.50);
-      border: 1px solid rgba(255,255,255,0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background: #fff;
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 8px 22px rgba(16,24,39,0.07);
     }
 
     .spinner,
@@ -725,7 +750,7 @@
     .spinner {
       width: 20px;
       height: 20px;
-      border: 3px solid rgba(0, 122, 255, 0.16);
+      border: 3px solid rgba(0, 102, 255, 0.14);
       border-top-color: var(--blue);
     }
 
@@ -770,12 +795,15 @@
       }
 
       .top-user-box {
+        max-width: 130px;
+      }
+
+      .user-info span {
         display: none;
       }
 
-      .language-select {
-        width: auto;
-        height: 40px;
+      .language-toggle {
+        min-width: 36px;
         font-size: 14px;
       }
 
@@ -785,7 +813,7 @@
 
       .panel {
         padding: 16px;
-        border-radius: 26px;
+        border-radius: 24px;
       }
 
       .page-title h1 {
@@ -849,10 +877,7 @@
     </div>
 
     <div class="topbar-side">
-      <select id="languageSelect" class="language-select" aria-label="اللغة">
-        <option value="ar">العربية</option>
-        <option value="en">English</option>
-      </select>
+      <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
       <div class="top-user-box">
         <div class="avatar" id="userAvatar">U</div>
@@ -922,10 +947,6 @@
         <span class="nav-icon">🚪</span>
       </button>
     </nav>
-
-    <div class="sidebar-footer" data-i18n="sidebarNote">
-      القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.
-    </div>
   </aside>
 
   <main class="main">
@@ -951,50 +972,33 @@
             </div>
 
             <div class="field">
-              <label for="shift" data-i18n="shift">الشفت</label>
-              <select id="shift" required>
-                <option value="" data-i18n="chooseShift">اختر الشفت</option>
-                <option value="صباحي" data-i18n="morning">صباحي</option>
-                <option value="مسائي" data-i18n="evening">مسائي</option>
-              </select>
+              <label for="rawWasteKg" data-i18n="rawWasteKg">هدر المواد الخام (كجم)</label>
+              <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="كجم">
             </div>
 
             <div class="field">
-              <label for="workerId" data-i18n="workerName">اسم العامل</label>
-              <select id="workerId" required>
-                <option value="" data-i18n="loading">جاري التحميل...</option>
-              </select>
+              <label for="defectImage" data-i18n="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
+              <input type="file" id="defectImage" accept="image/*">
             </div>
 
-            <div class="field">
-              <label for="rawWasteKg" data-i18n="rawWasteKg">كمية هدر المواد الخام كجم</label>
-              <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="2.5">
+            <div class="field full">
+              <div class="preview" id="imagePreviewBox">
+                <img id="imagePreview" alt="Preview">
+                <div>
+                  <strong id="imageName">---</strong>
+                  <br>
+                  <span id="imageSize">---</span>
+                </div>
+              </div>
+
+              <button class="btn btn-danger" type="button" id="removeImageBtn" style="display:none;" data-i18n="removeImage">
+                حذف الصورة
+              </button>
             </div>
 
             <div class="field full">
               <label for="notes" data-i18n="notes">الملاحظات</label>
               <textarea id="notes"></textarea>
-            </div>
-
-            <div class="field full">
-              <label for="defectImage" data-i18n="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
-
-              <div class="file-box">
-                <input type="file" id="defectImage" accept="image/*">
-
-                <div class="preview" id="imagePreviewBox">
-                  <img id="imagePreview" alt="Preview">
-                  <div>
-                    <strong id="imageName">---</strong>
-                    <br>
-                    <span id="imageSize">---</span>
-                  </div>
-                </div>
-
-                <button class="btn btn-danger" type="button" id="removeImageBtn" style="display:none;" data-i18n="removeImage">
-                  حذف الصورة
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -1013,6 +1017,27 @@
               <span>＋</span>
               <span data-i18n="addProductRow">أضف منتج</span>
             </button>
+          </div>
+
+          <div class="batch-title-row">
+            <h3 data-i18n="workersProductionTable">جدول إنتاج العمال</h3>
+            <button class="btn btn-secondary btn-small" type="button" id="addWorkerEntryBtn">
+              <span>＋</span>
+              <span data-i18n="addWorkerEntry">إضافة عامل</span>
+            </button>
+          </div>
+
+          <div class="batch-table-wrap">
+            <table class="batch-table">
+              <thead>
+                <tr>
+                  <th data-i18n="workerName">اسم العامل</th>
+                  <th data-i18n="shift">الشفت</th>
+                  <th data-i18n="enteredProductsCount">عدد المنتجات المدخلة</th>
+                </tr>
+              </thead>
+              <tbody id="workerEntriesBody"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -1048,6 +1073,7 @@
       ar: {
         htmlLang: "ar",
         dir: "rtl",
+        languageButton: "EN",
         pageTitle: "إدخال الإنتاج | ناتاك",
         factoryName: "ناتاك",
         factorySubtitle: "نظام متابعة الإنتاج اليومي",
@@ -1061,7 +1087,6 @@
         products: "المنتجات",
         machines: "المكائن",
         logout: "تسجيل الخروج",
-        sidebarNote: "القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.",
         loadingData: "جاري تحميل بيانات العمال والمنتجات والمكائن...",
         date: "التاريخ",
         shift: "الشفت",
@@ -1070,7 +1095,7 @@
         evening: "مسائي",
         workerName: "اسم العامل",
         loading: "جاري التحميل...",
-        rawWasteKg: "كمية هدر المواد الخام كجم",
+        rawWasteKg: "هدر المواد الخام (كجم)",
         notes: "الملاحظات",
         defectImage: "إرفاق صورة في حالة وجود خلل في المنتج",
         removeImage: "حذف الصورة",
@@ -1090,6 +1115,9 @@
         chooseProduct: "اختر المنتج",
         chooseMachine: "اختر المكينة",
         quantityPlaceholder: "الكمية",
+        workersProductionTable: "جدول إنتاج العمال",
+        enteredProductsCount: "عدد المنتجات المدخلة",
+        addWorkerEntry: "إضافة عامل",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         supervisorDateHint: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
@@ -1105,12 +1133,12 @@
         imageReady: size => "تم ضغط الصورة إلى حوالي " + size,
         imageFailed: "تعذر تجهيز الصورة. جرّب صورة أخرى.",
         resetConfirm: "هل تريد تفريغ النموذج؟",
-        saveConfirm: "هل أنت متأكد من حفظ بيانات الإنتاج؟",
+        saveConfirm: "هل أنت متأكد من حفظ بيانات الإنتاج لجميع العمال المدخلين؟",
         chooseDate: "يرجى اختيار التاريخ.",
-        chooseShiftMsg: "يرجى اختيار الشفت.",
-        chooseWorkerMsg: "يرجى اختيار العامل.",
+        chooseWorkerMsg: row => "يرجى اختيار العامل في الصف رقم " + row + ".",
+        chooseShiftMsg: row => "يرجى اختيار الشفت في الصف رقم " + row + ".",
         supervisorTodayOnly: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
-        needOneItem: "يرجى إدخال منتج واحد على الأقل مع الكمية.",
+        needOneItem: row => "يرجى إدخال منتج واحد على الأقل للعامل في الصف رقم " + row + ".",
         completeRow: row => "يرجى إكمال بيانات المنتج رقم " + row + " أو حذف البطاقة.",
         saveSuccess: "تم حفظ بيانات الإنتاج بنجاح.",
         saveFailed: "تعذر حفظ بيانات الإنتاج.",
@@ -1121,6 +1149,7 @@
       en: {
         htmlLang: "en",
         dir: "ltr",
+        languageButton: "عربي",
         pageTitle: "Production Entry | NATAC",
         factoryName: "NATAC",
         factorySubtitle: "Daily Production Monitoring System",
@@ -1134,7 +1163,6 @@
         products: "Products",
         machines: "Machines",
         logout: "Logout",
-        sidebarNote: "The menu stays hidden and appears only when you press the menu button in the top bar.",
         loadingData: "Loading workers, products, and machines...",
         date: "Date",
         shift: "Shift",
@@ -1143,7 +1171,7 @@
         evening: "Evening",
         workerName: "Worker Name",
         loading: "Loading...",
-        rawWasteKg: "Raw Material Waste Kg",
+        rawWasteKg: "Raw Material Waste (Kg)",
         notes: "Notes",
         defectImage: "Attach image if there is a product defect",
         removeImage: "Remove Image",
@@ -1163,6 +1191,9 @@
         chooseProduct: "Choose product",
         chooseMachine: "Choose machine",
         quantityPlaceholder: "Quantity",
+        workersProductionTable: "Workers Production Table",
+        enteredProductsCount: "Entered Products Count",
+        addWorkerEntry: "Add Worker",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         supervisorDateHint: "Supervisor can enter today’s production only.",
@@ -1178,12 +1209,12 @@
         imageReady: size => "Image compressed to about " + size,
         imageFailed: "Unable to prepare the image. Try another image.",
         resetConfirm: "Do you want to clear the form?",
-        saveConfirm: "Are you sure you want to save production data?",
+        saveConfirm: "Are you sure you want to save production data for all entered workers?",
         chooseDate: "Please choose the date.",
-        chooseShiftMsg: "Please choose the shift.",
-        chooseWorkerMsg: "Please choose the worker.",
+        chooseWorkerMsg: row => "Please choose the worker in row " + row + ".",
+        chooseShiftMsg: row => "Please choose the shift in row " + row + ".",
         supervisorTodayOnly: "Supervisor can enter today’s production only.",
-        needOneItem: "Please enter at least one product with quantity.",
+        needOneItem: row => "Please enter at least one product for the worker in row " + row + ".",
         completeRow: row => "Please complete product " + row + " or remove the card.",
         saveSuccess: "Production data saved successfully.",
         saveFailed: "Unable to save production data.",
@@ -1200,7 +1231,23 @@
     let machines = [];
     let categories = [];
     let selectedImage = null;
-    let visibleProductRows = 1;
+
+    let workerEntries = [
+      {
+        workerId: "",
+        shift: "",
+        items: [
+          {
+            category: "",
+            machineId: "",
+            productId: "",
+            quantity: ""
+          }
+        ]
+      }
+    ];
+
+    let activeEntryIndex = 0;
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
@@ -1210,8 +1257,6 @@
 
     const productionForm = document.getElementById("productionForm");
     const productionDate = document.getElementById("productionDate");
-    const shift = document.getElementById("shift");
-    const workerId = document.getElementById("workerId");
     const rawWasteKg = document.getElementById("rawWasteKg");
     const notes = document.getElementById("notes");
     const defectImage = document.getElementById("defectImage");
@@ -1224,6 +1269,9 @@
 
     const itemsBody = document.getElementById("itemsBody");
     const addProductRowBtn = document.getElementById("addProductRowBtn");
+    const addWorkerEntryBtn = document.getElementById("addWorkerEntryBtn");
+    const workerEntriesBody = document.getElementById("workerEntriesBody");
+
     const saveBtn = document.getElementById("saveBtn");
     const resetBtn = document.getElementById("resetBtn");
     const dateHint = document.getElementById("dateHint");
@@ -1237,7 +1285,7 @@
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
-    const languageSelect = document.getElementById("languageSelect");
+    const languageToggleBtn = document.getElementById("languageToggleBtn");
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
@@ -1245,6 +1293,7 @@
       initSidebar();
       initLanguage();
       initDateRules();
+      renderWorkerEntries();
       renderProductRows();
       loadInitialData();
       bindEvents();
@@ -1256,13 +1305,12 @@
 
     function normalizeSession(session) {
       const user = session.user || session.User || {};
-
       return {
         ...user,
         ...session,
         token: session.token || user.token || "",
         Role: session.Role || session.role || user.Role || user.role || "",
-        FullName: session.FullName || session.fullName || user.FullName || user.fullName || session.username || user.Username || user.username || "",
+        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
         Username: session.Username || session.username || user.Username || user.username || ""
       };
     }
@@ -1277,6 +1325,7 @@
 
       factoryName.textContent = i18n[lang].factoryName;
       factorySubtitle.textContent = i18n[lang].factorySubtitle;
+      languageToggleBtn.textContent = i18n[lang].languageButton;
 
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
@@ -1285,8 +1334,6 @@
         }
       });
 
-      languageSelect.value = lang;
-
       const session = getSession();
       if (session) {
         currentUser = normalizeSession(session);
@@ -1294,12 +1341,8 @@
       }
 
       initDateRules();
-
-      if (workers.length) {
-        renderWorkers(true);
-      }
-
-      renderProductRows(true);
+      renderWorkerEntries();
+      renderProductRows();
     }
 
     function protectPage() {
@@ -1316,7 +1359,14 @@
     }
 
     function renderUser(session) {
-      const name = session.FullName || session.fullName || session.Username || session.username || "User";
+      const name =
+        session.FullName ||
+        session.fullName ||
+        session.name ||
+        session.Username ||
+        session.username ||
+        "User";
+
       const role = session.Role || session.role || "---";
 
       userName.textContent = name;
@@ -1396,8 +1446,8 @@
         machines = result.machines || [];
         categories = result.categories || [];
 
-        renderWorkers();
-        renderProductRows(true);
+        renderWorkerEntries();
+        renderProductRows();
 
         if (!workers.length) {
           showMessage(t("noWorkers"), "warning");
@@ -1423,64 +1473,71 @@
       }
     }
 
-    function renderWorkers(preserveValue = false) {
-      const current = workerId.value;
+    function getActiveEntry() {
+      return workerEntries[activeEntryIndex];
+    }
 
-      workerId.innerHTML = `<option value="">${t("chooseWorker")}</option>`;
+    function renderWorkerEntries() {
+      workerEntriesBody.innerHTML = "";
 
-      workers.forEach(worker => {
-        const option = document.createElement("option");
-        option.value = worker.WorkerID;
-        option.textContent = worker.WorkerName;
-        workerId.appendChild(option);
+      workerEntries.forEach((entry, index) => {
+        const tr = document.createElement("tr");
+        tr.className = index === activeEntryIndex ? "active-entry" : "";
+        tr.dataset.index = index;
+
+        tr.innerHTML = `
+          <td>
+            <select class="worker-entry-worker" data-index="${index}">
+              <option value="">${t("chooseWorker")}</option>
+              ${workers.map(worker => {
+                const selected = String(worker.WorkerID || "") === String(entry.workerId || "") ? "selected" : "";
+                return `<option value="${escapeHtml(worker.WorkerID || "")}" ${selected}>${escapeHtml(worker.WorkerName || "")}</option>`;
+              }).join("")}
+            </select>
+          </td>
+
+          <td>
+            <select class="worker-entry-shift" data-index="${index}">
+              <option value="">${t("chooseShift")}</option>
+              <option value="صباحي" ${entry.shift === "صباحي" ? "selected" : ""}>${t("morning")}</option>
+              <option value="مسائي" ${entry.shift === "مسائي" ? "selected" : ""}>${t("evening")}</option>
+            </select>
+          </td>
+
+          <td>
+            <span class="product-count-pill">${countEnteredProducts(entry)}</span>
+          </td>
+        `;
+
+        workerEntriesBody.appendChild(tr);
       });
-
-      if (preserveValue && current) {
-        workerId.value = current;
-      }
     }
 
-    function getCurrentProductState() {
-      const state = [];
-
-      for (let i = 1; i <= visibleProductRows; i++) {
-        state.push({
-          category: document.querySelector(`.item-category[data-row="${i}"]`)?.value || "",
-          machineId: document.querySelector(`.item-machine[data-row="${i}"]`)?.value || "",
-          productId: document.querySelector(`.item-product[data-row="${i}"]`)?.value || "",
-          quantity: document.querySelector(`.item-quantity[data-row="${i}"]`)?.value || ""
-        });
-      }
-
-      return state;
+    function countEnteredProducts(entry) {
+      return entry.items.filter(item => item.productId && item.machineId && Number(item.quantity || 0) > 0).length;
     }
 
-    function renderProductRows(preserveState = false) {
-      const state = preserveState ? getCurrentProductState() : [];
+    function renderProductRows() {
+      const entry = getActiveEntry();
       itemsBody.innerHTML = "";
 
-      for (let i = 1; i <= visibleProductRows; i++) {
-        const saved = state[i - 1] || {
-          category: "",
-          machineId: "",
-          productId: "",
-          quantity: ""
-        };
+      entry.items.forEach((item, index) => {
+        const rowNumber = index + 1;
 
         const card = document.createElement("div");
         card.className = "product-card";
-        card.dataset.row = i;
+        card.dataset.row = rowNumber;
 
         card.innerHTML = `
           <div class="product-card-head">
             <div class="product-card-title">
-              <div class="row-number">${i}</div>
-              <span>${t("productRow")(i)}</span>
+              <div class="row-number">${rowNumber}</div>
+              <span>${t("productRow")(rowNumber)}</span>
             </div>
 
             ${
-              i > 1
-                ? `<button class="btn btn-danger btn-small remove-product-row-btn" type="button" data-row="${i}">${t("removeProductRow")}</button>`
+              rowNumber > 1
+                ? `<button class="btn btn-danger btn-small remove-product-row-btn" type="button" data-row="${rowNumber}">${t("removeProductRow")}</button>`
                 : ""
             }
           </div>
@@ -1488,28 +1545,28 @@
           <div class="product-grid">
             <div class="field">
               <label>${t("productCategory")}</label>
-              <select class="item-category" data-row="${i}">
+              <select class="item-category" data-row="${rowNumber}">
                 <option value="">${t("chooseCategory")}</option>
               </select>
             </div>
 
             <div class="field">
               <label>${t("machine")}</label>
-              <select class="item-machine" data-row="${i}">
+              <select class="item-machine" data-row="${rowNumber}">
                 <option value="">${t("chooseMachine")}</option>
               </select>
             </div>
 
             <div class="field">
               <label>${t("productName")}</label>
-              <select class="item-product" data-row="${i}">
+              <select class="item-product" data-row="${rowNumber}">
                 <option value="">${t("chooseProduct")}</option>
               </select>
             </div>
 
             <div class="field">
               <label>${t("quantity")}</label>
-              <input class="item-quantity" data-row="${i}" type="number" min="0" step="1" placeholder="${t("quantityPlaceholder")}">
+              <input class="item-quantity" data-row="${rowNumber}" type="number" min="0" step="1" placeholder="${t("quantityPlaceholder")}">
             </div>
           </div>
         `;
@@ -1522,23 +1579,24 @@
         const quantityInput = card.querySelector(".item-quantity");
 
         fillCategories(categorySelect);
-        categorySelect.value = saved.category || "";
+        categorySelect.value = item.category || "";
 
-        fillMachinesForCategory(machineSelect, saved.category || "");
-        machineSelect.value = saved.machineId || "";
+        fillMachinesForCategory(machineSelect, item.category || "");
+        machineSelect.value = item.machineId || "";
 
-        fillProductsForCategoryAndMachine(productSelect, saved.category || "", saved.machineId || "");
-        productSelect.value = saved.productId || "";
+        fillProductsForCategoryAndMachine(productSelect, item.category || "", item.machineId || "");
+        productSelect.value = item.productId || "";
 
-        quantityInput.value = saved.quantity || "";
-      }
+        quantityInput.value = item.quantity || "";
+      });
 
       updateAddProductButton();
+      renderWorkerEntries();
     }
 
     function updateAddProductButton() {
-      addProductRowBtn.disabled = visibleProductRows >= MAX_PRODUCTS;
-      addProductRowBtn.style.display = visibleProductRows >= MAX_PRODUCTS ? "none" : "inline-flex";
+      addProductRowBtn.disabled = getActiveEntry().items.length >= MAX_PRODUCTS;
+      addProductRowBtn.style.display = getActiveEntry().items.length >= MAX_PRODUCTS ? "none" : "inline-flex";
     }
 
     function fillCategories(select) {
@@ -1637,32 +1695,100 @@
     }
 
     function bindEvents() {
+      workerEntriesBody.addEventListener("click", event => {
+        const tr = event.target.closest("tr");
+        if (!tr) return;
+
+        activeEntryIndex = Number(tr.dataset.index || 0);
+        renderWorkerEntries();
+        renderProductRows();
+      });
+
+      workerEntriesBody.addEventListener("change", event => {
+        const target = event.target;
+        const index = Number(target.dataset.index || 0);
+
+        if (!workerEntries[index]) return;
+
+        if (target.classList.contains("worker-entry-worker")) {
+          workerEntries[index].workerId = target.value;
+        }
+
+        if (target.classList.contains("worker-entry-shift")) {
+          workerEntries[index].shift = target.value;
+        }
+
+        activeEntryIndex = index;
+        renderWorkerEntries();
+      });
+
+      addWorkerEntryBtn.addEventListener("click", () => {
+        workerEntries.push({
+          workerId: "",
+          shift: "",
+          items: [
+            {
+              category: "",
+              machineId: "",
+              productId: "",
+              quantity: ""
+            }
+          ]
+        });
+
+        activeEntryIndex = workerEntries.length - 1;
+        renderWorkerEntries();
+        renderProductRows();
+      });
+
       itemsBody.addEventListener("change", event => {
         const target = event.target;
-        const row = target.dataset.row;
+        const row = Number(target.dataset.row || 0);
+        const entry = getActiveEntry();
+        const item = entry.items[row - 1];
 
-        if (!row) return;
+        if (!item) return;
 
         const categorySelect = document.querySelector(`.item-category[data-row="${row}"]`);
         const machineSelect = document.querySelector(`.item-machine[data-row="${row}"]`);
         const productSelect = document.querySelector(`.item-product[data-row="${row}"]`);
+        const quantityInput = document.querySelector(`.item-quantity[data-row="${row}"]`);
 
         if (target.classList.contains("item-category")) {
-          const category = categorySelect.value;
-
-          machineSelect.value = "";
-          productSelect.value = "";
-
-          fillMachinesForCategory(machineSelect, category);
+          item.category = categorySelect.value;
+          item.machineId = "";
+          item.productId = "";
+          fillMachinesForCategory(machineSelect, item.category);
           fillProductsForCategoryAndMachine(productSelect, "", "");
         }
 
         if (target.classList.contains("item-machine")) {
-          const category = categorySelect.value;
-          const machineId = machineSelect.value;
+          item.machineId = machineSelect.value;
+          item.productId = "";
+          fillProductsForCategoryAndMachine(productSelect, item.category, item.machineId);
+        }
 
-          productSelect.value = "";
-          fillProductsForCategoryAndMachine(productSelect, category, machineId);
+        if (target.classList.contains("item-product")) {
+          item.productId = productSelect.value;
+        }
+
+        if (target.classList.contains("item-quantity")) {
+          item.quantity = quantityInput.value;
+        }
+
+        renderWorkerEntries();
+      });
+
+      itemsBody.addEventListener("input", event => {
+        const target = event.target;
+        const row = Number(target.dataset.row || 0);
+        const item = getActiveEntry().items[row - 1];
+
+        if (!item) return;
+
+        if (target.classList.contains("item-quantity")) {
+          item.quantity = target.value;
+          renderWorkerEntries();
         }
       });
 
@@ -1672,17 +1798,30 @@
         if (!btn) return;
 
         const removeRow = Number(btn.dataset.row || 0);
-        removeProductRow(removeRow);
+        const entry = getActiveEntry();
+
+        if (entry.items.length <= 1) return;
+
+        entry.items.splice(removeRow - 1, 1);
+        renderProductRows();
       });
 
       addProductRowBtn.addEventListener("click", () => {
-        if (visibleProductRows >= MAX_PRODUCTS) {
+        const entry = getActiveEntry();
+
+        if (entry.items.length >= MAX_PRODUCTS) {
           showMessage(t("maxProductsReached"), "warning");
           return;
         }
 
-        visibleProductRows += 1;
-        renderProductRows(true);
+        entry.items.push({
+          category: "",
+          machineId: "",
+          productId: "",
+          quantity: ""
+        });
+
+        renderProductRows();
       });
 
       defectImage.addEventListener("change", handleImageSelect);
@@ -1719,41 +1858,6 @@
 
         localStorage.removeItem(SESSION_KEY);
         window.location.href = "index.html";
-      });
-    }
-
-    function removeProductRow(rowNumber) {
-      const state = getCurrentProductState();
-
-      if (state.length <= 1) return;
-
-      state.splice(rowNumber - 1, 1);
-      visibleProductRows = Math.max(1, visibleProductRows - 1);
-
-      itemsBody.innerHTML = "";
-
-      for (let i = 1; i <= visibleProductRows; i++) {
-        const temporary = document.createElement("div");
-        temporary.innerHTML = "";
-      }
-
-      renderProductRows(false);
-
-      state.forEach((row, index) => {
-        const i = index + 1;
-        const categorySelect = document.querySelector(`.item-category[data-row="${i}"]`);
-        const machineSelect = document.querySelector(`.item-machine[data-row="${i}"]`);
-        const productSelect = document.querySelector(`.item-product[data-row="${i}"]`);
-        const quantityInput = document.querySelector(`.item-quantity[data-row="${i}"]`);
-
-        if (!categorySelect || !machineSelect || !productSelect || !quantityInput) return;
-
-        categorySelect.value = row.category || "";
-        fillMachinesForCategory(machineSelect, row.category || "");
-        machineSelect.value = row.machineId || "";
-        fillProductsForCategoryAndMachine(productSelect, row.category || "", row.machineId || "");
-        productSelect.value = row.productId || "";
-        quantityInput.value = row.quantity || "";
       });
     }
 
@@ -1802,9 +1906,9 @@
       event.preventDefault();
       clearMessage();
 
-      const payload = buildPayload();
+      const payloads = buildPayloads();
 
-      if (!payload) return;
+      if (!payloads) return;
 
       const confirmed = confirm(t("saveConfirm"));
 
@@ -1813,15 +1917,17 @@
       setSaving(true);
 
       try {
-        const result = await apiPost(payload);
+        for (let i = 0; i < payloads.length; i++) {
+          const result = await apiPost(payloads[i]);
 
-        setSaving(false);
-
-        if (!result.success) {
-          showMessage(result.message || t("saveFailed"), "error");
-          return;
+          if (!result.success) {
+            setSaving(false);
+            showMessage(result.message || t("saveFailed"), "error");
+            return;
+          }
         }
 
+        setSaving(false);
         showMessage(t("saveSuccess"), "success");
         resetForm();
 
@@ -1832,25 +1938,13 @@
       }
     }
 
-    function buildPayload() {
+    function buildPayloads() {
       const dateValue = productionDate.value;
-      const shiftValue = shift.value;
-      const workerValue = workerId.value;
       const wasteValue = Number(rawWasteKg.value || 0);
       const notesValue = notes.value.trim();
 
       if (!dateValue) {
         showMessage(t("chooseDate"), "error");
-        return null;
-      }
-
-      if (!shiftValue) {
-        showMessage(t("chooseShiftMsg"), "error");
-        return null;
-      }
-
-      if (!workerValue) {
-        showMessage(t("chooseWorkerMsg"), "error");
         return null;
       }
 
@@ -1861,50 +1955,77 @@
         return null;
       }
 
-      const itemsResult = collectItems();
+      const payloads = [];
 
-      if (!itemsResult.valid) {
+      for (let entryIndex = 0; entryIndex < workerEntries.length; entryIndex++) {
+        const entry = workerEntries[entryIndex];
+        const rowNumber = entryIndex + 1;
+
+        if (!entry.workerId && !entry.shift && entry.items.every(item => !item.productId && !item.machineId && !item.quantity)) {
+          continue;
+        }
+
+        if (!entry.workerId) {
+          showMessage(t("chooseWorkerMsg")(rowNumber), "error");
+          return null;
+        }
+
+        if (!entry.shift) {
+          showMessage(t("chooseShiftMsg")(rowNumber), "error");
+          return null;
+        }
+
+        const itemsResult = collectItems(entry);
+
+        if (!itemsResult.valid) {
+          return null;
+        }
+
+        if (!itemsResult.items.length) {
+          showMessage(t("needOneItem")(rowNumber), "error");
+          return null;
+        }
+
+        payloads.push({
+          action: "saveProduction",
+          token: currentUser.token,
+          production: {
+            date: dateValue,
+            shift: entry.shift,
+            workerId: entry.workerId,
+            rawWasteKg: wasteValue,
+            notes: notesValue,
+            image: selectedImage
+          },
+          items: itemsResult.items
+        });
+      }
+
+      if (!payloads.length) {
+        showMessage(t("needOneItem")(1), "error");
         return null;
       }
 
-      if (!itemsResult.items.length) {
-        showMessage(t("needOneItem"), "error");
-        return null;
-      }
-
-      return {
-        action: "saveProduction",
-        token: currentUser.token,
-        production: {
-          date: dateValue,
-          shift: shiftValue,
-          workerId: workerValue,
-          rawWasteKg: wasteValue,
-          notes: notesValue,
-          image: selectedImage
-        },
-        items: itemsResult.items
-      };
+      return payloads;
     }
 
-    function collectItems() {
+    function collectItems(entry) {
       const items = [];
 
-      for (let i = 1; i <= visibleProductRows; i++) {
-        const productSelect = document.querySelector(`.item-product[data-row="${i}"]`);
-        const machineSelect = document.querySelector(`.item-machine[data-row="${i}"]`);
-        const quantityInput = document.querySelector(`.item-quantity[data-row="${i}"]`);
+      for (let i = 0; i < entry.items.length; i++) {
+        const rowNumber = i + 1;
+        const item = entry.items[i];
 
-        const productId = productSelect.value;
-        const machineId = machineSelect.value;
-        const quantity = Number(quantityInput.value || 0);
+        const productId = item.productId;
+        const machineId = item.machineId;
+        const quantity = Number(item.quantity || 0);
 
         if (!productId && !machineId && !quantity) {
           continue;
         }
 
         if (!productId || !machineId || quantity <= 0) {
-          showMessage(t("completeRow")(i), "error");
+          showMessage(t("completeRow")(rowNumber), "error");
           return {
             valid: false,
             items: []
@@ -1935,7 +2056,24 @@
       imagePreviewBox.style.display = "none";
       removeImageBtn.style.display = "none";
 
-      visibleProductRows = 1;
+      workerEntries = [
+        {
+          workerId: "",
+          shift: "",
+          items: [
+            {
+              category: "",
+              machineId: "",
+              productId: "",
+              quantity: ""
+            }
+          ]
+        }
+      ];
+
+      activeEntryIndex = 0;
+
+      renderWorkerEntries();
       renderProductRows();
       initDateRules();
     }
@@ -2093,10 +2231,9 @@
     }
 
     function initLanguage() {
-      languageSelect.value = currentLang;
-
-      languageSelect.addEventListener("change", () => {
-        applyLanguage(languageSelect.value);
+      languageToggleBtn.addEventListener("click", () => {
+        const nextLang = currentLang === "ar" ? "en" : "ar";
+        applyLanguage(nextLang);
       });
     }
 
@@ -2113,6 +2250,15 @@
       }
 
       return "Inactive";
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
   </script>
 </body>
