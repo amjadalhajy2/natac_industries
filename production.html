@@ -18,8 +18,8 @@
       --text: #101827;
       --muted: #667085;
       --line: rgba(16, 24, 39, 0.12);
-      --card: rgba(255, 255, 255, 0.86);
-      --card-strong: rgba(255, 255, 255, 0.96);
+      --card: rgba(255, 255, 255, 0.88);
+      --card-strong: rgba(255, 255, 255, 0.98);
       --input: rgba(255, 255, 255, 0.98);
       --blue: #0066ff;
       --blue-dark: #004ec2;
@@ -404,7 +404,7 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -475,11 +475,6 @@
 
     .date-hint:empty {
       display: none;
-    }
-
-    .file-box {
-      display: grid;
-      gap: 12px;
     }
 
     .preview {
@@ -559,43 +554,28 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .batch-table-wrap {
-      margin-top: 20px;
       border-radius: 16px;
       overflow-x: auto;
       border: 1px solid rgba(16,24,39,0.16);
       background: #fff;
     }
 
-    .batch-title-row {
-      margin-top: 22px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .batch-title-row h3 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 900;
-    }
-
     .batch-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 620px;
+      min-width: 680px;
       background: #fff;
     }
 
     .batch-table th,
     .batch-table td {
       border: 1px solid rgba(16,24,39,0.14);
-      padding: 8px;
+      padding: 10px;
       text-align: center;
       vertical-align: middle;
     }
@@ -609,15 +589,16 @@
 
     .batch-table td {
       background: #fff;
+      font-weight: 800;
+    }
+
+    .batch-table tr {
+      cursor: pointer;
     }
 
     .batch-table tr.active-entry td {
       background: #f0f7ff;
-    }
-
-    .batch-table select {
-      min-height: 42px;
-      border-radius: 10px;
+      color: var(--blue-dark);
     }
 
     .product-count-pill {
@@ -676,6 +657,12 @@
       box-shadow: 0 8px 20px rgba(16,24,39,0.06);
     }
 
+    .btn-success {
+      background: #16a34a;
+      color: #fff;
+      box-shadow: 0 14px 26px rgba(22, 163, 74, 0.20);
+    }
+
     .btn-danger {
       background: rgba(220, 38, 38, 0.10);
       color: var(--red);
@@ -683,10 +670,10 @@
     }
 
     .btn-small {
-      min-height: 40px;
-      border-radius: 14px;
-      padding: 0 14px;
-      font-size: 14px;
+      min-height: 38px;
+      border-radius: 12px;
+      padding: 0 13px;
+      font-size: 13px;
     }
 
     .btn:disabled {
@@ -972,16 +959,36 @@
             </div>
 
             <div class="field">
+              <label for="shift" data-i18n="shift">الشفت</label>
+              <select id="shift" required>
+                <option value="" data-i18n="chooseShift">اختر الشفت</option>
+                <option value="صباحي" data-i18n="morning">صباحي</option>
+                <option value="مسائي" data-i18n="evening">مسائي</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="workerId" data-i18n="workerName">اسم العامل</label>
+              <select id="workerId" required>
+                <option value="" data-i18n="loading">جاري التحميل...</option>
+              </select>
+            </div>
+
+            <div class="field">
               <label for="rawWasteKg" data-i18n="rawWasteKg">هدر المواد الخام (كجم)</label>
               <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="كجم">
             </div>
 
-            <div class="field">
-              <label for="defectImage" data-i18n="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
-              <input type="file" id="defectImage" accept="image/*">
+            <div class="field full">
+              <label for="notes" data-i18n="notes">الملاحظات</label>
+              <textarea id="notes"></textarea>
             </div>
 
             <div class="field full">
+              <label for="defectImage" data-i18n="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
+
+              <input type="file" id="defectImage" accept="image/*">
+
               <div class="preview" id="imagePreviewBox">
                 <img id="imagePreview" alt="Preview">
                 <div>
@@ -995,17 +1002,10 @@
                 حذف الصورة
               </button>
             </div>
-
-            <div class="field full">
-              <label for="notes" data-i18n="notes">الملاحظات</label>
-              <textarea id="notes"></textarea>
-            </div>
           </div>
-        </div>
-      </section>
 
-      <section class="panel">
-        <div class="panel-content">
+          <div style="height: 20px;"></div>
+
           <div class="panel-header">
             <h2 data-i18n="production">الإنتاج</h2>
           </div>
@@ -1017,14 +1017,19 @@
               <span>＋</span>
               <span data-i18n="addProductRow">أضف منتج</span>
             </button>
-          </div>
 
-          <div class="batch-title-row">
-            <h3 data-i18n="workersProductionTable">جدول إنتاج العمال</h3>
-            <button class="btn btn-secondary btn-small" type="button" id="addWorkerEntryBtn">
-              <span>＋</span>
-              <span data-i18n="addWorkerEntry">إضافة عامل</span>
+            <button class="btn btn-success" type="button" id="addEntryToTableBtn">
+              <span>✓</span>
+              <span id="addEntryToTableText" data-i18n="addEntryToTable">إضافة المدخلات إلى الجدول</span>
             </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-content">
+          <div class="panel-header">
+            <h2 data-i18n="workersProductionTable">جدول إنتاج العمال</h2>
           </div>
 
           <div class="batch-table-wrap">
@@ -1034,9 +1039,10 @@
                   <th data-i18n="workerName">اسم العامل</th>
                   <th data-i18n="shift">الشفت</th>
                   <th data-i18n="enteredProductsCount">عدد المنتجات المدخلة</th>
+                  <th data-i18n="actions">الإجراء</th>
                 </tr>
               </thead>
-              <tbody id="workerEntriesBody"></tbody>
+              <tbody id="entriesTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -1048,14 +1054,6 @@
             <button class="btn btn-primary" type="submit" id="saveBtn" data-i18n="saveProduction">
               حفظ الإنتاج
             </button>
-
-            <button class="btn btn-secondary" type="button" id="resetBtn" data-i18n="resetForm">
-              تفريغ النموذج
-            </button>
-
-            <a class="btn btn-secondary" href="history.html" data-i18n="viewHistory">
-              عرض سجل الإنتاج
-            </a>
           </div>
         </div>
       </section>
@@ -1108,8 +1106,6 @@
         addProductRow: "أضف منتج",
         removeProductRow: "حذف المنتج",
         saveProduction: "حفظ الإنتاج",
-        resetForm: "تفريغ النموذج",
-        viewHistory: "عرض سجل الإنتاج",
         chooseWorker: "اختر العامل",
         chooseCategory: "اختر الصنف",
         chooseProduct: "اختر المنتج",
@@ -1117,7 +1113,10 @@
         quantityPlaceholder: "الكمية",
         workersProductionTable: "جدول إنتاج العمال",
         enteredProductsCount: "عدد المنتجات المدخلة",
-        addWorkerEntry: "إضافة عامل",
+        addEntryToTable: "إضافة المدخلات إلى الجدول",
+        updateEntryInTable: "تحديث المدخلات في الجدول",
+        actions: "الإجراء",
+        deleteEntry: "حذف",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         supervisorDateHint: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
@@ -1132,19 +1131,23 @@
         largeImage: "حجم الصورة كبير جدًا. يرجى اختيار صورة أقل من 8MB.",
         imageReady: size => "تم ضغط الصورة إلى حوالي " + size,
         imageFailed: "تعذر تجهيز الصورة. جرّب صورة أخرى.",
-        resetConfirm: "هل تريد تفريغ النموذج؟",
-        saveConfirm: "هل أنت متأكد من حفظ بيانات الإنتاج لجميع العمال المدخلين؟",
+        saveConfirm: "هل أنت متأكد من حفظ بيانات الإنتاج لجميع العمال في الجدول؟",
         chooseDate: "يرجى اختيار التاريخ.",
-        chooseWorkerMsg: row => "يرجى اختيار العامل في الصف رقم " + row + ".",
-        chooseShiftMsg: row => "يرجى اختيار الشفت في الصف رقم " + row + ".",
+        chooseShiftMsg: "يرجى اختيار الشفت.",
+        chooseWorkerMsg: "يرجى اختيار العامل.",
         supervisorTodayOnly: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
-        needOneItem: row => "يرجى إدخال منتج واحد على الأقل للعامل في الصف رقم " + row + ".",
+        needOneItem: "يرجى إدخال منتج واحد على الأقل مع الكمية.",
         completeRow: row => "يرجى إكمال بيانات المنتج رقم " + row + " أو حذف البطاقة.",
+        addEntrySuccess: "تمت إضافة المدخلات إلى الجدول.",
+        updateEntrySuccess: "تم تحديث المدخلات في الجدول.",
+        noEntriesToSave: "لا توجد مدخلات في جدول إنتاج العمال للحفظ.",
+        deleteConfirm: "هل تريد حذف هذا الصف من الجدول؟",
         saveSuccess: "تم حفظ بيانات الإنتاج بنجاح.",
         saveFailed: "تعذر حفظ بيانات الإنتاج.",
         saveServerError: "تعذر الاتصال بالخادم أثناء الحفظ. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         saving: "جاري الحفظ...",
-        maxProductsReached: "تم الوصول إلى الحد الأقصى 5 منتجات."
+        maxProductsReached: "تم الوصول إلى الحد الأقصى 5 منتجات.",
+        emptyTable: "لا توجد مدخلات مضافة بعد."
       },
       en: {
         htmlLang: "en",
@@ -1184,8 +1187,6 @@
         addProductRow: "Add Product",
         removeProductRow: "Remove Product",
         saveProduction: "Save Production",
-        resetForm: "Clear Form",
-        viewHistory: "View Production History",
         chooseWorker: "Choose worker",
         chooseCategory: "Choose category",
         chooseProduct: "Choose product",
@@ -1193,7 +1194,10 @@
         quantityPlaceholder: "Quantity",
         workersProductionTable: "Workers Production Table",
         enteredProductsCount: "Entered Products Count",
-        addWorkerEntry: "Add Worker",
+        addEntryToTable: "Add Entry to Table",
+        updateEntryInTable: "Update Entry in Table",
+        actions: "Action",
+        deleteEntry: "Delete",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         supervisorDateHint: "Supervisor can enter today’s production only.",
@@ -1208,19 +1212,23 @@
         largeImage: "Image size is too large. Please select an image under 8MB.",
         imageReady: size => "Image compressed to about " + size,
         imageFailed: "Unable to prepare the image. Try another image.",
-        resetConfirm: "Do you want to clear the form?",
-        saveConfirm: "Are you sure you want to save production data for all entered workers?",
+        saveConfirm: "Are you sure you want to save all workers production entries?",
         chooseDate: "Please choose the date.",
-        chooseWorkerMsg: row => "Please choose the worker in row " + row + ".",
-        chooseShiftMsg: row => "Please choose the shift in row " + row + ".",
+        chooseShiftMsg: "Please choose the shift.",
+        chooseWorkerMsg: "Please choose the worker.",
         supervisorTodayOnly: "Supervisor can enter today’s production only.",
-        needOneItem: row => "Please enter at least one product for the worker in row " + row + ".",
+        needOneItem: "Please enter at least one product with quantity.",
         completeRow: row => "Please complete product " + row + " or remove the card.",
+        addEntrySuccess: "Entry added to the table.",
+        updateEntrySuccess: "Entry updated in the table.",
+        noEntriesToSave: "There are no entries in the workers production table to save.",
+        deleteConfirm: "Do you want to delete this row from the table?",
         saveSuccess: "Production data saved successfully.",
         saveFailed: "Unable to save production data.",
         saveServerError: "Unable to connect to the server while saving. Check Apps Script URL or internet connection.",
         saving: "Saving...",
-        maxProductsReached: "Maximum of 5 products reached."
+        maxProductsReached: "Maximum of 5 products reached.",
+        emptyTable: "No entries added yet."
       }
     };
 
@@ -1231,23 +1239,16 @@
     let machines = [];
     let categories = [];
     let selectedImage = null;
-
-    let workerEntries = [
+    let currentItems = [
       {
-        workerId: "",
-        shift: "",
-        items: [
-          {
-            category: "",
-            machineId: "",
-            productId: "",
-            quantity: ""
-          }
-        ]
+        category: "",
+        machineId: "",
+        productId: "",
+        quantity: ""
       }
     ];
-
-    let activeEntryIndex = 0;
+    let productionEntries = [];
+    let editingEntryIndex = null;
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
@@ -1257,6 +1258,8 @@
 
     const productionForm = document.getElementById("productionForm");
     const productionDate = document.getElementById("productionDate");
+    const shift = document.getElementById("shift");
+    const workerId = document.getElementById("workerId");
     const rawWasteKg = document.getElementById("rawWasteKg");
     const notes = document.getElementById("notes");
     const defectImage = document.getElementById("defectImage");
@@ -1269,11 +1272,11 @@
 
     const itemsBody = document.getElementById("itemsBody");
     const addProductRowBtn = document.getElementById("addProductRowBtn");
-    const addWorkerEntryBtn = document.getElementById("addWorkerEntryBtn");
-    const workerEntriesBody = document.getElementById("workerEntriesBody");
+    const addEntryToTableBtn = document.getElementById("addEntryToTableBtn");
+    const addEntryToTableText = document.getElementById("addEntryToTableText");
+    const entriesTableBody = document.getElementById("entriesTableBody");
 
     const saveBtn = document.getElementById("saveBtn");
-    const resetBtn = document.getElementById("resetBtn");
     const dateHint = document.getElementById("dateHint");
 
     const userName = document.getElementById("userName");
@@ -1293,8 +1296,8 @@
       initSidebar();
       initLanguage();
       initDateRules();
-      renderWorkerEntries();
       renderProductRows();
+      renderEntriesTable();
       loadInitialData();
       bindEvents();
     });
@@ -1341,8 +1344,10 @@
       }
 
       initDateRules();
-      renderWorkerEntries();
+      renderWorkers(true);
       renderProductRows();
+      renderEntriesTable();
+      updateEntryButtonText();
     }
 
     function protectPage() {
@@ -1446,7 +1451,7 @@
         machines = result.machines || [];
         categories = result.categories || [];
 
-        renderWorkerEntries();
+        renderWorkers();
         renderProductRows();
 
         if (!workers.length) {
@@ -1473,55 +1478,27 @@
       }
     }
 
-    function getActiveEntry() {
-      return workerEntries[activeEntryIndex];
-    }
+    function renderWorkers(preserveValue = false) {
+      const current = workerId.value;
 
-    function renderWorkerEntries() {
-      workerEntriesBody.innerHTML = "";
+      workerId.innerHTML = `<option value="">${t("chooseWorker")}</option>`;
 
-      workerEntries.forEach((entry, index) => {
-        const tr = document.createElement("tr");
-        tr.className = index === activeEntryIndex ? "active-entry" : "";
-        tr.dataset.index = index;
-
-        tr.innerHTML = `
-          <td>
-            <select class="worker-entry-worker" data-index="${index}">
-              <option value="">${t("chooseWorker")}</option>
-              ${workers.map(worker => {
-                const selected = String(worker.WorkerID || "") === String(entry.workerId || "") ? "selected" : "";
-                return `<option value="${escapeHtml(worker.WorkerID || "")}" ${selected}>${escapeHtml(worker.WorkerName || "")}</option>`;
-              }).join("")}
-            </select>
-          </td>
-
-          <td>
-            <select class="worker-entry-shift" data-index="${index}">
-              <option value="">${t("chooseShift")}</option>
-              <option value="صباحي" ${entry.shift === "صباحي" ? "selected" : ""}>${t("morning")}</option>
-              <option value="مسائي" ${entry.shift === "مسائي" ? "selected" : ""}>${t("evening")}</option>
-            </select>
-          </td>
-
-          <td>
-            <span class="product-count-pill">${countEnteredProducts(entry)}</span>
-          </td>
-        `;
-
-        workerEntriesBody.appendChild(tr);
+      workers.forEach(worker => {
+        const option = document.createElement("option");
+        option.value = worker.WorkerID;
+        option.textContent = worker.WorkerName;
+        workerId.appendChild(option);
       });
-    }
 
-    function countEnteredProducts(entry) {
-      return entry.items.filter(item => item.productId && item.machineId && Number(item.quantity || 0) > 0).length;
+      if (preserveValue && current) {
+        workerId.value = current;
+      }
     }
 
     function renderProductRows() {
-      const entry = getActiveEntry();
       itemsBody.innerHTML = "";
 
-      entry.items.forEach((item, index) => {
+      currentItems.forEach((item, index) => {
         const rowNumber = index + 1;
 
         const card = document.createElement("div");
@@ -1591,12 +1568,11 @@
       });
 
       updateAddProductButton();
-      renderWorkerEntries();
     }
 
     function updateAddProductButton() {
-      addProductRowBtn.disabled = getActiveEntry().items.length >= MAX_PRODUCTS;
-      addProductRowBtn.style.display = getActiveEntry().items.length >= MAX_PRODUCTS ? "none" : "inline-flex";
+      addProductRowBtn.disabled = currentItems.length >= MAX_PRODUCTS;
+      addProductRowBtn.style.display = currentItems.length >= MAX_PRODUCTS ? "none" : "inline-flex";
     }
 
     function fillCategories(select) {
@@ -1695,57 +1671,10 @@
     }
 
     function bindEvents() {
-      workerEntriesBody.addEventListener("click", event => {
-        const tr = event.target.closest("tr");
-        if (!tr) return;
-
-        activeEntryIndex = Number(tr.dataset.index || 0);
-        renderWorkerEntries();
-        renderProductRows();
-      });
-
-      workerEntriesBody.addEventListener("change", event => {
-        const target = event.target;
-        const index = Number(target.dataset.index || 0);
-
-        if (!workerEntries[index]) return;
-
-        if (target.classList.contains("worker-entry-worker")) {
-          workerEntries[index].workerId = target.value;
-        }
-
-        if (target.classList.contains("worker-entry-shift")) {
-          workerEntries[index].shift = target.value;
-        }
-
-        activeEntryIndex = index;
-        renderWorkerEntries();
-      });
-
-      addWorkerEntryBtn.addEventListener("click", () => {
-        workerEntries.push({
-          workerId: "",
-          shift: "",
-          items: [
-            {
-              category: "",
-              machineId: "",
-              productId: "",
-              quantity: ""
-            }
-          ]
-        });
-
-        activeEntryIndex = workerEntries.length - 1;
-        renderWorkerEntries();
-        renderProductRows();
-      });
-
       itemsBody.addEventListener("change", event => {
         const target = event.target;
         const row = Number(target.dataset.row || 0);
-        const entry = getActiveEntry();
-        const item = entry.items[row - 1];
+        const item = currentItems[row - 1];
 
         if (!item) return;
 
@@ -1775,20 +1704,17 @@
         if (target.classList.contains("item-quantity")) {
           item.quantity = quantityInput.value;
         }
-
-        renderWorkerEntries();
       });
 
       itemsBody.addEventListener("input", event => {
         const target = event.target;
         const row = Number(target.dataset.row || 0);
-        const item = getActiveEntry().items[row - 1];
+        const item = currentItems[row - 1];
 
         if (!item) return;
 
         if (target.classList.contains("item-quantity")) {
           item.quantity = target.value;
-          renderWorkerEntries();
         }
       });
 
@@ -1798,23 +1724,20 @@
         if (!btn) return;
 
         const removeRow = Number(btn.dataset.row || 0);
-        const entry = getActiveEntry();
 
-        if (entry.items.length <= 1) return;
+        if (currentItems.length <= 1) return;
 
-        entry.items.splice(removeRow - 1, 1);
+        currentItems.splice(removeRow - 1, 1);
         renderProductRows();
       });
 
       addProductRowBtn.addEventListener("click", () => {
-        const entry = getActiveEntry();
-
-        if (entry.items.length >= MAX_PRODUCTS) {
+        if (currentItems.length >= MAX_PRODUCTS) {
           showMessage(t("maxProductsReached"), "warning");
           return;
         }
 
-        entry.items.push({
+        currentItems.push({
           category: "",
           machineId: "",
           productId: "",
@@ -1822,6 +1745,26 @@
         });
 
         renderProductRows();
+      });
+
+      addEntryToTableBtn.addEventListener("click", handleAddOrUpdateEntry);
+
+      entriesTableBody.addEventListener("click", event => {
+        const deleteBtn = event.target.closest(".delete-entry-btn");
+
+        if (deleteBtn) {
+          event.stopPropagation();
+          const index = Number(deleteBtn.dataset.index);
+          deleteEntry(index);
+          return;
+        }
+
+        const row = event.target.closest("tr[data-index]");
+
+        if (!row) return;
+
+        const index = Number(row.dataset.index);
+        loadEntryForEdit(index);
       });
 
       defectImage.addEventListener("change", handleImageSelect);
@@ -1832,12 +1775,6 @@
         imagePreview.src = "";
         imagePreviewBox.style.display = "none";
         removeImageBtn.style.display = "none";
-      });
-
-      resetBtn.addEventListener("click", () => {
-        if (confirm(t("resetConfirm"))) {
-          resetForm();
-        }
       });
 
       productionForm.addEventListener("submit", handleSubmit);
@@ -1859,6 +1796,199 @@
         localStorage.removeItem(SESSION_KEY);
         window.location.href = "index.html";
       });
+    }
+
+    function handleAddOrUpdateEntry() {
+      clearMessage();
+
+      const entry = buildCurrentEntry();
+
+      if (!entry) return;
+
+      if (editingEntryIndex === null) {
+        productionEntries.push(entry);
+        showMessage(t("addEntrySuccess"), "success");
+      } else {
+        productionEntries[editingEntryIndex] = entry;
+        editingEntryIndex = null;
+        showMessage(t("updateEntrySuccess"), "success");
+      }
+
+      clearCurrentEntryForm();
+      renderEntriesTable();
+      updateEntryButtonText();
+    }
+
+    function buildCurrentEntry() {
+      const shiftValue = shift.value;
+      const workerValue = workerId.value;
+
+      if (!shiftValue) {
+        showMessage(t("chooseShiftMsg"), "error");
+        return null;
+      }
+
+      if (!workerValue) {
+        showMessage(t("chooseWorkerMsg"), "error");
+        return null;
+      }
+
+      const itemsResult = collectItems(currentItems);
+
+      if (!itemsResult.valid) {
+        return null;
+      }
+
+      if (!itemsResult.items.length) {
+        showMessage(t("needOneItem"), "error");
+        return null;
+      }
+
+      return {
+        workerId: workerValue,
+        shift: shiftValue,
+        items: JSON.parse(JSON.stringify(currentItems))
+      };
+    }
+
+    function collectItems(itemsSource) {
+      const items = [];
+
+      for (let i = 0; i < itemsSource.length; i++) {
+        const rowNumber = i + 1;
+        const item = itemsSource[i];
+
+        const productId = item.productId;
+        const machineId = item.machineId;
+        const quantity = Number(item.quantity || 0);
+
+        if (!productId && !machineId && !quantity) {
+          continue;
+        }
+
+        if (!productId || !machineId || quantity <= 0) {
+          showMessage(t("completeRow")(rowNumber), "error");
+          return {
+            valid: false,
+            items: []
+          };
+        }
+
+        items.push({
+          productId: productId,
+          machineId: machineId,
+          quantity: quantity
+        });
+      }
+
+      return {
+        valid: true,
+        items: items
+      };
+    }
+
+    function renderEntriesTable() {
+      entriesTableBody.innerHTML = "";
+
+      if (!productionEntries.length) {
+        entriesTableBody.innerHTML = `
+          <tr>
+            <td colspan="4">${t("emptyTable")}</td>
+          </tr>
+        `;
+        return;
+      }
+
+      productionEntries.forEach((entry, index) => {
+        const worker = workers.find(w => String(w.WorkerID) === String(entry.workerId));
+        const workerNameText = worker ? worker.WorkerName : entry.workerId;
+        const count = collectItems(entry.items).items.length;
+
+        const tr = document.createElement("tr");
+        tr.dataset.index = index;
+        tr.className = editingEntryIndex === index ? "active-entry" : "";
+
+        tr.innerHTML = `
+          <td>${escapeHtml(workerNameText)}</td>
+          <td>${escapeHtml(entry.shift)}</td>
+          <td><span class="product-count-pill">${count}</span></td>
+          <td>
+            <button class="btn btn-danger btn-small delete-entry-btn" type="button" data-index="${index}">
+              ${t("deleteEntry")}
+            </button>
+          </td>
+        `;
+
+        entriesTableBody.appendChild(tr);
+      });
+    }
+
+    function loadEntryForEdit(index) {
+      const entry = productionEntries[index];
+
+      if (!entry) return;
+
+      editingEntryIndex = index;
+      workerId.value = entry.workerId || "";
+      shift.value = entry.shift || "";
+
+      currentItems = JSON.parse(JSON.stringify(entry.items || []));
+      if (!currentItems.length) {
+        currentItems = [
+          {
+            category: "",
+            machineId: "",
+            productId: "",
+            quantity: ""
+          }
+        ];
+      }
+
+      renderProductRows();
+      renderEntriesTable();
+      updateEntryButtonText();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function deleteEntry(index) {
+      if (!confirm(t("deleteConfirm"))) {
+        return;
+      }
+
+      productionEntries.splice(index, 1);
+
+      if (editingEntryIndex === index) {
+        editingEntryIndex = null;
+        clearCurrentEntryForm();
+      } else if (editingEntryIndex !== null && editingEntryIndex > index) {
+        editingEntryIndex -= 1;
+      }
+
+      renderEntriesTable();
+      updateEntryButtonText();
+    }
+
+    function updateEntryButtonText() {
+      addEntryToTableText.textContent =
+        editingEntryIndex === null ? t("addEntryToTable") : t("updateEntryInTable");
+    }
+
+    function clearCurrentEntryForm() {
+      workerId.value = "";
+      shift.value = "";
+      currentItems = [
+        {
+          category: "",
+          machineId: "",
+          productId: "",
+          quantity: ""
+        }
+      ];
+      renderProductRows();
     }
 
     async function handleImageSelect(event) {
@@ -1929,7 +2059,7 @@
 
         setSaving(false);
         showMessage(t("saveSuccess"), "success");
-        resetForm();
+        resetAfterSave();
 
       } catch (error) {
         console.error(error);
@@ -1955,34 +2085,19 @@
         return null;
       }
 
+      if (!productionEntries.length) {
+        showMessage(t("noEntriesToSave"), "error");
+        return null;
+      }
+
       const payloads = [];
 
-      for (let entryIndex = 0; entryIndex < workerEntries.length; entryIndex++) {
-        const entry = workerEntries[entryIndex];
-        const rowNumber = entryIndex + 1;
+      for (let i = 0; i < productionEntries.length; i++) {
+        const entry = productionEntries[i];
+        const itemsResult = collectItems(entry.items);
 
-        if (!entry.workerId && !entry.shift && entry.items.every(item => !item.productId && !item.machineId && !item.quantity)) {
-          continue;
-        }
-
-        if (!entry.workerId) {
-          showMessage(t("chooseWorkerMsg")(rowNumber), "error");
-          return null;
-        }
-
-        if (!entry.shift) {
-          showMessage(t("chooseShiftMsg")(rowNumber), "error");
-          return null;
-        }
-
-        const itemsResult = collectItems(entry);
-
-        if (!itemsResult.valid) {
-          return null;
-        }
-
-        if (!itemsResult.items.length) {
-          showMessage(t("needOneItem")(rowNumber), "error");
+        if (!itemsResult.valid || !itemsResult.items.length) {
+          showMessage(t("needOneItem"), "error");
           return null;
         }
 
@@ -2001,51 +2116,10 @@
         });
       }
 
-      if (!payloads.length) {
-        showMessage(t("needOneItem")(1), "error");
-        return null;
-      }
-
       return payloads;
     }
 
-    function collectItems(entry) {
-      const items = [];
-
-      for (let i = 0; i < entry.items.length; i++) {
-        const rowNumber = i + 1;
-        const item = entry.items[i];
-
-        const productId = item.productId;
-        const machineId = item.machineId;
-        const quantity = Number(item.quantity || 0);
-
-        if (!productId && !machineId && !quantity) {
-          continue;
-        }
-
-        if (!productId || !machineId || quantity <= 0) {
-          showMessage(t("completeRow")(rowNumber), "error");
-          return {
-            valid: false,
-            items: []
-          };
-        }
-
-        items.push({
-          productId: productId,
-          machineId: machineId,
-          quantity: quantity
-        });
-      }
-
-      return {
-        valid: true,
-        items: items
-      };
-    }
-
-    function resetForm() {
+    function resetAfterSave() {
       const today = getTodayISO();
 
       productionForm.reset();
@@ -2056,25 +2130,21 @@
       imagePreviewBox.style.display = "none";
       removeImageBtn.style.display = "none";
 
-      workerEntries = [
+      currentItems = [
         {
-          workerId: "",
-          shift: "",
-          items: [
-            {
-              category: "",
-              machineId: "",
-              productId: "",
-              quantity: ""
-            }
-          ]
+          category: "",
+          machineId: "",
+          productId: "",
+          quantity: ""
         }
       ];
 
-      activeEntryIndex = 0;
+      productionEntries = [];
+      editingEntryIndex = null;
 
-      renderWorkerEntries();
       renderProductRows();
+      renderEntriesTable();
+      updateEntryButtonText();
       initDateRules();
     }
 
