@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>إدخال الإنتاج اليومي | نظام الإنتاج</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --card: #ffffff;
+      --text: #2f241b;
+      --muted: #7b6a5c;
+      --primary: #8b5e34;
+      --primary-dark: #6f4727;
+      --primary-soft: rgba(139, 94, 52, 0.10);
+      --border: rgba(139, 94, 52, 0.18);
+      --danger: #b42318;
+      --success: #137333;
+      --warning: #b7791f;
+      --shadow: 0 18px 45px rgba(58, 35, 18, 0.10);
+      --radius: 22px;
+      --sidebar-width: 280px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Tajawal", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(139, 94, 52, 0.16), transparent 32%),
+        linear-gradient(135deg, #f7f2ea 0%, #eee3d4 100%);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: rgba(255, 255, 255, 0.88);
+      border-left: 1px solid var(--border);
+      padding: 22px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+      padding: 8px;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(139, 94, 52, 0.24);
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 17px;
+      color: #2b1d13;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a,
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      padding: 13px 14px;
+      border-radius: 16px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      background: transparent;
+      font-family: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      width: 100%;
+      text-align: right;
+      transition: 0.18s ease;
+    }
+
+    .nav a:hover,
+    .logout-btn:hover {
+      background: var(--primary-soft);
+      border-color: var(--border);
+    }
+
+    .nav a.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(111, 71, 39, 0.20);
+    }
+
+    .nav-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: rgba(139, 94, 52, 0.10);
+      flex-shrink: 0;
+    }
+
+    .nav a.active .nav-icon {
+      background: rgba(255,255,255,0.18);
+    }
+
+    .sidebar-footer {
+      margin-top: 26px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(139, 94, 52, 0.08);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .main {
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 30px;
+      color: #2b1d13;
+      letter-spacing: -0.3px;
+    }
+
+    .page-title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .user-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 18px;
+      padding: 10px 12px;
+      box-shadow: 0 10px 28px rgba(58, 35, 18, 0.08);
+      min-width: 220px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .user-info strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .user-info span {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 15px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 22px;
+      color: #2b1d13;
+    }
+
+    .panel-header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 800;
+      color: #3d2b1f;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 0 13px;
+      font-family: inherit;
+      font-size: 15px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: 0.18s ease;
+    }
+
+    textarea {
+      min-height: 96px;
+      padding: 13px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(139, 94, 52, 0.65);
+      box-shadow: 0 0 0 4px rgba(139, 94, 52, 0.11);
+    }
+
+    input[readonly],
+    select:disabled {
+      background: #f7f2ea;
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .products-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th {
+      background: rgba(139, 94, 52, 0.10);
+      color: #3d2b1f;
+      font-size: 14px;
+      text-align: right;
+      padding: 13px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px;
+      border-top: 1px solid rgba(139, 94, 52, 0.12);
+      vertical-align: top;
+    }
+
+    td input,
+    td select {
+      min-height: 44px;
+      border-radius: 13px;
+    }
+
+    .row-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 900;
+    }
+
+    .file-box {
+      display: grid;
+      gap: 10px;
+      border: 1px dashed rgba(139, 94, 52, 0.35);
+      background: rgba(139, 94, 52, 0.06);
+      padding: 14px;
+      border-radius: 18px;
+    }
+
+    .preview {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border-radius: 15px;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+
+    .preview img {
+      width: 70px;
+      height: 70px;
+      border-radius: 14px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .preview div {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      min-height: 48px;
+      border: 0;
+      border-radius: 15px;
+      padding: 0 20px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(111, 71, 39, 0.20);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(111, 71, 39, 0.26);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: rgba(180, 35, 24, 0.08);
+      color: var(--danger);
+      border: 1px solid rgba(180, 35, 24, 0.16);
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .message.error {
+      display: block;
+      color: var(--danger);
+      background: rgba(180, 35, 24, 0.08);
+      border: 1px solid rgba(180, 35, 24, 0.16);
+    }
+
+    .message.success {
+      display: block;
+      color: var(--success);
+      background: rgba(19, 115, 51, 0.08);
+      border: 1px solid rgba(19, 115, 51, 0.16);
+    }
+
+    .message.warning {
+      display: block;
+      color: var(--warning);
+      background: rgba(183, 121, 31, 0.10);
+      border: 1px solid rgba(183, 121, 31, 0.18);
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(139, 94, 52, 0.18);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    .mini-spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255,255,255,0.45);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .summary-card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 14px;
+    }
+
+    .summary-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .summary-card strong {
+      display: block;
+      color: #2b1d13;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .overlay {
+      display: none;
+    }
+
+    @media (max-width: 1100px) {
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 290px;
+        z-index: 50;
+        transform: translateX(105%);
+        transition: 0.22s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .overlay.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+        z-index: 40;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .mobile-menu-btn {
+        display: grid;
+        place-items: center;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .user-box {
+        display: none;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-title h1 {
+        font-size: 24px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">P</div>
+        <div class="brand-text">
+          <strong>نظام الإنتاج</strong>
+          <span>مصنع البلاستيك</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="dashboard.html">
+          <span>لوحة التحكم</span>
+          <span class="nav-icon">📊</span>
+        </a>
+
+        <a href="production.html" class="active">
+          <span>إدخال الإنتاج</span>
+          <span class="nav-icon">🏭</span>
+        </a>
+
+        <a href="evaluation.html">
+          <span>تقييم المشرف</span>
+          <span class="nav-icon">⭐</span>
+        </a>
+
+        <a href="history.html">
+          <span>سجل الإنتاج</span>
+          <span class="nav-icon">📋</span>
+        </a>
+
+        <a href="workers.html">
+          <span>العمال</span>
+          <span class="nav-icon">👷</span>
+        </a>
+
+        <a href="products.html">
+          <span>المنتجات</span>
+          <span class="nav-icon">📦</span>
+        </a>
+
+        <a href="machines.html">
+          <span>المكائن</span>
+          <span class="nav-icon">⚙️</span>
+        </a>
+
+        <button class="logout-btn" type="button" id="logoutBtn">
+          <span>تسجيل الخروج</span>
+          <span class="nav-icon">🚪</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        المشرف يمكنه إدخال إنتاج اليوم فقط. مدير النظام يمكنه إدخال الإنتاج لأي تاريخ.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu-btn" id="menuBtn" type="button">☰</button>
+
+        <div class="page-title">
+          <h1>إدخال الإنتاج اليومي</h1>
+          <p id="welcomeText">قم بتسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.</p>
+        </div>
+
+        <div class="user-box">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <strong id="userName">مستخدم</strong>
+            <span id="userRole">---</span>
+          </div>
+        </div>
+      </header>
+
+      <div id="loadingBox" class="loading">
+        <span class="spinner"></span>
+        <span>جاري تحميل بيانات العمال والمنتجات والمكائن...</span>
+      </div>
+
+      <div id="messageBox" class="message"></div>
+
+      <form id="productionForm">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>بيانات الإنتاج الأساسية</h2>
+              <p>اختر التاريخ والشفت والعامل، ثم أدخل الهدر والملاحظات إن وجدت.</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="productionDate">التاريخ</label>
+              <input type="date" id="productionDate" required>
+              <div class="hint" id="dateHint"></div>
+            </div>
+
+            <div class="field">
+              <label for="shift">الشفت</label>
+              <select id="shift" required>
+                <option value="">اختر الشفت</option>
+                <option value="صباحي">صباحي</option>
+                <option value="مسائي">مسائي</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="workerId">اسم العامل</label>
+              <select id="workerId" required>
+                <option value="">جاري التحميل...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="rawWasteKg">كمية هدر المواد الخام كجم</label>
+              <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="مثال: 2.5">
+            </div>
+
+            <div class="field full">
+              <label for="notes">الملاحظات</label>
+              <textarea id="notes" placeholder="اكتب أي ملاحظات مرتبطة بالإنتاج أو الخلل إن وجدت"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
+
+              <div class="file-box">
+                <input type="file" id="defectImage" accept="image/*">
+                <div class="hint">
+                  يفضل رفع صورة واضحة وبحجم مناسب. سيتم ضغط الصورة قبل إرسالها لتقليل حجم البيانات.
+                </div>
+
+                <div class="preview" id="imagePreviewBox">
+                  <img id="imagePreview" alt="معاينة الصورة">
+                  <div>
+                    <strong id="imageName">---</strong>
+                    <br>
+                    <span id="imageSize">---</span>
+                  </div>
+                </div>
+
+                <button class="btn btn-danger" type="button" id="removeImageBtn" style="display:none;">
+                  حذف الصورة
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>الإنتاج</h2>
+              <p>يمكن إدخال حتى 5 منتجات في نفس عملية الإنتاج. يجب إدخال منتج واحد على الأقل.</p>
+            </div>
+          </div>
+
+          <div class="products-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>صنف المنتج</th>
+                  <th>اسم المنتج</th>
+                  <th>المكينة</th>
+                  <th>الكمية</th>
+                </tr>
+              </thead>
+              <tbody id="itemsBody"></tbody>
+            </table>
+          </div>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <span>عدد المنتجات المدخلة</span>
+              <strong id="enteredItemsCount">0</strong>
+            </div>
+
+            <div class="summary-card">
+              <span>إجمالي الكمية</span>
+              <strong id="totalQuantity">0</strong>
+            </div>
+
+            <div class="summary-card">
+              <span>الهدر المدخل كجم</span>
+              <strong id="wasteSummary">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="actions">
+            <button class="btn btn-primary" type="submit" id="saveBtn">
+              حفظ الإنتاج
+            </button>
+
+            <button class="btn btn-secondary" type="button" id="resetBtn">
+              تفريغ النموذج
+            </button>
+
+            <a class="btn btn-secondary" href="history.html">
+              عرض سجل الإنتاج
+            </a>
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+
+  <script>
+    /*
+      ضع هنا رابط تطبيق Apps Script بعد النشر كـ Web App.
+      يجب أن يكون نفس الرابط المستخدم في index.html و dashboard.html.
+    */
+    const API_URL = "https://script.google.com/macros/s/AKfycbwQYYmJiQH9sosRT5-lrNvJHd-LHo9Ntx9TV7rYT2ZbfLrsqpHMGyswsTSJzeRJXTL-/exec";
+
+    const SESSION_KEY = "factoryUserSession";
+
+    let currentUser = null;
+    let workers = [];
+    let products = [];
+    let machines = [];
+    let selectedImage = null;
+
+    const loadingBox = document.getElementById("loadingBox");
+    const messageBox = document.getElementById("messageBox");
+
+    const productionForm = document.getElementById("productionForm");
+    const productionDate = document.getElementById("productionDate");
+    const shift = document.getElementById("shift");
+    const workerId = document.getElementById("workerId");
+    const rawWasteKg = document.getElementById("rawWasteKg");
+    const notes = document.getElementById("notes");
+    const defectImage = document.getElementById("defectImage");
+
+    const imagePreviewBox = document.getElementById("imagePreviewBox");
+    const imagePreview = document.getElementById("imagePreview");
+    const imageName = document.getElementById("imageName");
+    const imageSize = document.getElementById("imageSize");
+    const removeImageBtn = document.getElementById("removeImageBtn");
+
+    const itemsBody = document.getElementById("itemsBody");
+    const enteredItemsCount = document.getElementById("enteredItemsCount");
+    const totalQuantity = document.getElementById("totalQuantity");
+    const wasteSummary = document.getElementById("wasteSummary");
+    const saveBtn = document.getElementById("saveBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const dateHint = document.getElementById("dateHint");
+
+    const userName = document.getElementById("userName");
+    const userRole = document.getElementById("userRole");
+    const userAvatar = document.getElementById("userAvatar");
+    const welcomeText = document.getElementById("welcomeText");
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    const menuBtn = document.getElementById("menuBtn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      protectPage();
+      initMobileMenu();
+      initDateRules();
+      createProductRows();
+      loadInitialData();
+      bindEvents();
+    });
+
+    function protectPage() {
+      const session = getSession();
+
+      if (!session) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      currentUser = session;
+      renderUser(session);
+    }
+
+    function renderUser(session) {
+      const name = session.fullName || session.FullName || session.username || "مستخدم";
+      const role = session.role || session.Role || "---";
+
+      userName.textContent = name;
+      userRole.textContent = normalizeRoleLabel(role);
+      welcomeText.textContent = "مرحبًا " + name + "، يمكنك إدخال إنتاج اليوم من هذه الصفحة.";
+
+      const firstLetter = String(name).trim().charAt(0) || "U";
+      userAvatar.textContent = firstLetter;
+    }
+
+    function normalizeRoleLabel(role) {
+      const cleanRole = String(role || "").toLowerCase();
+      if (cleanRole === "admin") return "مدير النظام";
+      if (cleanRole === "supervisor") return "مشرف";
+      return role || "---";
+    }
+
+    function initDateRules() {
+      const today = getTodayISO();
+      productionDate.value = today;
+
+      const role = String(currentUser?.role || "").toLowerCase();
+
+      if (role === "supervisor") {
+        productionDate.min = today;
+        productionDate.max = today;
+        productionDate.readOnly = true;
+        dateHint.textContent = "المشرف يمكنه إدخال إنتاج اليوم فقط.";
+      } else {
+        dateHint.textContent = "مدير النظام يمكنه اختيار أي تاريخ.";
+      }
+    }
+
+    async function loadInitialData() {
+      if (!API_URL || API_URL.includes("ضع_رابط")) {
+        hideLoading();
+        showMessage("يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة production.html.", "error");
+        return;
+      }
+
+      if (!currentUser || !currentUser.token) {
+        hideLoading();
+        showMessage("لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.", "error");
+        return;
+      }
+
+      try {
+        const result = await apiPost({
+          action: "getInitialData",
+          token: currentUser.token
+        });
+
+        hideLoading();
+
+        if (!result.success) {
+          showMessage(result.message || "تعذر تحميل البيانات الأساسية.", "error");
+          return;
+        }
+
+        workers = result.workers || [];
+        products = result.products || [];
+        machines = result.machines || [];
+
+        renderWorkers();
+        refreshAllRows();
+
+        if (!workers.length) {
+          showMessage("لا توجد عمال نشطون. أضف العمال أولًا من صفحة العمال.", "warning");
+          return;
+        }
+
+        if (!products.length) {
+          showMessage("لا توجد منتجات نشطة. أضف المنتجات أولًا من صفحة المنتجات.", "warning");
+          return;
+        }
+
+        if (!machines.length) {
+          showMessage("لا توجد مكائن نشطة. أضف المكائن أولًا من صفحة المكائن.", "warning");
+          return;
+        }
+
+        clearMessage();
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        showMessage("تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.", "error");
+      }
+    }
+
+    function renderWorkers() {
+      workerId.innerHTML = '<option value="">اختر العامل</option>';
+
+      workers.forEach(worker => {
+        const option = document.createElement("option");
+        option.value = worker.WorkerID;
+        option.textContent = worker.WorkerName;
+        workerId.appendChild(option);
+      });
+    }
+
+    function createProductRows() {
+      itemsBody.innerHTML = "";
+
+      for (let i = 1; i <= 5; i++) {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>
+            <div class="row-number">${i}</div>
+          </td>
+
+          <td>
+            <select class="item-category" data-row="${i}">
+              <option value="">اختر الصنف</option>
+            </select>
+          </td>
+
+          <td>
+            <select class="item-product" data-row="${i}">
+              <option value="">اختر المنتج</option>
+            </select>
+          </td>
+
+          <td>
+            <select class="item-machine" data-row="${i}">
+              <option value="">اختر المكينة</option>
+            </select>
+          </td>
+
+          <td>
+            <input class="item-quantity" data-row="${i}" type="number" min="0" step="1" placeholder="الكمية">
+          </td>
+        `;
+
+        itemsBody.appendChild(tr);
+      }
+    }
+
+    function refreshAllRows() {
+      document.querySelectorAll(".item-category").forEach(select => {
+        fillCategories(select);
+      });
+
+      document.querySelectorAll(".item-machine").forEach(select => {
+        fillMachines(select);
+      });
+
+      document.querySelectorAll(".item-product").forEach(select => {
+        fillProducts(select, "");
+      });
+    }
+
+    function fillCategories(select) {
+      const categories = [...new Set(products.map(p => p.ProductCategory).filter(Boolean))];
+
+      select.innerHTML = '<option value="">اختر الصنف</option>';
+
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        select.appendChild(option);
+      });
+    }
+
+    function fillMachines(select) {
+      const current = select.value;
+      select.innerHTML = '<option value="">اختر المكينة</option>';
+
+      machines.forEach(machine => {
+        const option = document.createElement("option");
+        option.value = machine.MachineID;
+        option.textContent = machine.MachineName;
+        select.appendChild(option);
+      });
+
+      if (current) {
+        select.value = current;
+      }
+    }
+
+    function fillProducts(select, category) {
+      const current = select.value;
+      select.innerHTML = '<option value="">اختر المنتج</option>';
+
+      const filtered = category
+        ? products.filter(p => p.ProductCategory === category)
+        : products;
+
+      filtered.forEach(product => {
+        const option = document.createElement("option");
+        option.value = product.ProductID;
+        option.textContent = product.ProductName;
+        option.dataset.machineId = product.MachineID || "";
+        select.appendChild(option);
+      });
+
+      if (current && filtered.some(p => p.ProductID === current)) {
+        select.value = current;
+      }
+    }
+
+    function bindEvents() {
+      itemsBody.addEventListener("change", event => {
+        const target = event.target;
+
+        if (target.classList.contains("item-category")) {
+          const row = target.dataset.row;
+          const category = target.value;
+          const productSelect = document.querySelector(`.item-product[data-row="${row}"]`);
+          const machineSelect = document.querySelector(`.item-machine[data-row="${row}"]`);
+
+          fillProducts(productSelect, category);
+          productSelect.value = "";
+          machineSelect.value = "";
+          updateSummary();
+        }
+
+        if (target.classList.contains("item-product")) {
+          const row = target.dataset.row;
+          const productId = target.value;
+          const product = products.find(p => p.ProductID === productId);
+          const machineSelect = document.querySelector(`.item-machine[data-row="${row}"]`);
+
+          if (product && product.MachineID) {
+            machineSelect.value = product.MachineID;
+          }
+
+          updateSummary();
+        }
+
+        if (target.classList.contains("item-machine")) {
+          updateSummary();
+        }
+      });
+
+      itemsBody.addEventListener("input", event => {
+        if (event.target.classList.contains("item-quantity")) {
+          updateSummary();
+        }
+      });
+
+      rawWasteKg.addEventListener("input", updateSummary);
+
+      defectImage.addEventListener("change", handleImageSelect);
+
+      removeImageBtn.addEventListener("click", () => {
+        selectedImage = null;
+        defectImage.value = "";
+        imagePreview.src = "";
+        imagePreviewBox.style.display = "none";
+        removeImageBtn.style.display = "none";
+      });
+
+      resetBtn.addEventListener("click", () => {
+        if (confirm("هل تريد تفريغ النموذج؟")) {
+          resetForm();
+        }
+      });
+
+      productionForm.addEventListener("submit", handleSubmit);
+
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem(SESSION_KEY);
+        window.location.href = "index.html";
+      });
+    }
+
+    async function handleImageSelect(event) {
+      const file = event.target.files[0];
+
+      if (!file) {
+        selectedImage = null;
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        showMessage("الملف المختار ليس صورة.", "error");
+        defectImage.value = "";
+        return;
+      }
+
+      if (file.size > 8 * 1024 * 1024) {
+        showMessage("حجم الصورة كبير جدًا. يرجى اختيار صورة أقل من 8MB.", "error");
+        defectImage.value = "";
+        return;
+      }
+
+      try {
+        const compressed = await compressImage(file, 1200, 0.75);
+        selectedImage = {
+          fileName: createImageFileName(file.name),
+          mimeType: "image/jpeg",
+          dataUrl: compressed.dataUrl
+        };
+
+        imagePreview.src = compressed.dataUrl;
+        imageName.textContent = file.name;
+        imageSize.textContent = "تم ضغط الصورة إلى حوالي " + formatBytes(compressed.sizeBytes);
+        imagePreviewBox.style.display = "flex";
+        removeImageBtn.style.display = "inline-flex";
+
+      } catch (error) {
+        console.error(error);
+        showMessage("تعذر تجهيز الصورة. جرّب صورة أخرى.", "error");
+      }
+    }
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+      clearMessage();
+
+      const payload = buildPayload();
+
+      if (!payload) return;
+
+      const confirmed = confirm("هل أنت متأكد من حفظ بيانات الإنتاج؟");
+
+      if (!confirmed) return;
+
+      setSaving(true);
+
+      try {
+        const result = await apiPost(payload);
+
+        setSaving(false);
+
+        if (!result.success) {
+          showMessage(result.message || "تعذر حفظ بيانات الإنتاج.", "error");
+          return;
+        }
+
+        showMessage("تم حفظ بيانات الإنتاج بنجاح.", "success");
+        resetForm();
+
+      } catch (error) {
+        console.error(error);
+        setSaving(false);
+        showMessage("تعذر الاتصال بالخادم أثناء الحفظ. تحقق من رابط Apps Script أو اتصال الإنترنت.", "error");
+      }
+    }
+
+    function buildPayload() {
+      const dateValue = productionDate.value;
+      const shiftValue = shift.value;
+      const workerValue = workerId.value;
+      const wasteValue = Number(rawWasteKg.value || 0);
+      const notesValue = notes.value.trim();
+
+      if (!dateValue) {
+        showMessage("يرجى اختيار التاريخ.", "error");
+        return null;
+      }
+
+      if (!shiftValue) {
+        showMessage("يرجى اختيار الشفت.", "error");
+        return null;
+      }
+
+      if (!workerValue) {
+        showMessage("يرجى اختيار العامل.", "error");
+        return null;
+      }
+
+      const role = String(currentUser?.role || "").toLowerCase();
+
+      if (role === "supervisor" && dateValue !== getTodayISO()) {
+        showMessage("المشرف يمكنه إدخال إنتاج اليوم فقط.", "error");
+        return null;
+      }
+
+      const items = collectItems();
+
+      if (!items.length) {
+        showMessage("يرجى إدخال منتج واحد على الأقل مع الكمية.", "error");
+        return null;
+      }
+
+      return {
+        action: "saveProduction",
+        token: currentUser.token,
+        production: {
+          date: dateValue,
+          shift: shiftValue,
+          workerId: workerValue,
+          rawWasteKg: wasteValue,
+          notes: notesValue,
+          image: selectedImage
+        },
+        items: items
+      };
+    }
+
+    function collectItems() {
+      const items = [];
+
+      for (let i = 1; i <= 5; i++) {
+        const productSelect = document.querySelector(`.item-product[data-row="${i}"]`);
+        const machineSelect = document.querySelector(`.item-machine[data-row="${i}"]`);
+        const quantityInput = document.querySelector(`.item-quantity[data-row="${i}"]`);
+
+        const productId = productSelect.value;
+        const machineId = machineSelect.value;
+        const quantity = Number(quantityInput.value || 0);
+
+        if (!productId && !machineId && !quantity) {
+          continue;
+        }
+
+        if (!productId || !machineId || quantity <= 0) {
+          showMessage("يرجى إكمال بيانات المنتج رقم " + i + " أو ترك الصف فارغًا بالكامل.", "error");
+          return [];
+        }
+
+        items.push({
+          productId: productId,
+          machineId: machineId,
+          quantity: quantity
+        });
+      }
+
+      return items;
+    }
+
+    function updateSummary() {
+      const items = collectItemsForSummary();
+      const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
+
+      enteredItemsCount.textContent = items.length;
+      totalQuantity.textContent = totalQty;
+      wasteSummary.textContent = Number(rawWasteKg.value || 0).toFixed(3).replace(/\.?0+$/, "");
+    }
+
+    function collectItemsForSummary() {
+      const items = [];
+
+      for (let i = 1; i <= 5; i++) {
+        const productId = document.querySelector(`.item-product[data-row="${i}"]`)?.value;
+        const quantity = Number(document.querySelector(`.item-quantity[data-row="${i}"]`)?.value || 0);
+
+        if (productId && quantity > 0) {
+          items.push({
+            productId,
+            quantity
+          });
+        }
+      }
+
+      return items;
+    }
+
+    function resetForm() {
+      const today = getTodayISO();
+
+      productionForm.reset();
+      productionDate.value = today;
+
+      selectedImage = null;
+      imagePreview.src = "";
+      imagePreviewBox.style.display = "none";
+      removeImageBtn.style.display = "none";
+
+      createProductRows();
+      refreshAllRows();
+      updateSummary();
+
+      if (String(currentUser?.role || "").toLowerCase() === "supervisor") {
+        productionDate.min = today;
+        productionDate.max = today;
+        productionDate.readOnly = true;
+      }
+    }
+
+    async function apiPost(payload) {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+
+      return await response.json();
+    }
+
+    function setSaving(isSaving) {
+      saveBtn.disabled = isSaving;
+
+      if (isSaving) {
+        saveBtn.innerHTML = '<span class="mini-spinner"></span> جاري الحفظ...';
+      } else {
+        saveBtn.textContent = "حفظ الإنتاج";
+      }
+    }
+
+    function getSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (error) {
+        localStorage.removeItem(SESSION_KEY);
+        return null;
+      }
+    }
+
+    function getTodayISO() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function createImageFileName(originalName) {
+      const cleanName = String(originalName || "image.jpg")
+        .replace(/[^\w.\-]+/g, "_")
+        .slice(-80);
+
+      return "DEFECT_" + getTodayISO() + "_" + Date.now() + "_" + cleanName.replace(/\.[^.]+$/, "") + ".jpg";
+    }
+
+    function compressImage(file, maxWidth, quality) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = event => {
+          const img = new Image();
+
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL("image/jpeg", quality);
+            const sizeBytes = Math.round((dataUrl.length * 3) / 4);
+
+            resolve({
+              dataUrl,
+              sizeBytes
+            });
+          };
+
+          img.onerror = reject;
+          img.src = event.target.result;
+        };
+
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return "0 KB";
+
+      const kb = bytes / 1024;
+
+      if (kb < 1024) {
+        return kb.toFixed(1) + " KB";
+      }
+
+      return (kb / 1024).toFixed(2) + " MB";
+    }
+
+    function hideLoading() {
+      loadingBox.style.display = "none";
+    }
+
+    function showMessage(text, type) {
+      messageBox.textContent = text;
+      messageBox.className = "message " + type;
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function clearMessage() {
+      messageBox.textContent = "";
+      messageBox.className = "message";
+    }
+
+    function initMobileMenu() {
+      menuBtn.addEventListener("click", () => {
+        sidebar.classList.add("open");
+        overlay.classList.add("show");
+      });
+
+      overlay.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
+      });
+    }
+  </script>
+</body>
+</html>
