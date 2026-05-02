@@ -461,7 +461,8 @@
       background: #fff;
     }
 
-    input[readonly] {
+    input[readonly],
+    input:disabled {
       color: var(--muted);
       cursor: not-allowed;
       background: #f2f4f7;
@@ -568,7 +569,7 @@
     .batch-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 680px;
+      min-width: 760px;
       background: #fff;
     }
 
@@ -684,32 +685,43 @@
 
     .message {
       display: none;
-      margin-bottom: 16px;
-      padding: 14px 16px;
+      position: fixed;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      min-width: min(520px, calc(100vw - 28px));
+      max-width: calc(100vw - 28px);
+      padding: 14px 18px;
       border-radius: 18px;
       font-size: 15px;
+      font-weight: 900;
       line-height: 1.7;
       border: 1px solid transparent;
+      box-shadow: 0 18px 48px rgba(16, 24, 39, 0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      text-align: center;
     }
 
     .message.error {
       display: block;
       color: #991b1b;
-      background: #fef2f2;
+      background: rgba(254, 242, 242, 0.96);
       border-color: #fecaca;
     }
 
     .message.success {
       display: block;
       color: #166534;
-      background: #f0fdf4;
+      background: rgba(240, 253, 244, 0.96);
       border-color: #bbf7d0;
     }
 
     .message.warning {
       display: block;
       color: #9a3412;
-      background: #fff7ed;
+      background: rgba(255, 247, 237, 0.96);
       border-color: #fed7aa;
     }
 
@@ -1038,6 +1050,7 @@
                 <tr>
                   <th data-i18n="workerName">اسم العامل</th>
                   <th data-i18n="shift">الشفت</th>
+                  <th data-i18n="rawWasteKgShort">الهدر كجم</th>
                   <th data-i18n="enteredProductsCount">عدد المنتجات المدخلة</th>
                   <th data-i18n="actions">الإجراء</th>
                 </tr>
@@ -1094,6 +1107,8 @@
         workerName: "اسم العامل",
         loading: "جاري التحميل...",
         rawWasteKg: "هدر المواد الخام (كجم)",
+        rawWasteKgShort: "الهدر كجم",
+        wasteRequired: "يرجى إدخال هدر المواد الخام للعامل.",
         notes: "الملاحظات",
         defectImage: "إرفاق صورة في حالة وجود خلل في المنتج",
         removeImage: "حذف الصورة",
@@ -1120,6 +1135,9 @@
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         supervisorDateHint: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
+        futureDateNotAllowed: "لا يمكن إدخال إنتاج بتاريخ مستقبلي.",
+        duplicateWorkerEntry: "تمت إضافة إنتاج هذا العامل مسبقًا في الجدول.",
+        dateLockedHint: "تم تثبيت التاريخ لأن هناك مدخلات مضافة في الجدول.",
         apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة production.html.",
         tokenMissing: "لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.",
         loadFailed: "تعذر تحميل البيانات الأساسية.",
@@ -1175,6 +1193,8 @@
         workerName: "Worker Name",
         loading: "Loading...",
         rawWasteKg: "Raw Material Waste (Kg)",
+        rawWasteKgShort: "Waste Kg",
+        wasteRequired: "Please enter raw material waste for the worker.",
         notes: "Notes",
         defectImage: "Attach image if there is a product defect",
         removeImage: "Remove Image",
@@ -1201,6 +1221,9 @@
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         supervisorDateHint: "Supervisor can enter today’s production only.",
+        futureDateNotAllowed: "Future production dates are not allowed.",
+        duplicateWorkerEntry: "This worker already has an entry in the table.",
+        dateLockedHint: "Date is locked because entries have been added to the table.",
         apiMissing: "Please set the Apps Script URL inside API_URL in production.html.",
         tokenMissing: "Session token not found. Make sure login page stores token in localStorage.",
         loadFailed: "Unable to load master data.",
@@ -1249,6 +1272,7 @@
     ];
     let productionEntries = [];
     let editingEntryIndex = null;
+    let messageTimer = null;
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
@@ -1399,23 +1423,40 @@
     }
 
     function initDateRules() {
+      updateDateLockState();
+    }
+
+    function updateDateLockState() {
       const today = getTodayISO();
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
+
+      productionDate.max = today;
 
       if (!productionDate.value) {
         productionDate.value = today;
       }
 
-      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
+      if (productionDate.value > today) {
+        productionDate.value = today;
+        showMessage(t("futureDateNotAllowed"), "error");
+      }
 
       if (role === "supervisor") {
+        productionDate.value = today;
         productionDate.min = today;
         productionDate.max = today;
-        productionDate.readOnly = true;
+        productionDate.disabled = true;
         dateHint.textContent = t("supervisorDateHint");
+        return;
+      }
+
+      productionDate.removeAttribute("min");
+
+      if (productionEntries.length > 0) {
+        productionDate.disabled = true;
+        dateHint.textContent = t("dateLockedHint");
       } else {
-        productionDate.readOnly = false;
-        productionDate.removeAttribute("min");
-        productionDate.removeAttribute("max");
+        productionDate.disabled = false;
         dateHint.textContent = "";
       }
     }
@@ -1479,11 +1520,29 @@
     }
 
     function renderWorkers(preserveValue = false) {
-      const current = workerId.value;
+      const current = preserveValue ? workerId.value : "";
+
+      const usedWorkerIds = new Set(
+        productionEntries
+          .map((entry, index) => {
+            if (editingEntryIndex !== null && index === editingEntryIndex) {
+              return "";
+            }
+
+            return String(entry.workerId || "");
+          })
+          .filter(Boolean)
+      );
 
       workerId.innerHTML = `<option value="">${t("chooseWorker")}</option>`;
 
       workers.forEach(worker => {
+        const id = String(worker.WorkerID || "");
+
+        if (usedWorkerIds.has(id) && id !== current) {
+          return;
+        }
+
         const option = document.createElement("option");
         option.value = worker.WorkerID;
         option.textContent = worker.WorkerName;
@@ -1671,6 +1730,13 @@
     }
 
     function bindEvents() {
+      productionDate.addEventListener("change", () => {
+        if (isFutureDate(productionDate.value)) {
+          showMessage(t("futureDateNotAllowed"), "error");
+          productionDate.value = getTodayISO();
+        }
+      });
+
       itemsBody.addEventListener("change", event => {
         const target = event.target;
         const row = Number(target.dataset.row || 0);
@@ -1805,6 +1871,16 @@
 
       if (!entry) return;
 
+      const duplicateIndex = productionEntries.findIndex((savedEntry, index) => {
+        return index !== editingEntryIndex &&
+          String(savedEntry.workerId || "") === String(entry.workerId || "");
+      });
+
+      if (duplicateIndex !== -1) {
+        showMessage(t("duplicateWorkerEntry"), "error");
+        return;
+      }
+
       if (editingEntryIndex === null) {
         productionEntries.push(entry);
         showMessage(t("addEntrySuccess"), "success");
@@ -1816,12 +1892,27 @@
 
       clearCurrentEntryForm();
       renderEntriesTable();
+      renderWorkers();
       updateEntryButtonText();
+      updateDateLockState();
     }
 
     function buildCurrentEntry() {
+      const dateValue = productionDate.value;
       const shiftValue = shift.value;
       const workerValue = workerId.value;
+      const wasteValue = Number(rawWasteKg.value || 0);
+
+      if (!dateValue) {
+        showMessage(t("chooseDate"), "error");
+        return null;
+      }
+
+      if (isFutureDate(dateValue)) {
+        showMessage(t("futureDateNotAllowed"), "error");
+        productionDate.value = getTodayISO();
+        return null;
+      }
 
       if (!shiftValue) {
         showMessage(t("chooseShiftMsg"), "error");
@@ -1830,6 +1921,11 @@
 
       if (!workerValue) {
         showMessage(t("chooseWorkerMsg"), "error");
+        return null;
+      }
+
+      if (rawWasteKg.value === "") {
+        showMessage(t("wasteRequired"), "error");
         return null;
       }
 
@@ -1847,6 +1943,7 @@
       return {
         workerId: workerValue,
         shift: shiftValue,
+        rawWasteKg: wasteValue,
         items: JSON.parse(JSON.stringify(currentItems))
       };
     }
@@ -1887,13 +1984,19 @@
       };
     }
 
+    function countValidItems(itemsSource) {
+      return itemsSource.filter(item => {
+        return item.productId && item.machineId && Number(item.quantity || 0) > 0;
+      }).length;
+    }
+
     function renderEntriesTable() {
       entriesTableBody.innerHTML = "";
 
       if (!productionEntries.length) {
         entriesTableBody.innerHTML = `
           <tr>
-            <td colspan="4">${t("emptyTable")}</td>
+            <td colspan="5">${t("emptyTable")}</td>
           </tr>
         `;
         return;
@@ -1902,7 +2005,8 @@
       productionEntries.forEach((entry, index) => {
         const worker = workers.find(w => String(w.WorkerID) === String(entry.workerId));
         const workerNameText = worker ? worker.WorkerName : entry.workerId;
-        const count = collectItems(entry.items).items.length;
+        const count = countValidItems(entry.items);
+        const wasteValue = Number(entry.rawWasteKg || 0);
 
         const tr = document.createElement("tr");
         tr.dataset.index = index;
@@ -1911,6 +2015,7 @@
         tr.innerHTML = `
           <td>${escapeHtml(workerNameText)}</td>
           <td>${escapeHtml(entry.shift)}</td>
+          <td>${formatDecimal(wasteValue)}</td>
           <td><span class="product-count-pill">${count}</span></td>
           <td>
             <button class="btn btn-danger btn-small delete-entry-btn" type="button" data-index="${index}">
@@ -1929,10 +2034,15 @@
       if (!entry) return;
 
       editingEntryIndex = index;
+
+      renderWorkers();
+
       workerId.value = entry.workerId || "";
       shift.value = entry.shift || "";
+      rawWasteKg.value = entry.rawWasteKg || "";
 
       currentItems = JSON.parse(JSON.stringify(entry.items || []));
+
       if (!currentItems.length) {
         currentItems = [
           {
@@ -1947,6 +2057,7 @@
       renderProductRows();
       renderEntriesTable();
       updateEntryButtonText();
+      updateDateLockState();
 
       window.scrollTo({
         top: 0,
@@ -1969,7 +2080,9 @@
       }
 
       renderEntriesTable();
+      renderWorkers();
       updateEntryButtonText();
+      updateDateLockState();
     }
 
     function updateEntryButtonText() {
@@ -1980,6 +2093,8 @@
     function clearCurrentEntryForm() {
       workerId.value = "";
       shift.value = "";
+      rawWasteKg.value = "";
+
       currentItems = [
         {
           category: "",
@@ -1988,6 +2103,8 @@
           quantity: ""
         }
       ];
+
+      renderWorkers();
       renderProductRows();
     }
 
@@ -2070,11 +2187,16 @@
 
     function buildPayloads() {
       const dateValue = productionDate.value;
-      const wasteValue = Number(rawWasteKg.value || 0);
       const notesValue = notes.value.trim();
 
       if (!dateValue) {
         showMessage(t("chooseDate"), "error");
+        return null;
+      }
+
+      if (isFutureDate(dateValue)) {
+        showMessage(t("futureDateNotAllowed"), "error");
+        productionDate.value = getTodayISO();
         return null;
       }
 
@@ -2108,7 +2230,7 @@
             date: dateValue,
             shift: entry.shift,
             workerId: entry.workerId,
-            rawWasteKg: wasteValue,
+            rawWasteKg: Number(entry.rawWasteKg || 0),
             notes: notesValue,
             image: selectedImage
           },
@@ -2142,10 +2264,11 @@
       productionEntries = [];
       editingEntryIndex = null;
 
+      renderWorkers();
       renderProductRows();
       renderEntriesTable();
       updateEntryButtonText();
-      initDateRules();
+      updateDateLockState();
     }
 
     async function apiPost(payload) {
@@ -2191,6 +2314,11 @@
       const month = String(now.getMonth() + 1).padStart(2, "0");
       const day = String(now.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
+    }
+
+    function isFutureDate(dateValue) {
+      if (!dateValue) return false;
+      return String(dateValue) > getTodayISO();
     }
 
     function createImageFileName(originalName) {
@@ -2254,20 +2382,28 @@
       return (kb / 1024).toFixed(2) + " MB";
     }
 
+    function formatDecimal(value) {
+      const number = Number(value || 0);
+      return number.toFixed(3).replace(/\.?0+$/, "");
+    }
+
     function hideLoading() {
       loadingBox.style.display = "none";
     }
 
     function showMessage(text, type) {
+      clearTimeout(messageTimer);
+
       messageBox.textContent = text;
       messageBox.className = "message " + type;
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
+
+      messageTimer = setTimeout(() => {
+        clearMessage();
+      }, 1000);
     }
 
     function clearMessage() {
+      clearTimeout(messageTimer);
       messageBox.textContent = "";
       messageBox.className = "message";
     }
