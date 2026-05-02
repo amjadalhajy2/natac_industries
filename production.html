@@ -568,7 +568,7 @@
     .batch-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 840px;
+      min-width: 720px;
       background: #fff;
     }
 
@@ -601,8 +601,7 @@
       color: var(--blue-dark);
     }
 
-    .product-count-pill,
-    .image-pill {
+    .product-count-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -611,21 +610,28 @@
       border-radius: 999px;
       font-weight: 900;
       padding: 0 10px;
-    }
-
-    .product-count-pill {
       background: rgba(22, 163, 74, 0.12);
       color: #0f7a35;
     }
 
-    .image-pill.has-image {
-      background: rgba(0, 102, 255, 0.12);
-      color: var(--blue-dark);
+    .danger-cell {
+      background: #fee2e2 !important;
+      color: #991b1b !important;
+      border-color: #fca5a5 !important;
     }
 
-    .image-pill.no-image {
-      background: rgba(102, 112, 133, 0.12);
-      color: var(--muted);
+    .danger-cell .product-count-pill {
+      background: rgba(220, 38, 38, 0.12);
+      color: #991b1b;
+    }
+
+    .metric-note {
+      display: block;
+      margin-top: 4px;
+      color: #991b1b;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.5;
     }
 
     .actions {
@@ -1063,10 +1069,8 @@
               <thead>
                 <tr>
                   <th data-i18n="workerName">اسم العامل</th>
-                  <th data-i18n="shift">الشفت</th>
                   <th data-i18n="rawWasteKgShort">الهدر كجم</th>
                   <th data-i18n="enteredProductsCount">عدد المنتجات المدخلة</th>
-                  <th data-i18n="imageColumn">الصورة</th>
                   <th data-i18n="actions">الإجراء</th>
                 </tr>
               </thead>
@@ -1090,10 +1094,10 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
-
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
     const MAX_PRODUCTS = 5;
+    const MIN_EXPECTED_TIME_MINUTES = 600;
 
     const i18n = {
       ar: {
@@ -1143,9 +1147,6 @@
         quantityPlaceholder: "الكمية",
         workersProductionTable: "جدول إنتاج العمال",
         enteredProductsCount: "عدد المنتجات المدخلة",
-        imageColumn: "الصورة",
-        hasImage: "مرفقة",
-        noImage: "لا توجد",
         addEntryToTable: "إضافة المدخلات إلى الجدول",
         updateEntryInTable: "تحديث المدخلات في الجدول",
         actions: "الإجراء",
@@ -1166,6 +1167,9 @@
         largeImage: "حجم الصورة كبير جدًا. يرجى اختيار صورة أقل من 8MB.",
         imageReady: size => "تم ضغط الصورة إلى حوالي " + size,
         imageFailed: "تعذر تجهيز الصورة. جرّب صورة أخرى.",
+        expectedTimeLowWarning: minutes => "الوقت النظري المتوقع أقل من 600 دقيقة. الوقت المحسوب: " + minutes + " دقيقة. يرجى إدخال السبب في خانة الملاحظات.",
+        actualWasteHighWarning: (actual, expected) => "الهدر الفعلي أكبر من الهدر المتوقع. الهدر الفعلي: " + actual + " كجم، الهدر المتوقع: " + expected + " كجم. يرجى إدخال السبب في خانة الملاحظات.",
+        reasonRequired: "يرجى إدخال السبب في خانة الملاحظات قبل إضافة المدخلات إلى الجدول.",
         saveConfirm: "هل أنت متأكد من حفظ بيانات الإنتاج لجميع العمال في الجدول؟",
         chooseDate: "يرجى اختيار التاريخ.",
         chooseShiftMsg: "يرجى اختيار الشفت.",
@@ -1231,9 +1235,6 @@
         quantityPlaceholder: "Quantity",
         workersProductionTable: "Workers Production Table",
         enteredProductsCount: "Entered Products Count",
-        imageColumn: "Image",
-        hasImage: "Attached",
-        noImage: "None",
         addEntryToTable: "Add Entry to Table",
         updateEntryInTable: "Update Entry in Table",
         actions: "Action",
@@ -1254,6 +1255,9 @@
         largeImage: "Image size is too large. Please select an image under 8MB.",
         imageReady: size => "Image compressed to about " + size,
         imageFailed: "Unable to prepare the image. Try another image.",
+        expectedTimeLowWarning: minutes => "The expected theoretical time is less than 600 minutes. Calculated time: " + minutes + " minutes. Please enter the reason in the notes field.",
+        actualWasteHighWarning: (actual, expected) => "Actual waste is higher than expected waste. Actual waste: " + actual + " kg, expected waste: " + expected + " kg. Please enter the reason in the notes field.",
+        reasonRequired: "Please enter the reason in the notes field before adding the entry to the table.",
         saveConfirm: "Are you sure you want to save all workers production entries?",
         chooseDate: "Please choose the date.",
         chooseShiftMsg: "Please choose the shift.",
@@ -1957,6 +1961,35 @@
         return null;
       }
 
+      const metrics = calculateEntryMetrics({
+        rawWasteKg: wasteValue,
+        items: currentItems
+      });
+
+      const expectedTimeLow = metrics.expectedTimeMinutes < MIN_EXPECTED_TIME_MINUTES;
+      const actualWasteHigh = metrics.actualWasteKg > metrics.expectedWasteKg;
+
+      if ((expectedTimeLow || actualWasteHigh) && !notesValue) {
+        if (actualWasteHigh) {
+          showMessage(
+            t("actualWasteHighWarning")(
+              formatDecimal(metrics.actualWasteKg),
+              formatDecimal(metrics.expectedWasteKg)
+            ),
+            "warning"
+          );
+          return null;
+        }
+
+        if (expectedTimeLow) {
+          showMessage(t("expectedTimeLowWarning")(formatDecimal(metrics.expectedTimeMinutes)), "warning");
+          return null;
+        }
+
+        showMessage(t("reasonRequired"), "warning");
+        return null;
+      }
+
       return {
         workerId: workerValue,
         shift: shiftValue,
@@ -2037,7 +2070,7 @@
       if (!productionEntries.length) {
         entriesTableBody.innerHTML = `
           <tr>
-            <td colspan="6">${t("emptyTable")}</td>
+            <td colspan="4">${t("emptyTable")}</td>
           </tr>
         `;
         return;
@@ -2047,8 +2080,10 @@
         const worker = workers.find(w => String(w.WorkerID) === String(entry.workerId));
         const workerNameText = worker ? worker.WorkerName : entry.workerId;
         const count = countValidItems(entry.items);
-        const wasteValue = Number(entry.rawWasteKg || 0);
-        const hasImage = !!(entry.image && entry.image.dataUrl);
+        const metrics = calculateEntryMetrics(entry);
+
+        const expectedTimeLow = metrics.expectedTimeMinutes < MIN_EXPECTED_TIME_MINUTES;
+        const actualWasteHigh = metrics.actualWasteKg > metrics.expectedWasteKg;
 
         const tr = document.createElement("tr");
         tr.dataset.index = index;
@@ -2056,14 +2091,25 @@
 
         tr.innerHTML = `
           <td>${escapeHtml(workerNameText)}</td>
-          <td>${escapeHtml(entry.shift)}</td>
-          <td>${formatDecimal(wasteValue)}</td>
-          <td><span class="product-count-pill">${count}</span></td>
-          <td>
-            <span class="image-pill ${hasImage ? "has-image" : "no-image"}">
-              ${hasImage ? t("hasImage") : t("noImage")}
-            </span>
+
+          <td class="${actualWasteHigh ? "danger-cell" : ""}">
+            ${formatDecimal(metrics.actualWasteKg)}
+            ${
+              actualWasteHigh
+                ? `<span class="metric-note">${formatDecimal(metrics.actualWasteKg)} / ${formatDecimal(metrics.expectedWasteKg)} كجم</span>`
+                : ""
+            }
           </td>
+
+          <td class="${expectedTimeLow ? "danger-cell" : ""}">
+            <span class="product-count-pill">${count}</span>
+            ${
+              expectedTimeLow
+                ? `<span class="metric-note">${formatDecimal(metrics.expectedTimeMinutes)} دقيقة</span>`
+                : ""
+            }
+          </td>
+
           <td>
             <button class="btn btn-danger btn-small delete-entry-btn" type="button" data-index="${index}">
               ${t("deleteEntry")}
@@ -2219,7 +2265,7 @@
       if (selectedImage.sizeText) {
         imageSize.textContent = selectedImage.sizeText;
       } else {
-        imageSize.textContent = t("hasImage");
+        imageSize.textContent = "";
       }
 
       imagePreviewBox.style.display = "flex";
@@ -2321,6 +2367,71 @@
       }
 
       return payloads;
+    }
+
+    function calculateEntryMetrics(entry) {
+      const items = entry.items || [];
+      const actualWasteKg = Number(entry.rawWasteKg || 0);
+
+      let expectedTimeMinutes = 0;
+      let expectedWasteKg = 0;
+
+      items.forEach(item => {
+        const product = getProductById(item.productId);
+        const quantity = Number(item.quantity || 0);
+
+        if (!product || quantity <= 0) {
+          return;
+        }
+
+        const timePerUnit = getProductNumberValue(product, [
+          "TimePerUnit",
+          "timePerUnit",
+          "ProductionTime",
+          "productionTime",
+          "وقت الإنتاج",
+          "وقت الانتاج",
+          "ProductionTimePerUnit"
+        ]);
+
+        const wastePerUnit = getProductNumberValue(product, [
+          "WasteKgPerUnit",
+          "wasteKgPerUnit",
+          "RawWasteKgPerUnit",
+          "rawWasteKgPerUnit",
+          "هدر الخام",
+          "هدر المواد الخام",
+          "WastePerUnit"
+        ]);
+
+        expectedTimeMinutes += timePerUnit * quantity;
+        expectedWasteKg += wastePerUnit * quantity;
+      });
+
+      return {
+        expectedTimeMinutes: expectedTimeMinutes,
+        expectedWasteKg: expectedWasteKg,
+        actualWasteKg: actualWasteKg
+      };
+    }
+
+    function getProductById(productId) {
+      return products.find(product => {
+        return String(product.ProductID || product.productId || "") === String(productId || "");
+      });
+    }
+
+    function getProductNumberValue(product, possibleKeys) {
+      for (let i = 0; i < possibleKeys.length; i++) {
+        const key = possibleKeys[i];
+
+        if (product[key] !== undefined && product[key] !== null && product[key] !== "") {
+          const number = Number(product[key]);
+          return isNaN(number) ? 0 : number;
+        }
+      }
+
+      return 0;
     }
 
     function resetAfterSave() {
