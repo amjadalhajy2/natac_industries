@@ -26,10 +26,9 @@
       --red: #ff3b30;
       --glass-border: rgba(255, 255, 255, 0.72);
       --shadow: 0 24px 70px rgba(50, 70, 110, 0.15);
-      --soft-shadow: 0 12px 34px rgba(50, 70, 110, 0.11);
-      --radius-xl: 30px;
       --topbar-height: 78px;
       --sidebar-width: 310px;
+      --radius-xl: 30px;
     }
 
     * {
@@ -968,7 +967,9 @@
         <form id="addMachineForm" class="form-grid">
           <div class="field">
             <label for="newMachineCategory" data-i18n="machineCategory">صنف المكينة</label>
-            <input id="newMachineCategory" type="text" required>
+            <select id="newMachineCategory" required>
+              <option value="" data-i18n="chooseCategory">اختر الصنف</option>
+            </select>
           </div>
 
           <div class="field">
@@ -1034,7 +1035,7 @@
   </main>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwQYYmJiQH9sosRT5-lrNvJHd-LHo9Ntx9TV7rYT2ZbfLrsqpHMGyswsTSJzeRJXTL-/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzojnKnLTng-HRfbOPX3mOpnZj0_gBVWPo015HeoVcNQ20hKZo3sn1RoJfAl_TKabck/exec";
 
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
@@ -1064,6 +1065,7 @@
         machineId: "رقم المكينة",
         machineCategory: "صنف المكينة",
         machineName: "اسم المكينة",
+        chooseCategory: "اختر الصنف",
         status: "الحالة",
         active: "نشط",
         inactive: "غير نشط",
@@ -1080,8 +1082,9 @@
         apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة machines.html.",
         tokenMissing: "لم يتم العثور على رمز الجلسة token. يرجى تسجيل الدخول مرة أخرى.",
         loadFailed: "تعذر تحميل بيانات المكائن.",
+        categoriesLoadFailed: "تعذر تحميل قائمة الأصناف.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
-        categoryRequired: "يرجى إدخال صنف المكينة.",
+        categoryRequired: "يرجى اختيار صنف المكينة.",
         nameRequired: "يرجى إدخال اسم المكينة.",
         addSuccess: "تمت إضافة المكينة بنجاح.",
         addFailed: "تعذر إضافة المكينة.",
@@ -1115,6 +1118,7 @@
         machineId: "Machine ID",
         machineCategory: "Machine Category",
         machineName: "Machine Name",
+        chooseCategory: "Choose category",
         status: "Status",
         active: "Active",
         inactive: "Inactive",
@@ -1131,8 +1135,9 @@
         apiMissing: "Please set the Apps Script URL inside API_URL in machines.html.",
         tokenMissing: "Session token not found. Please log in again.",
         loadFailed: "Unable to load machines data.",
+        categoriesLoadFailed: "Unable to load categories list.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
-        categoryRequired: "Please enter the machine category.",
+        categoryRequired: "Please choose the machine category.",
         nameRequired: "Please enter the machine name.",
         addSuccess: "Machine added successfully.",
         addFailed: "Unable to add machine.",
@@ -1147,6 +1152,7 @@
     let currentLang = localStorage.getItem(LANGUAGE_KEY) || "ar";
     let currentUser = null;
     let machines = [];
+    let categories = [];
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
@@ -1186,7 +1192,7 @@
       initSidebar();
       initLanguage();
       bindEvents();
-      loadMachines();
+      loadMachinesPageData();
     });
 
     function t(key) {
@@ -1219,8 +1225,12 @@
         renderUser(session);
       }
 
-      if (machines.length) {
+      if (categories.length) {
+        renderNewMachineCategoryOptions();
         renderCategoryFilter();
+      }
+
+      if (machines.length) {
         renderMachines();
       }
     }
@@ -1235,12 +1245,12 @@
 
       currentUser = session;
       renderUser(session);
-      applyRoleUI(session.role);
+      applyRoleUI(session.Role || session.role);
     }
 
     function renderUser(session) {
-      const name = session.fullName || session.FullName || session.username || "User";
-      const role = session.role || session.Role || "---";
+      const name = session.FullName || session.fullName || session.username || session.Username || "User";
+      const role = session.Role || session.role || "---";
 
       userName.textContent = name;
       userRole.textContent = normalizeRoleLabel(role);
@@ -1252,13 +1262,15 @@
 
     function normalizeRoleLabel(role) {
       const cleanRole = String(role || "").toLowerCase();
+
       if (cleanRole === "admin") return t("roleAdmin");
       if (cleanRole === "supervisor") return t("roleSupervisor");
+
       return role || "---";
     }
 
     function isAdmin() {
-      return String(currentUser?.role || "").toLowerCase() === "admin";
+      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
     }
 
     function applyRoleUI(role) {
@@ -1269,6 +1281,10 @@
       });
 
       addMachinePanel.style.display = admin ? "" : "none";
+
+      if (!admin) {
+        showMessage("هذه الصفحة مخصصة لمدير النظام فقط.", "warning");
+      }
     }
 
     function bindEvents() {
@@ -1296,7 +1312,7 @@
       });
     }
 
-    async function loadMachines() {
+    async function loadMachinesPageData() {
       if (!API_URL || API_URL.includes("ضع_رابط")) {
         hideLoading();
         showMessage(t("apiMissing"), "error");
@@ -1310,20 +1326,35 @@
       }
 
       try {
-        const result = await apiPost({
-          action: "getMachines",
-          token: currentUser.token,
-          activeOnly: false
-        });
+        const [machinesResult, categoriesResult] = await Promise.all([
+          apiPost({
+            action: "getMachines",
+            token: currentUser.token,
+            activeOnly: false
+          }),
+          apiPost({
+            action: "getCategories",
+            token: currentUser.token,
+            activeOnly: true
+          })
+        ]);
 
         hideLoading();
 
-        if (!result.success) {
-          showMessage(result.message || t("loadFailed"), "error");
+        if (!machinesResult.success) {
+          showMessage(machinesResult.message || t("loadFailed"), "error");
           return;
         }
 
-        machines = result.machines || [];
+        if (!categoriesResult.success) {
+          showMessage(categoriesResult.message || t("categoriesLoadFailed"), "error");
+          return;
+        }
+
+        machines = machinesResult.machines || [];
+        categories = categoriesResult.categories || [];
+
+        renderNewMachineCategoryOptions();
         renderCategoryFilter();
         renderMachines();
         clearMessage();
@@ -1335,18 +1366,38 @@
       }
     }
 
+    function renderNewMachineCategoryOptions() {
+      const current = newMachineCategory.value;
+
+      newMachineCategory.innerHTML = `<option value="">${t("chooseCategory")}</option>`;
+
+      categories
+        .filter(category => normalizeStatus(category.Status) === "Active")
+        .forEach(category => {
+          const option = document.createElement("option");
+          option.value = category.CategoryName;
+          option.textContent = category.CategoryName;
+          newMachineCategory.appendChild(option);
+        });
+
+      if (current && [...newMachineCategory.options].some(option => option.value === current)) {
+        newMachineCategory.value = current;
+      }
+    }
+
     function renderCategoryFilter() {
       const current = categoryFilter.value;
-      const categories = [...new Set(machines.map(m => m.MachineCategory).filter(Boolean))];
 
       categoryFilter.innerHTML = `<option value="all">${t("allCategories")}</option>`;
 
-      categories.forEach(category => {
-        const option = document.createElement("option");
-        option.value = category;
-        option.textContent = category;
-        categoryFilter.appendChild(option);
-      });
+      categories
+        .filter(category => normalizeStatus(category.Status) === "Active")
+        .forEach(category => {
+          const option = document.createElement("option");
+          option.value = category.CategoryName;
+          option.textContent = category.CategoryName;
+          categoryFilter.appendChild(option);
+        });
 
       if (current && [...categoryFilter.options].some(option => option.value === current)) {
         categoryFilter.value = current;
@@ -1397,9 +1448,17 @@
 
         if (isAdmin()) {
           tr.innerHTML = `
-            <td><span class="id-badge">${machineId}</span></td>
-            <td><input class="edit-category" data-id="${machineId}" value="${machineCategory}"></td>
-            <td><input class="edit-name" data-id="${machineId}" value="${machineName}"></td>
+            <td>
+              <span class="id-badge">${machineId}</span>
+            </td>
+            <td>
+              <select class="edit-category" data-id="${machineId}">
+                ${getCategoryOptionsHtml(machineCategory)}
+              </select>
+            </td>
+            <td>
+              <input class="edit-name" data-id="${machineId}" value="${machineName}">
+            </td>
             <td>
               <select class="edit-status" data-id="${machineId}">
                 <option value="Active" ${statusValue === "Active" ? "selected" : ""}>${t("active")}</option>
@@ -1416,7 +1475,9 @@
           `;
         } else {
           tr.innerHTML = `
-            <td><span class="id-badge">${machineId}</span></td>
+            <td>
+              <span class="id-badge">${machineId}</span>
+            </td>
             <td>${machineCategory}</td>
             <td>${machineName}</td>
             <td>${getStatusBadge(statusValue)}</td>
@@ -1458,9 +1519,9 @@
           action: "addMachine",
           token: currentUser.token,
           machine: {
-            machineCategory,
-            machineName,
-            status
+            machineCategory: machineCategory,
+            machineName: machineName,
+            status: status
           }
         });
 
@@ -1475,7 +1536,7 @@
         addMachineForm.reset();
         newMachineStatus.value = "Active";
 
-        await loadMachines();
+        await loadMachinesPageData();
 
       } catch (error) {
         console.error(error);
@@ -1516,10 +1577,10 @@
           action: "updateMachine",
           token: currentUser.token,
           machine: {
-            machineId,
-            machineCategory,
-            machineName,
-            status
+            machineId: machineId,
+            machineCategory: machineCategory,
+            machineName: machineName,
+            status: status
           }
         });
 
@@ -1531,13 +1592,27 @@
         }
 
         showMessage(t("updateSuccess"), "success");
-        await loadMachines();
+        await loadMachinesPageData();
 
       } catch (error) {
         console.error(error);
         setButtonLoading(btn, false, t("update"));
         showMessage(t("serverError"), "error");
       }
+    }
+
+    function getCategoryOptionsHtml(selectedCategory) {
+      let html = `<option value="">${t("chooseCategory")}</option>`;
+
+      categories
+        .filter(category => normalizeStatus(category.Status) === "Active")
+        .forEach(category => {
+          const name = escapeHtml(category.CategoryName || "");
+          const selected = String(category.CategoryName || "") === String(selectedCategory || "") ? "selected" : "";
+          html += `<option value="${name}" ${selected}>${name}</option>`;
+        });
+
+      return html;
     }
 
     function getStatusBadge(status) {
