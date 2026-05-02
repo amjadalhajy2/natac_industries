@@ -25,7 +25,8 @@
       --warning: #b7791f;
       --shadow: 0 18px 45px rgba(58, 35, 18, 0.10);
       --radius: 22px;
-      --sidebar-width: 280px;
+      --topbar-height: 78px;
+      --sidebar-width: 300px;
     }
 
     * {
@@ -42,55 +43,231 @@
         linear-gradient(135deg, #f7f2ea 0%, #eee3d4 100%);
     }
 
-    .app {
-      display: grid;
-      grid-template-columns: var(--sidebar-width) 1fr;
-      min-height: 100vh;
-    }
-
-    .sidebar {
+    .floating-topbar {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      left: 14px;
+      min-height: var(--topbar-height);
+      z-index: 100;
       background: rgba(255, 255, 255, 0.88);
-      border-left: 1px solid var(--border);
-      padding: 22px 18px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(58, 35, 18, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 16px;
     }
 
-    .brand {
+    .topbar-right {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 26px;
-      padding: 8px;
+      min-width: 0;
     }
 
-    .brand-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
+    .menu-btn {
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-size: 25px;
+      font-weight: 900;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 12px 24px rgba(111, 71, 39, 0.22);
+      flex-shrink: 0;
+    }
+
+    .factory-brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .factory-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 17px;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: #fff;
       display: grid;
       place-items: center;
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 900;
-      box-shadow: 0 10px 24px rgba(139, 94, 52, 0.24);
+      box-shadow: 0 10px 24px rgba(139, 94, 52, 0.20);
+      flex-shrink: 0;
     }
 
-    .brand-text strong {
+    .factory-info {
+      min-width: 0;
+    }
+
+    .factory-info strong {
       display: block;
       font-size: 17px;
       color: #2b1d13;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .brand-text span {
+    .factory-info span {
       display: block;
-      color: var(--muted);
       font-size: 13px;
+      color: var(--muted);
       margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .language-select {
+      height: 42px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 0 12px;
+      font-family: inherit;
+      font-weight: 800;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .top-user-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(139, 94, 52, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px 10px;
+      min-width: 200px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: var(--primary-dark);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      min-width: 0;
+    }
+
+    .user-info strong {
+      display: block;
+      font-size: 14px;
+      color: #2b1d13;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-info span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: var(--sidebar-width);
+      max-width: 86vw;
+      height: 100vh;
+      z-index: 200;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border-left: 1px solid var(--border);
+      box-shadow: -20px 0 50px rgba(58, 35, 18, 0.18);
+      padding: 22px 18px;
+      overflow-y: auto;
+      transform: translateX(105%);
+      transition: 0.25s ease;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .sidebar-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .sidebar-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 17px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title strong {
+      display: block;
+      font-size: 16px;
+      color: #2b1d13;
+    }
+
+    .sidebar-title span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .close-sidebar {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(180, 35, 24, 0.08);
+      color: var(--danger);
+      font-size: 22px;
+      cursor: pointer;
+      flex-shrink: 0;
     }
 
     .nav {
@@ -108,7 +285,7 @@
       color: var(--text);
       padding: 13px 14px;
       border-radius: 16px;
-      font-weight: 700;
+      font-weight: 800;
       border: 1px solid transparent;
       background: transparent;
       font-family: inherit;
@@ -156,22 +333,32 @@
       line-height: 1.7;
     }
 
-    .main {
-      padding: 24px;
-      overflow: hidden;
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 150;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
+    .overlay.show {
+      display: block;
+    }
+
+    .main {
+      padding: 120px 24px 30px;
+      width: 100%;
+      max-width: 1450px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      margin-bottom: 22px;
     }
 
     .page-title h1 {
       margin: 0;
-      font-size: 30px;
+      font-size: 32px;
       color: #2b1d13;
       letter-spacing: -0.3px;
     }
@@ -180,54 +367,6 @@
       margin: 6px 0 0;
       color: var(--muted);
       line-height: 1.7;
-    }
-
-    .user-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid rgba(255,255,255,0.9);
-      border-radius: 18px;
-      padding: 10px 12px;
-      box-shadow: 0 10px 28px rgba(58, 35, 18, 0.08);
-      min-width: 220px;
-    }
-
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 15px;
-      display: grid;
-      place-items: center;
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    .user-info strong {
-      display: block;
-      font-size: 15px;
-    }
-
-    .user-info span {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      width: 46px;
-      height: 46px;
-      border: 0;
-      border-radius: 15px;
-      background: var(--primary);
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
     }
 
     .panel {
@@ -311,8 +450,7 @@
       box-shadow: 0 0 0 4px rgba(139, 94, 52, 0.11);
     }
 
-    input[readonly],
-    select:disabled {
+    input[readonly] {
       background: #f7f2ea;
       color: var(--muted);
       cursor: not-allowed;
@@ -492,7 +630,7 @@
       align-items: center;
       gap: 10px;
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 16px;
     }
 
@@ -549,10 +687,6 @@
       font-weight: 900;
     }
 
-    .overlay {
-      display: none;
-    }
-
     @media (max-width: 1100px) {
       .form-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -563,62 +697,61 @@
       }
     }
 
-    @media (max-width: 850px) {
-      .app {
-        grid-template-columns: 1fr;
+    @media (max-width: 760px) {
+      .floating-topbar {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        height: auto;
+        min-height: 74px;
+        border-radius: 22px;
+        padding: 10px;
       }
 
-      .sidebar {
-        position: fixed;
-        right: 0;
-        top: 0;
-        width: 290px;
-        z-index: 50;
-        transform: translateX(105%);
-        transition: 0.22s ease;
+      .factory-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 15px;
+        font-size: 21px;
       }
 
-      .sidebar.open {
-        transform: translateX(0);
+      .menu-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 15px;
       }
 
-      .overlay.show {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.35);
-        z-index: 40;
+      .factory-info strong {
+        font-size: 15px;
+      }
+
+      .factory-info span {
+        font-size: 12px;
+      }
+
+      .top-user-box {
+        display: none;
+      }
+
+      .language-select {
+        width: 78px;
+        height: 40px;
       }
 
       .main {
-        padding: 18px;
-      }
-
-      .mobile-menu-btn {
-        display: grid;
-        place-items: center;
-      }
-
-      .topbar {
-        align-items: flex-start;
-      }
-
-      .user-box {
-        display: none;
-      }
-    }
-
-    @media (max-width: 580px) {
-      .form-grid {
-        grid-template-columns: 1fr;
+        padding: 112px 16px 24px;
       }
 
       .page-title h1 {
-        font-size: 24px;
+        font-size: 25px;
       }
 
       .panel {
         padding: 16px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
       }
 
       .actions {
@@ -630,221 +763,255 @@
         width: 100%;
       }
     }
+
+    @media (max-width: 430px) {
+      .factory-info span {
+        display: none;
+      }
+
+      .language-select {
+        width: 70px;
+        padding: 0 8px;
+      }
+
+      .topbar-left {
+        gap: 8px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <header class="floating-topbar">
+    <div class="topbar-right">
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="فتح القائمة">☰</button>
+
+      <div class="factory-brand">
+        <div class="factory-logo">P</div>
+        <div class="factory-info">
+          <strong id="factoryName">مصنع البلاستيك</strong>
+          <span>نظام متابعة الإنتاج اليومي</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="topbar-left">
+      <select id="languageSelect" class="language-select" aria-label="اللغة">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+
+      <div class="top-user-box">
+        <div class="avatar" id="userAvatar">U</div>
+        <div class="user-info">
+          <strong id="userName">مستخدم</strong>
+          <span id="userRole">---</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
   <div class="overlay" id="overlay"></div>
 
-  <div class="app">
-    <aside class="sidebar" id="sidebar">
-      <div class="brand">
-        <div class="brand-logo">P</div>
-        <div class="brand-text">
-          <strong>نظام الإنتاج</strong>
-          <span>مصنع البلاستيك</span>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-title">
+        <div class="sidebar-logo">P</div>
+        <div>
+          <strong>القائمة الرئيسية</strong>
+          <span>نظام الإنتاج</span>
         </div>
       </div>
 
-      <nav class="nav">
-        <a href="dashboard.html">
-          <span>لوحة التحكم</span>
-          <span class="nav-icon">📊</span>
-        </a>
+      <button class="close-sidebar" id="closeSidebarBtn" type="button" aria-label="إغلاق القائمة">×</button>
+    </div>
 
-        <a href="production.html" class="active">
-          <span>إدخال الإنتاج</span>
-          <span class="nav-icon">🏭</span>
-        </a>
+    <nav class="nav">
+      <a href="dashboard.html">
+        <span>لوحة التحكم</span>
+        <span class="nav-icon">📊</span>
+      </a>
 
-        <a href="evaluation.html">
-          <span>تقييم المشرف</span>
-          <span class="nav-icon">⭐</span>
-        </a>
+      <a href="production.html" class="active">
+        <span>إدخال الإنتاج</span>
+        <span class="nav-icon">🏭</span>
+      </a>
 
-        <a href="history.html">
-          <span>سجل الإنتاج</span>
-          <span class="nav-icon">📋</span>
-        </a>
+      <a href="evaluation.html">
+        <span>تقييم المشرف</span>
+        <span class="nav-icon">⭐</span>
+      </a>
 
-        <a href="workers.html">
-          <span>العمال</span>
-          <span class="nav-icon">👷</span>
-        </a>
+      <a href="history.html">
+        <span>سجل الإنتاج</span>
+        <span class="nav-icon">📋</span>
+      </a>
 
-        <a href="products.html">
-          <span>المنتجات</span>
-          <span class="nav-icon">📦</span>
-        </a>
+      <a href="workers.html">
+        <span>العمال</span>
+        <span class="nav-icon">👷</span>
+      </a>
 
-        <a href="machines.html">
-          <span>المكائن</span>
-          <span class="nav-icon">⚙️</span>
-        </a>
+      <a href="products.html" class="admin-only">
+        <span>المنتجات</span>
+        <span class="nav-icon">📦</span>
+      </a>
 
-        <button class="logout-btn" type="button" id="logoutBtn">
-          <span>تسجيل الخروج</span>
-          <span class="nav-icon">🚪</span>
-        </button>
-      </nav>
+      <a href="machines.html" class="admin-only">
+        <span>المكائن</span>
+        <span class="nav-icon">⚙️</span>
+      </a>
 
-      <div class="sidebar-footer">
-        المشرف يمكنه إدخال إنتاج اليوم فقط. مدير النظام يمكنه إدخال الإنتاج لأي تاريخ.
-      </div>
-    </aside>
+      <button class="logout-btn" type="button" id="logoutBtn">
+        <span>تسجيل الخروج</span>
+        <span class="nav-icon">🚪</span>
+      </button>
+    </nav>
 
-    <main class="main">
-      <header class="topbar">
-        <button class="mobile-menu-btn" id="menuBtn" type="button">☰</button>
+    <div class="sidebar-footer">
+      المشرف يمكنه إدخال إنتاج اليوم فقط. مدير النظام يمكنه إدخال الإنتاج لأي تاريخ.
+    </div>
+  </aside>
 
-        <div class="page-title">
-          <h1>إدخال الإنتاج اليومي</h1>
-          <p id="welcomeText">قم بتسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.</p>
-        </div>
+  <main class="main">
+    <section class="page-title">
+      <h1>إدخال الإنتاج اليومي</h1>
+      <p id="welcomeText">قم بتسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.</p>
+    </section>
 
-        <div class="user-box">
-          <div class="avatar" id="userAvatar">U</div>
-          <div class="user-info">
-            <strong id="userName">مستخدم</strong>
-            <span id="userRole">---</span>
+    <div id="loadingBox" class="loading">
+      <span class="spinner"></span>
+      <span>جاري تحميل بيانات العمال والمنتجات والمكائن...</span>
+    </div>
+
+    <div id="messageBox" class="message"></div>
+
+    <form id="productionForm">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>بيانات الإنتاج الأساسية</h2>
+            <p>اختر التاريخ والشفت والعامل، ثم أدخل الهدر والملاحظات إن وجدت.</p>
           </div>
         </div>
-      </header>
 
-      <div id="loadingBox" class="loading">
-        <span class="spinner"></span>
-        <span>جاري تحميل بيانات العمال والمنتجات والمكائن...</span>
-      </div>
-
-      <div id="messageBox" class="message"></div>
-
-      <form id="productionForm">
-        <section class="panel">
-          <div class="panel-header">
-            <div>
-              <h2>بيانات الإنتاج الأساسية</h2>
-              <p>اختر التاريخ والشفت والعامل، ثم أدخل الهدر والملاحظات إن وجدت.</p>
-            </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="productionDate">التاريخ</label>
+            <input type="date" id="productionDate" required>
+            <div class="hint" id="dateHint"></div>
           </div>
 
-          <div class="form-grid">
-            <div class="field">
-              <label for="productionDate">التاريخ</label>
-              <input type="date" id="productionDate" required>
-              <div class="hint" id="dateHint"></div>
-            </div>
+          <div class="field">
+            <label for="shift">الشفت</label>
+            <select id="shift" required>
+              <option value="">اختر الشفت</option>
+              <option value="صباحي">صباحي</option>
+              <option value="مسائي">مسائي</option>
+            </select>
+          </div>
 
-            <div class="field">
-              <label for="shift">الشفت</label>
-              <select id="shift" required>
-                <option value="">اختر الشفت</option>
-                <option value="صباحي">صباحي</option>
-                <option value="مسائي">مسائي</option>
-              </select>
-            </div>
+          <div class="field">
+            <label for="workerId">اسم العامل</label>
+            <select id="workerId" required>
+              <option value="">جاري التحميل...</option>
+            </select>
+          </div>
 
-            <div class="field">
-              <label for="workerId">اسم العامل</label>
-              <select id="workerId" required>
-                <option value="">جاري التحميل...</option>
-              </select>
-            </div>
+          <div class="field">
+            <label for="rawWasteKg">كمية هدر المواد الخام كجم</label>
+            <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="مثال: 2.5">
+          </div>
 
-            <div class="field">
-              <label for="rawWasteKg">كمية هدر المواد الخام كجم</label>
-              <input type="number" id="rawWasteKg" min="0" step="0.001" placeholder="مثال: 2.5">
-            </div>
+          <div class="field full">
+            <label for="notes">الملاحظات</label>
+            <textarea id="notes" placeholder="اكتب أي ملاحظات مرتبطة بالإنتاج أو الخلل إن وجدت"></textarea>
+          </div>
 
-            <div class="field full">
-              <label for="notes">الملاحظات</label>
-              <textarea id="notes" placeholder="اكتب أي ملاحظات مرتبطة بالإنتاج أو الخلل إن وجدت"></textarea>
-            </div>
+          <div class="field full">
+            <label for="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
 
-            <div class="field full">
-              <label for="defectImage">إرفاق صورة في حالة وجود خلل في المنتج</label>
-
-              <div class="file-box">
-                <input type="file" id="defectImage" accept="image/*">
-                <div class="hint">
-                  يفضل رفع صورة واضحة وبحجم مناسب. سيتم ضغط الصورة قبل إرسالها لتقليل حجم البيانات.
-                </div>
-
-                <div class="preview" id="imagePreviewBox">
-                  <img id="imagePreview" alt="معاينة الصورة">
-                  <div>
-                    <strong id="imageName">---</strong>
-                    <br>
-                    <span id="imageSize">---</span>
-                  </div>
-                </div>
-
-                <button class="btn btn-danger" type="button" id="removeImageBtn" style="display:none;">
-                  حذف الصورة
-                </button>
+            <div class="file-box">
+              <input type="file" id="defectImage" accept="image/*">
+              <div class="hint">
+                يفضل رفع صورة واضحة وبحجم مناسب. سيتم ضغط الصورة قبل إرسالها لتقليل حجم البيانات.
               </div>
+
+              <div class="preview" id="imagePreviewBox">
+                <img id="imagePreview" alt="معاينة الصورة">
+                <div>
+                  <strong id="imageName">---</strong>
+                  <br>
+                  <span id="imageSize">---</span>
+                </div>
+              </div>
+
+              <button class="btn btn-danger" type="button" id="removeImageBtn" style="display:none;">
+                حذف الصورة
+              </button>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="panel">
-          <div class="panel-header">
-            <div>
-              <h2>الإنتاج</h2>
-              <p>يمكن إدخال حتى 5 منتجات في نفس عملية الإنتاج. يجب إدخال منتج واحد على الأقل.</p>
-            </div>
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>الإنتاج</h2>
+            <p>يمكن إدخال حتى 5 منتجات في نفس عملية الإنتاج. يجب إدخال منتج واحد على الأقل.</p>
+          </div>
+        </div>
+
+        <div class="products-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>صنف المنتج</th>
+                <th>اسم المنتج</th>
+                <th>المكينة</th>
+                <th>الكمية</th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+        </div>
+
+        <div class="summary-grid">
+          <div class="summary-card">
+            <span>عدد المنتجات المدخلة</span>
+            <strong id="enteredItemsCount">0</strong>
           </div>
 
-          <div class="products-table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>صنف المنتج</th>
-                  <th>اسم المنتج</th>
-                  <th>المكينة</th>
-                  <th>الكمية</th>
-                </tr>
-              </thead>
-              <tbody id="itemsBody"></tbody>
-            </table>
+          <div class="summary-card">
+            <span>إجمالي الكمية</span>
+            <strong id="totalQuantity">0</strong>
           </div>
 
-          <div class="summary-grid">
-            <div class="summary-card">
-              <span>عدد المنتجات المدخلة</span>
-              <strong id="enteredItemsCount">0</strong>
-            </div>
-
-            <div class="summary-card">
-              <span>إجمالي الكمية</span>
-              <strong id="totalQuantity">0</strong>
-            </div>
-
-            <div class="summary-card">
-              <span>الهدر المدخل كجم</span>
-              <strong id="wasteSummary">0</strong>
-            </div>
+          <div class="summary-card">
+            <span>الهدر المدخل كجم</span>
+            <strong id="wasteSummary">0</strong>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="panel">
-          <div class="actions">
-            <button class="btn btn-primary" type="submit" id="saveBtn">
-              حفظ الإنتاج
-            </button>
+      <section class="panel">
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" id="saveBtn">
+            حفظ الإنتاج
+          </button>
 
-            <button class="btn btn-secondary" type="button" id="resetBtn">
-              تفريغ النموذج
-            </button>
+          <button class="btn btn-secondary" type="button" id="resetBtn">
+            تفريغ النموذج
+          </button>
 
-            <a class="btn btn-secondary" href="history.html">
-              عرض سجل الإنتاج
-            </a>
-          </div>
-        </section>
-      </form>
-    </main>
-  </div>
+          <a class="btn btn-secondary" href="history.html">
+            عرض سجل الإنتاج
+          </a>
+        </div>
+      </section>
+    </form>
+  </main>
 
   <script>
     /*
@@ -893,12 +1060,15 @@
 
     const logoutBtn = document.getElementById("logoutBtn");
     const menuBtn = document.getElementById("menuBtn");
+    const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
+    const languageSelect = document.getElementById("languageSelect");
 
     document.addEventListener("DOMContentLoaded", () => {
       protectPage();
-      initMobileMenu();
+      initSidebar();
+      initLanguage();
       initDateRules();
       createProductRows();
       loadInitialData();
@@ -915,6 +1085,7 @@
 
       currentUser = session;
       renderUser(session);
+      applyRoleUI(session.role);
     }
 
     function renderUser(session) {
@@ -934,6 +1105,14 @@
       if (cleanRole === "admin") return "مدير النظام";
       if (cleanRole === "supervisor") return "مشرف";
       return role || "---";
+    }
+
+    function applyRoleUI(role) {
+      const cleanRole = String(role || "").toLowerCase();
+
+      document.querySelectorAll(".admin-only").forEach(el => {
+        el.style.display = cleanRole === "admin" ? "" : "none";
+      });
     }
 
     function initDateRules() {
@@ -1027,9 +1206,7 @@
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
-          <td>
-            <div class="row-number">${i}</div>
-          </td>
+          <td><div class="row-number">${i}</div></td>
 
           <td>
             <select class="item-category" data-row="${i}">
@@ -1163,7 +1340,6 @@
       });
 
       rawWasteKg.addEventListener("input", updateSummary);
-
       defectImage.addEventListener("change", handleImageSelect);
 
       removeImageBtn.addEventListener("click", () => {
@@ -1182,7 +1358,20 @@
 
       productionForm.addEventListener("submit", handleSubmit);
 
-      logoutBtn.addEventListener("click", () => {
+      logoutBtn.addEventListener("click", async () => {
+        const session = getSession();
+
+        try {
+          if (session && session.token && API_URL && !API_URL.includes("ضع_رابط")) {
+            await apiPost({
+              action: "logout",
+              token: session.token
+            });
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+
         localStorage.removeItem(SESSION_KEY);
         window.location.href = "index.html";
       });
@@ -1517,15 +1706,40 @@
       messageBox.className = "message";
     }
 
-    function initMobileMenu() {
-      menuBtn.addEventListener("click", () => {
-        sidebar.classList.add("open");
-        overlay.classList.add("show");
+    function initSidebar() {
+      menuBtn.addEventListener("click", openSidebar);
+      closeSidebarBtn.addEventListener("click", closeSidebar);
+      overlay.addEventListener("click", closeSidebar);
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          closeSidebar();
+        }
       });
 
-      overlay.addEventListener("click", () => {
-        sidebar.classList.remove("open");
-        overlay.classList.remove("show");
+      document.querySelectorAll(".nav a").forEach(link => {
+        link.addEventListener("click", closeSidebar);
+      });
+    }
+
+    function openSidebar() {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function initLanguage() {
+      const savedLang = localStorage.getItem("factoryLanguage") || "ar";
+      languageSelect.value = savedLang;
+
+      languageSelect.addEventListener("change", () => {
+        localStorage.setItem("factoryLanguage", languageSelect.value);
       });
     }
   </script>
