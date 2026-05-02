@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googles.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -393,10 +393,11 @@
       padding: 116px 24px 32px;
     }
 
-    .hero,
     .panel {
       position: relative;
       overflow: hidden;
+      margin-bottom: 16px;
+      padding: 22px;
       border-radius: var(--radius-xl);
       background:
         linear-gradient(145deg, rgba(255,255,255,0.68), rgba(255,255,255,0.35)),
@@ -408,12 +409,6 @@
       -webkit-backdrop-filter: blur(24px) saturate(180%);
     }
 
-    .hero {
-      margin-bottom: 18px;
-      padding: 26px;
-    }
-
-    .hero::after,
     .panel::after {
       content: "";
       position: absolute;
@@ -423,17 +418,13 @@
         linear-gradient(125deg, rgba(255,255,255,0.34), transparent 32%, rgba(255,255,255,0.12) 66%, transparent);
     }
 
-    .hero-content,
     .panel-content {
       position: relative;
       z-index: 1;
     }
 
-    .hero-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 18px;
+    .page-title {
+      margin-bottom: 20px;
     }
 
     .page-title h1 {
@@ -442,34 +433,6 @@
       font-weight: 900;
       letter-spacing: -0.5px;
       color: var(--text);
-    }
-
-    .page-title p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 15px;
-    }
-
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 42px;
-      padding: 0 14px;
-      border-radius: 999px;
-      color: var(--blue-dark);
-      font-weight: 900;
-      background: rgba(255,255,255,0.58);
-      border: 1px solid rgba(255,255,255,0.76);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.76);
-      white-space: nowrap;
-    }
-
-    .panel {
-      margin-bottom: 16px;
-      padding: 22px;
     }
 
     .panel-header {
@@ -496,6 +459,7 @@
     .field {
       display: grid;
       gap: 8px;
+      min-width: 0;
     }
 
     .field.full {
@@ -589,51 +553,57 @@
       line-height: 1.6;
     }
 
-    .products-table-wrap {
-      overflow-x: auto;
-      border: 1px solid rgba(255,255,255,0.72);
+    .products-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .product-card {
+      padding: 16px;
       border-radius: 24px;
-      background: rgba(255,255,255,0.38);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.70);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 850px;
-    }
-
-    th {
       background: rgba(255,255,255,0.46);
-      color: var(--muted);
-      font-size: 14px;
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+    }
+
+    .product-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .product-card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 900;
-      text-align: inherit;
-      padding: 14px;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 10px;
-      border-top: 1px solid rgba(255,255,255,0.58);
-      vertical-align: top;
-    }
-
-    td input,
-    td select {
-      min-height: 46px;
-      border-radius: 16px;
     }
 
     .row-number {
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
+      width: 38px;
+      height: 38px;
+      border-radius: 15px;
       display: grid;
       place-items: center;
-      background: linear-gradient(145deg, rgba(255,255,255,0.85), rgba(238,244,255,0.68));
+      background: linear-gradient(145deg, rgba(255,255,255,0.88), rgba(238,244,255,0.70));
       color: var(--blue-dark);
       font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .add-product-row {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
     }
 
     .actions {
@@ -659,6 +629,7 @@
       justify-content: center;
       gap: 8px;
       text-decoration: none;
+      white-space: nowrap;
     }
 
     .btn-primary {
@@ -682,6 +653,13 @@
       background: rgba(255, 59, 48, 0.10);
       color: var(--red);
       border: 1px solid rgba(255, 59, 48, 0.18);
+    }
+
+    .btn-small {
+      min-height: 40px;
+      border-radius: 15px;
+      padding: 0 14px;
+      font-size: 14px;
     }
 
     .btn:disabled {
@@ -805,39 +783,32 @@
         padding: 94px 14px 24px;
       }
 
-      .hero {
-        padding: 20px;
+      .panel {
+        padding: 16px;
         border-radius: 26px;
-      }
-
-      .hero-content {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .hero-pill {
-        width: 100%;
       }
 
       .page-title h1 {
         font-size: 26px;
       }
 
-      .panel {
-        padding: 16px;
-      }
-
-      .form-grid {
+      .form-grid,
+      .product-grid {
         grid-template-columns: 1fr;
       }
 
-      .actions {
+      .actions,
+      .add-product-row {
         display: grid;
         grid-template-columns: 1fr;
       }
 
       .btn {
         width: 100%;
+      }
+
+      .product-card-head {
+        align-items: flex-start;
       }
     }
 
@@ -958,20 +929,6 @@
   </aside>
 
   <main class="main">
-    <section class="hero">
-      <div class="hero-content">
-        <div class="page-title">
-          <h1 data-i18n="productionEntry">إدخال الإنتاج</h1>
-          <p id="welcomeText">قم بتسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.</p>
-        </div>
-
-        <div class="hero-pill">
-          <span>●</span>
-          <span data-i18n="connected">متصل ببيانات Google Sheets</span>
-        </div>
-      </div>
-    </section>
-
     <div id="loadingBox" class="loading">
       <span class="spinner"></span>
       <span data-i18n="loadingData">جاري تحميل بيانات العمال والمنتجات والمكائن...</span>
@@ -982,8 +939,8 @@
     <form id="productionForm">
       <section class="panel">
         <div class="panel-content">
-          <div class="panel-header">
-            <h2 data-i18n="basicProductionData">بيانات الإنتاج الأساسية</h2>
+          <div class="page-title">
+            <h1 data-i18n="productionEntry">إدخال الإنتاج</h1>
           </div>
 
           <div class="form-grid">
@@ -1049,19 +1006,13 @@
             <h2 data-i18n="production">الإنتاج</h2>
           </div>
 
-          <div class="products-table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th data-i18n="productCategory">صنف المنتج</th>
-                  <th data-i18n="productName">اسم المنتج</th>
-                  <th data-i18n="machine">المكينة</th>
-                  <th data-i18n="quantity">الكمية</th>
-                </tr>
-              </thead>
-              <tbody id="itemsBody"></tbody>
-            </table>
+          <div class="products-list" id="itemsBody"></div>
+
+          <div class="add-product-row">
+            <button class="btn btn-secondary" type="button" id="addProductRowBtn">
+              <span>＋</span>
+              <span data-i18n="addProductRow">أضف منتج</span>
+            </button>
           </div>
         </div>
       </section>
@@ -1091,6 +1042,7 @@
 
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const MAX_PRODUCTS = 5;
 
     const i18n = {
       ar: {
@@ -1110,9 +1062,7 @@
         machines: "المكائن",
         logout: "تسجيل الخروج",
         sidebarNote: "القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.",
-        connected: "متصل ببيانات Google Sheets",
         loadingData: "جاري تحميل بيانات العمال والمنتجات والمكائن...",
-        basicProductionData: "بيانات الإنتاج الأساسية",
         date: "التاريخ",
         shift: "الشفت",
         chooseShift: "اختر الشفت",
@@ -1125,10 +1075,13 @@
         defectImage: "إرفاق صورة في حالة وجود خلل في المنتج",
         removeImage: "حذف الصورة",
         production: "الإنتاج",
+        productRow: row => "منتج رقم " + row,
         productCategory: "صنف المنتج",
         productName: "اسم المنتج",
         machine: "المكينة",
         quantity: "الكمية",
+        addProductRow: "أضف منتج",
+        removeProductRow: "حذف المنتج",
         saveProduction: "حفظ الإنتاج",
         resetForm: "تفريغ النموذج",
         viewHistory: "عرض سجل الإنتاج",
@@ -1140,7 +1093,6 @@
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         supervisorDateHint: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
-        welcome: name => "مرحبًا " + name + "، يمكنك إدخال إنتاج اليوم من هذه الصفحة.",
         apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة production.html.",
         tokenMissing: "لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.",
         loadFailed: "تعذر تحميل البيانات الأساسية.",
@@ -1159,11 +1111,12 @@
         chooseWorkerMsg: "يرجى اختيار العامل.",
         supervisorTodayOnly: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
         needOneItem: "يرجى إدخال منتج واحد على الأقل مع الكمية.",
-        completeRow: row => "يرجى إكمال بيانات المنتج رقم " + row + " أو ترك الصف فارغًا بالكامل.",
+        completeRow: row => "يرجى إكمال بيانات المنتج رقم " + row + " أو حذف البطاقة.",
         saveSuccess: "تم حفظ بيانات الإنتاج بنجاح.",
         saveFailed: "تعذر حفظ بيانات الإنتاج.",
         saveServerError: "تعذر الاتصال بالخادم أثناء الحفظ. تحقق من رابط Apps Script أو اتصال الإنترنت.",
-        saving: "جاري الحفظ..."
+        saving: "جاري الحفظ...",
+        maxProductsReached: "تم الوصول إلى الحد الأقصى 5 منتجات."
       },
       en: {
         htmlLang: "en",
@@ -1182,9 +1135,7 @@
         machines: "Machines",
         logout: "Logout",
         sidebarNote: "The menu stays hidden and appears only when you press the menu button in the top bar.",
-        connected: "Connected to Google Sheets data",
         loadingData: "Loading workers, products, and machines...",
-        basicProductionData: "Basic Production Data",
         date: "Date",
         shift: "Shift",
         chooseShift: "Choose shift",
@@ -1197,10 +1148,13 @@
         defectImage: "Attach image if there is a product defect",
         removeImage: "Remove Image",
         production: "Production",
+        productRow: row => "Product " + row,
         productCategory: "Product Category",
         productName: "Product Name",
         machine: "Machine",
         quantity: "Quantity",
+        addProductRow: "Add Product",
+        removeProductRow: "Remove Product",
         saveProduction: "Save Production",
         resetForm: "Clear Form",
         viewHistory: "View Production History",
@@ -1212,7 +1166,6 @@
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         supervisorDateHint: "Supervisor can enter today’s production only.",
-        welcome: name => "Welcome " + name + ", you can enter today’s production from this page.",
         apiMissing: "Please set the Apps Script URL inside API_URL in production.html.",
         tokenMissing: "Session token not found. Make sure login page stores token in localStorage.",
         loadFailed: "Unable to load master data.",
@@ -1231,11 +1184,12 @@
         chooseWorkerMsg: "Please choose the worker.",
         supervisorTodayOnly: "Supervisor can enter today’s production only.",
         needOneItem: "Please enter at least one product with quantity.",
-        completeRow: row => "Please complete product row " + row + " or leave it fully empty.",
+        completeRow: row => "Please complete product " + row + " or remove the card.",
         saveSuccess: "Production data saved successfully.",
         saveFailed: "Unable to save production data.",
         saveServerError: "Unable to connect to the server while saving. Check Apps Script URL or internet connection.",
-        saving: "Saving..."
+        saving: "Saving...",
+        maxProductsReached: "Maximum of 5 products reached."
       }
     };
 
@@ -1244,7 +1198,9 @@
     let workers = [];
     let products = [];
     let machines = [];
+    let categories = [];
     let selectedImage = null;
+    let visibleProductRows = 1;
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
@@ -1267,6 +1223,7 @@
     const removeImageBtn = document.getElementById("removeImageBtn");
 
     const itemsBody = document.getElementById("itemsBody");
+    const addProductRowBtn = document.getElementById("addProductRowBtn");
     const saveBtn = document.getElementById("saveBtn");
     const resetBtn = document.getElementById("resetBtn");
     const dateHint = document.getElementById("dateHint");
@@ -1274,7 +1231,6 @@
     const userName = document.getElementById("userName");
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
-    const welcomeText = document.getElementById("welcomeText");
 
     const logoutBtn = document.getElementById("logoutBtn");
     const menuBtn = document.getElementById("menuBtn");
@@ -1289,13 +1245,26 @@
       initSidebar();
       initLanguage();
       initDateRules();
-      createProductRows();
+      renderProductRows();
       loadInitialData();
       bindEvents();
     });
 
     function t(key) {
       return i18n[currentLang][key];
+    }
+
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+
+      return {
+        ...user,
+        ...session,
+        token: session.token || user.token || "",
+        Role: session.Role || session.role || user.Role || user.role || "",
+        FullName: session.FullName || session.fullName || user.FullName || user.fullName || session.username || user.Username || user.username || "",
+        Username: session.Username || session.username || user.Username || user.username || ""
+      };
     }
 
     function applyLanguage(lang) {
@@ -1320,7 +1289,8 @@
 
       const session = getSession();
       if (session) {
-        renderUser(session);
+        currentUser = normalizeSession(session);
+        renderUser(currentUser);
       }
 
       initDateRules();
@@ -1329,9 +1299,7 @@
         renderWorkers(true);
       }
 
-      if (itemsBody.children.length) {
-        refreshAllRowsWithState();
-      }
+      renderProductRows(true);
     }
 
     function protectPage() {
@@ -1342,18 +1310,17 @@
         return;
       }
 
-      currentUser = session;
-      renderUser(session);
-      applyRoleUI(session.role);
+      currentUser = normalizeSession(session);
+      renderUser(currentUser);
+      applyRoleUI(currentUser.Role || currentUser.role);
     }
 
     function renderUser(session) {
-      const name = session.fullName || session.FullName || session.username || "User";
-      const role = session.role || session.Role || "---";
+      const name = session.FullName || session.fullName || session.Username || session.username || "User";
+      const role = session.Role || session.role || "---";
 
       userName.textContent = name;
       userRole.textContent = normalizeRoleLabel(role);
-      welcomeText.textContent = t("welcome")(name);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
@@ -1361,8 +1328,10 @@
 
     function normalizeRoleLabel(role) {
       const cleanRole = String(role || "").toLowerCase();
+
       if (cleanRole === "admin") return t("roleAdmin");
       if (cleanRole === "supervisor") return t("roleSupervisor");
+
       return role || "---";
     }
 
@@ -1381,7 +1350,7 @@
         productionDate.value = today;
       }
 
-      const role = String(currentUser?.role || "").toLowerCase();
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
 
       if (role === "supervisor") {
         productionDate.min = today;
@@ -1389,12 +1358,15 @@
         productionDate.readOnly = true;
         dateHint.textContent = t("supervisorDateHint");
       } else {
+        productionDate.readOnly = false;
+        productionDate.removeAttribute("min");
+        productionDate.removeAttribute("max");
         dateHint.textContent = "";
       }
     }
 
     async function loadInitialData() {
-      if (!API_URL || API_URL.includes("ضع_رابط")) {
+      if (!API_URL) {
         hideLoading();
         showMessage(t("apiMissing"), "error");
         return;
@@ -1422,9 +1394,10 @@
         workers = result.workers || [];
         products = result.products || [];
         machines = result.machines || [];
+        categories = result.categories || [];
 
         renderWorkers();
-        refreshAllRows();
+        renderProductRows(true);
 
         if (!workers.length) {
           showMessage(t("noWorkers"), "warning");
@@ -1467,94 +1440,113 @@
       }
     }
 
-    function createProductRows() {
-      itemsBody.innerHTML = "";
-
-      for (let i = 1; i <= 5; i++) {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-          <td><div class="row-number">${i}</div></td>
-
-          <td>
-            <select class="item-category" data-row="${i}">
-              <option value="">${t("chooseCategory")}</option>
-            </select>
-          </td>
-
-          <td>
-            <select class="item-product" data-row="${i}">
-              <option value="">${t("chooseProduct")}</option>
-            </select>
-          </td>
-
-          <td>
-            <select class="item-machine" data-row="${i}">
-              <option value="">${t("chooseMachine")}</option>
-            </select>
-          </td>
-
-          <td>
-            <input class="item-quantity" data-row="${i}" type="number" min="0" step="1" placeholder="${t("quantityPlaceholder")}">
-          </td>
-        `;
-
-        itemsBody.appendChild(tr);
-      }
-    }
-
-    function refreshAllRows() {
-      document.querySelectorAll(".item-category").forEach(select => {
-        fillCategories(select);
-      });
-
-      document.querySelectorAll(".item-machine").forEach(select => {
-        fillMachines(select);
-      });
-
-      document.querySelectorAll(".item-product").forEach(select => {
-        fillProducts(select, "");
-      });
-    }
-
-    function refreshAllRowsWithState() {
+    function getCurrentProductState() {
       const state = [];
 
-      for (let i = 1; i <= 5; i++) {
+      for (let i = 1; i <= visibleProductRows; i++) {
         state.push({
           category: document.querySelector(`.item-category[data-row="${i}"]`)?.value || "",
-          productId: document.querySelector(`.item-product[data-row="${i}"]`)?.value || "",
           machineId: document.querySelector(`.item-machine[data-row="${i}"]`)?.value || "",
+          productId: document.querySelector(`.item-product[data-row="${i}"]`)?.value || "",
           quantity: document.querySelector(`.item-quantity[data-row="${i}"]`)?.value || ""
         });
       }
 
-      createProductRows();
+      return state;
+    }
 
-      state.forEach((row, index) => {
-        const i = index + 1;
-        const categorySelect = document.querySelector(`.item-category[data-row="${i}"]`);
-        const productSelect = document.querySelector(`.item-product[data-row="${i}"]`);
-        const machineSelect = document.querySelector(`.item-machine[data-row="${i}"]`);
-        const quantityInput = document.querySelector(`.item-quantity[data-row="${i}"]`);
+    function renderProductRows(preserveState = false) {
+      const state = preserveState ? getCurrentProductState() : [];
+      itemsBody.innerHTML = "";
+
+      for (let i = 1; i <= visibleProductRows; i++) {
+        const saved = state[i - 1] || {
+          category: "",
+          machineId: "",
+          productId: "",
+          quantity: ""
+        };
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.dataset.row = i;
+
+        card.innerHTML = `
+          <div class="product-card-head">
+            <div class="product-card-title">
+              <div class="row-number">${i}</div>
+              <span>${t("productRow")(i)}</span>
+            </div>
+
+            ${
+              i > 1
+                ? `<button class="btn btn-danger btn-small remove-product-row-btn" type="button" data-row="${i}">${t("removeProductRow")}</button>`
+                : ""
+            }
+          </div>
+
+          <div class="product-grid">
+            <div class="field">
+              <label>${t("productCategory")}</label>
+              <select class="item-category" data-row="${i}">
+                <option value="">${t("chooseCategory")}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>${t("machine")}</label>
+              <select class="item-machine" data-row="${i}">
+                <option value="">${t("chooseMachine")}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>${t("productName")}</label>
+              <select class="item-product" data-row="${i}">
+                <option value="">${t("chooseProduct")}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>${t("quantity")}</label>
+              <input class="item-quantity" data-row="${i}" type="number" min="0" step="1" placeholder="${t("quantityPlaceholder")}">
+            </div>
+          </div>
+        `;
+
+        itemsBody.appendChild(card);
+
+        const categorySelect = card.querySelector(".item-category");
+        const machineSelect = card.querySelector(".item-machine");
+        const productSelect = card.querySelector(".item-product");
+        const quantityInput = card.querySelector(".item-quantity");
 
         fillCategories(categorySelect);
-        fillMachines(machineSelect);
-        fillProducts(productSelect, row.category);
+        categorySelect.value = saved.category || "";
 
-        categorySelect.value = row.category;
-        productSelect.value = row.productId;
-        machineSelect.value = row.machineId;
-        quantityInput.value = row.quantity;
-      });
+        fillMachinesForCategory(machineSelect, saved.category || "");
+        machineSelect.value = saved.machineId || "";
+
+        fillProductsForCategoryAndMachine(productSelect, saved.category || "", saved.machineId || "");
+        productSelect.value = saved.productId || "";
+
+        quantityInput.value = saved.quantity || "";
+      }
+
+      updateAddProductButton();
+    }
+
+    function updateAddProductButton() {
+      addProductRowBtn.disabled = visibleProductRows >= MAX_PRODUCTS;
+      addProductRowBtn.style.display = visibleProductRows >= MAX_PRODUCTS ? "none" : "inline-flex";
     }
 
     function fillCategories(select) {
-      const categories = [...new Set(products.map(p => p.ProductCategory).filter(Boolean))];
+      const categoryNames = getAvailableCategories();
 
       select.innerHTML = `<option value="">${t("chooseCategory")}</option>`;
 
-      categories.forEach(category => {
+      categoryNames.forEach(category => {
         const option = document.createElement("option");
         option.value = category;
         option.textContent = category;
@@ -1562,39 +1554,84 @@
       });
     }
 
-    function fillMachines(select) {
+    function getAvailableCategories() {
+      const fromCategoriesSheet = categories
+        .filter(category => normalizeStatus(category.Status) === "Active")
+        .map(category => category.CategoryName)
+        .filter(Boolean);
+
+      const fromProducts = products
+        .filter(product => normalizeStatus(product.Status) === "Active")
+        .map(product => product.ProductCategory)
+        .filter(Boolean);
+
+      return [...new Set([...fromCategoriesSheet, ...fromProducts])];
+    }
+
+    function fillMachinesForCategory(select, category) {
       const current = select.value;
+
       select.innerHTML = `<option value="">${t("chooseMachine")}</option>`;
 
-      machines.forEach(machine => {
-        const option = document.createElement("option");
-        option.value = machine.MachineID;
-        option.textContent = machine.MachineName;
-        select.appendChild(option);
-      });
+      if (!category) {
+        if (current) select.value = "";
+        return;
+      }
 
-      if (current) {
+      const relatedMachineIds = new Set();
+
+      products
+        .filter(product => {
+          return normalizeStatus(product.Status) === "Active" &&
+            String(product.ProductCategory || "") === String(category || "") &&
+            product.MachineID;
+        })
+        .forEach(product => {
+          relatedMachineIds.add(String(product.MachineID));
+        });
+
+      machines
+        .filter(machine => {
+          const sameCategory = String(machine.MachineCategory || "") === String(category || "");
+          const linkedByProduct = relatedMachineIds.has(String(machine.MachineID || ""));
+          return normalizeStatus(machine.Status) === "Active" && (sameCategory || linkedByProduct);
+        })
+        .forEach(machine => {
+          const option = document.createElement("option");
+          option.value = machine.MachineID;
+          option.textContent = machine.MachineName;
+          select.appendChild(option);
+        });
+
+      if (current && [...select.options].some(option => option.value === current)) {
         select.value = current;
       }
     }
 
-    function fillProducts(select, category) {
+    function fillProductsForCategoryAndMachine(select, category, machineId) {
       const current = select.value;
+
       select.innerHTML = `<option value="">${t("chooseProduct")}</option>`;
 
-      const filtered = category
-        ? products.filter(p => p.ProductCategory === category)
-        : products;
+      if (!category || !machineId) {
+        if (current) select.value = "";
+        return;
+      }
 
-      filtered.forEach(product => {
-        const option = document.createElement("option");
-        option.value = product.ProductID;
-        option.textContent = product.ProductName;
-        option.dataset.machineId = product.MachineID || "";
-        select.appendChild(option);
-      });
+      products
+        .filter(product => {
+          return normalizeStatus(product.Status) === "Active" &&
+            String(product.ProductCategory || "") === String(category || "") &&
+            String(product.MachineID || "") === String(machineId || "");
+        })
+        .forEach(product => {
+          const option = document.createElement("option");
+          option.value = product.ProductID;
+          option.textContent = product.ProductName;
+          select.appendChild(option);
+        });
 
-      if (current && filtered.some(p => p.ProductID === current)) {
+      if (current && [...select.options].some(option => option.value === current)) {
         select.value = current;
       }
     }
@@ -1602,28 +1639,50 @@
     function bindEvents() {
       itemsBody.addEventListener("change", event => {
         const target = event.target;
+        const row = target.dataset.row;
+
+        if (!row) return;
+
+        const categorySelect = document.querySelector(`.item-category[data-row="${row}"]`);
+        const machineSelect = document.querySelector(`.item-machine[data-row="${row}"]`);
+        const productSelect = document.querySelector(`.item-product[data-row="${row}"]`);
 
         if (target.classList.contains("item-category")) {
-          const row = target.dataset.row;
-          const category = target.value;
-          const productSelect = document.querySelector(`.item-product[data-row="${row}"]`);
-          const machineSelect = document.querySelector(`.item-machine[data-row="${row}"]`);
+          const category = categorySelect.value;
 
-          fillProducts(productSelect, category);
-          productSelect.value = "";
           machineSelect.value = "";
+          productSelect.value = "";
+
+          fillMachinesForCategory(machineSelect, category);
+          fillProductsForCategoryAndMachine(productSelect, "", "");
         }
 
-        if (target.classList.contains("item-product")) {
-          const row = target.dataset.row;
-          const productId = target.value;
-          const product = products.find(p => p.ProductID === productId);
-          const machineSelect = document.querySelector(`.item-machine[data-row="${row}"]`);
+        if (target.classList.contains("item-machine")) {
+          const category = categorySelect.value;
+          const machineId = machineSelect.value;
 
-          if (product && product.MachineID) {
-            machineSelect.value = product.MachineID;
-          }
+          productSelect.value = "";
+          fillProductsForCategoryAndMachine(productSelect, category, machineId);
         }
+      });
+
+      itemsBody.addEventListener("click", event => {
+        const btn = event.target.closest(".remove-product-row-btn");
+
+        if (!btn) return;
+
+        const removeRow = Number(btn.dataset.row || 0);
+        removeProductRow(removeRow);
+      });
+
+      addProductRowBtn.addEventListener("click", () => {
+        if (visibleProductRows >= MAX_PRODUCTS) {
+          showMessage(t("maxProductsReached"), "warning");
+          return;
+        }
+
+        visibleProductRows += 1;
+        renderProductRows(true);
       });
 
       defectImage.addEventListener("change", handleImageSelect);
@@ -1648,7 +1707,7 @@
         const session = getSession();
 
         try {
-          if (session && session.token && API_URL && !API_URL.includes("ضع_رابط")) {
+          if (session && session.token && API_URL) {
             await apiPost({
               action: "logout",
               token: session.token
@@ -1660,6 +1719,41 @@
 
         localStorage.removeItem(SESSION_KEY);
         window.location.href = "index.html";
+      });
+    }
+
+    function removeProductRow(rowNumber) {
+      const state = getCurrentProductState();
+
+      if (state.length <= 1) return;
+
+      state.splice(rowNumber - 1, 1);
+      visibleProductRows = Math.max(1, visibleProductRows - 1);
+
+      itemsBody.innerHTML = "";
+
+      for (let i = 1; i <= visibleProductRows; i++) {
+        const temporary = document.createElement("div");
+        temporary.innerHTML = "";
+      }
+
+      renderProductRows(false);
+
+      state.forEach((row, index) => {
+        const i = index + 1;
+        const categorySelect = document.querySelector(`.item-category[data-row="${i}"]`);
+        const machineSelect = document.querySelector(`.item-machine[data-row="${i}"]`);
+        const productSelect = document.querySelector(`.item-product[data-row="${i}"]`);
+        const quantityInput = document.querySelector(`.item-quantity[data-row="${i}"]`);
+
+        if (!categorySelect || !machineSelect || !productSelect || !quantityInput) return;
+
+        categorySelect.value = row.category || "";
+        fillMachinesForCategory(machineSelect, row.category || "");
+        machineSelect.value = row.machineId || "";
+        fillProductsForCategoryAndMachine(productSelect, row.category || "", row.machineId || "");
+        productSelect.value = row.productId || "";
+        quantityInput.value = row.quantity || "";
       });
     }
 
@@ -1760,7 +1854,7 @@
         return null;
       }
 
-      const role = String(currentUser?.role || "").toLowerCase();
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
 
       if (role === "supervisor" && dateValue !== getTodayISO()) {
         showMessage(t("supervisorTodayOnly"), "error");
@@ -1796,7 +1890,7 @@
     function collectItems() {
       const items = [];
 
-      for (let i = 1; i <= 5; i++) {
+      for (let i = 1; i <= visibleProductRows; i++) {
         const productSelect = document.querySelector(`.item-product[data-row="${i}"]`);
         const machineSelect = document.querySelector(`.item-machine[data-row="${i}"]`);
         const quantityInput = document.querySelector(`.item-quantity[data-row="${i}"]`);
@@ -1841,8 +1935,8 @@
       imagePreviewBox.style.display = "none";
       removeImageBtn.style.display = "none";
 
-      createProductRows();
-      refreshAllRows();
+      visibleProductRows = 1;
+      renderProductRows();
       initDateRules();
     }
 
@@ -2004,6 +2098,21 @@
       languageSelect.addEventListener("change", () => {
         applyLanguage(languageSelect.value);
       });
+    }
+
+    function normalizeStatus(status) {
+      const value = String(status || "").toLowerCase();
+
+      if (
+        value === "active" ||
+        value === "نشط" ||
+        value === "مفعل" ||
+        value === "فعال"
+      ) {
+        return "Active";
+      }
+
+      return "Inactive";
     }
   </script>
 </body>
