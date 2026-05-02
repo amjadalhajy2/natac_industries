@@ -449,6 +449,14 @@
       font-size: 15px;
     }
 
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .hero-pill {
       display: inline-flex;
       align-items: center;
@@ -744,6 +752,117 @@
       line-height: 1.7;
     }
 
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(20, 28, 44, 0.28);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 18px;
+    }
+
+    .modal-overlay.show {
+      display: grid;
+      place-items: center;
+    }
+
+    .modal-card {
+      width: min(680px, 100%);
+      max-height: 88vh;
+      overflow-y: auto;
+      border-radius: 30px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.82), rgba(255,255,255,0.58)),
+        radial-gradient(circle at 12% 18%, rgba(0,122,255,0.14), transparent 28%),
+        radial-gradient(circle at 88% 20%, rgba(124,58,237,0.10), transparent 30%);
+      border: 1px solid rgba(255,255,255,0.78);
+      box-shadow: 0 28px 80px rgba(50, 70, 110, 0.22);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      padding: 22px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .modal-header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .modal-close {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.48);
+      color: var(--red);
+      font-size: 26px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .modal-body {
+      display: grid;
+      gap: 16px;
+    }
+
+    .categories-list-box {
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.44);
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.74);
+    }
+
+    .categories-list-box h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .categories-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .category-chip {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.62);
+      color: var(--blue-dark);
+      border: 1px solid rgba(255,255,255,0.78);
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .category-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
     @media (max-width: 1200px) {
       .form-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -798,6 +917,12 @@
         flex-direction: column;
       }
 
+      .hero-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
       .hero-pill {
         width: 100%;
       }
@@ -821,6 +946,15 @@
       .row-actions {
         display: grid;
         grid-template-columns: 1fr;
+      }
+
+      .category-form {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-card {
+        padding: 16px;
+        border-radius: 26px;
       }
     }
 
@@ -940,6 +1074,37 @@
     </div>
   </aside>
 
+  <div class="modal-overlay" id="categoryModalOverlay">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div>
+          <h2 data-i18n="categories">الأصناف</h2>
+          <p data-i18n="categoriesModalNote">يمكنك الاطلاع على الأصناف الحالية وإضافة صنف جديد.</p>
+        </div>
+
+        <button class="modal-close" type="button" id="closeCategoryModalBtn">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="categories-list-box">
+          <h3 data-i18n="existingCategories">الأصناف الحالية</h3>
+          <div id="existingCategoriesList" class="categories-list"></div>
+        </div>
+
+        <form id="addCategoryForm" class="category-form">
+          <div class="field">
+            <label for="newCategoryName" data-i18n="newCategoryName">اسم الصنف الجديد</label>
+            <input id="newCategoryName" type="text" required>
+          </div>
+
+          <button class="btn btn-primary" type="submit" id="saveCategoryBtn">
+            <span data-i18n="saveCategory">حفظ الصنف</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <main class="main">
     <section class="hero">
       <div class="hero-content">
@@ -948,9 +1113,16 @@
           <p id="welcomeText">إدارة المنتجات وربطها بالمكائن ووقت الإنتاج والهدر القياسي.</p>
         </div>
 
-        <div class="hero-pill">
-          <span>●</span>
-          <span data-i18n="connected">متصل ببيانات Google Sheets</span>
+        <div class="hero-actions">
+          <button class="btn btn-secondary admin-only" type="button" id="openCategoryModalBtn">
+            <span>＋</span>
+            <span data-i18n="addNewCategory">إضافة صنف جديد</span>
+          </button>
+
+          <div class="hero-pill">
+            <span>●</span>
+            <span data-i18n="connected">متصل ببيانات Google Sheets</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1121,7 +1293,18 @@
         updateSuccess: "تم تحديث بيانات المنتج بنجاح.",
         updateFailed: "تعذر تحديث بيانات المنتج.",
         saving: "جاري الحفظ...",
-        updating: "جاري التحديث..."
+        updating: "جاري التحديث...",
+        addNewCategory: "إضافة صنف جديد",
+        categories: "الأصناف",
+        categoriesModalNote: "يمكنك الاطلاع على الأصناف الحالية وإضافة صنف جديد.",
+        existingCategories: "الأصناف الحالية",
+        newCategoryName: "اسم الصنف الجديد",
+        saveCategory: "حفظ الصنف",
+        categoryAdded: "تمت إضافة الصنف بنجاح.",
+        categoryAddFailed: "تعذر إضافة الصنف.",
+        categoryAlreadyExists: "هذا الصنف موجود مسبقًا.",
+        noCategories: "لا توجد أصناف مسجلة.",
+        categoryNameRequired: "يرجى إدخال اسم الصنف."
       },
       en: {
         htmlLang: "en",
@@ -1179,7 +1362,18 @@
         updateSuccess: "Product updated successfully.",
         updateFailed: "Unable to update product.",
         saving: "Saving...",
-        updating: "Updating..."
+        updating: "Updating...",
+        addNewCategory: "Add New Category",
+        categories: "Categories",
+        categoriesModalNote: "View existing categories and add a new category.",
+        existingCategories: "Existing Categories",
+        newCategoryName: "New Category Name",
+        saveCategory: "Save Category",
+        categoryAdded: "Category added successfully.",
+        categoryAddFailed: "Unable to add category.",
+        categoryAlreadyExists: "This category already exists.",
+        noCategories: "No categories available.",
+        categoryNameRequired: "Please enter the category name."
       }
     };
 
@@ -1210,6 +1404,14 @@
     const newProductStatus = document.getElementById("newProductStatus");
     const addProductBtn = document.getElementById("addProductBtn");
 
+    const openCategoryModalBtn = document.getElementById("openCategoryModalBtn");
+    const categoryModalOverlay = document.getElementById("categoryModalOverlay");
+    const closeCategoryModalBtn = document.getElementById("closeCategoryModalBtn");
+    const existingCategoriesList = document.getElementById("existingCategoriesList");
+    const addCategoryForm = document.getElementById("addCategoryForm");
+    const newCategoryName = document.getElementById("newCategoryName");
+    const saveCategoryBtn = document.getElementById("saveCategoryBtn");
+
     const productsBody = document.getElementById("productsBody");
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
@@ -1237,6 +1439,18 @@
       return i18n[currentLang][key];
     }
 
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+      return {
+        ...user,
+        ...session,
+        token: session.token || user.token || "",
+        Role: session.Role || session.role || user.Role || user.role || "",
+        FullName: session.FullName || session.fullName || user.FullName || user.fullName || session.username || user.Username || user.username || "",
+        Username: session.Username || session.username || user.Username || user.username || ""
+      };
+    }
+
     function applyLanguage(lang) {
       currentLang = lang;
       localStorage.setItem(LANGUAGE_KEY, lang);
@@ -1260,7 +1474,8 @@
 
       const session = getSession();
       if (session) {
-        renderUser(session);
+        currentUser = normalizeSession(session);
+        renderUser(currentUser);
       }
 
       if (categories.length) {
@@ -1275,6 +1490,10 @@
       if (products.length) {
         renderProducts();
       }
+
+      if (categoryModalOverlay.classList.contains("show")) {
+        renderExistingCategoriesList();
+      }
     }
 
     function protectPage() {
@@ -1285,13 +1504,13 @@
         return;
       }
 
-      currentUser = session;
-      renderUser(session);
-      applyRoleUI(session.Role || session.role);
+      currentUser = normalizeSession(session);
+      renderUser(currentUser);
+      applyRoleUI(currentUser.Role || currentUser.role);
     }
 
     function renderUser(session) {
-      const name = session.FullName || session.fullName || session.username || session.Username || "User";
+      const name = session.FullName || session.fullName || session.Username || session.username || "User";
       const role = session.Role || session.role || "---";
 
       userName.textContent = name;
@@ -1323,10 +1542,6 @@
       });
 
       addProductPanel.style.display = admin ? "" : "none";
-
-      if (!admin) {
-        showMessage("هذه الصفحة مخصصة لمدير النظام فقط.", "warning");
-      }
     }
 
     function bindEvents() {
@@ -1335,11 +1550,29 @@
       statusFilter.addEventListener("change", renderProducts);
       addProductForm.addEventListener("submit", handleAddProduct);
 
+      openCategoryModalBtn?.addEventListener("click", openCategoryModal);
+
+      closeCategoryModalBtn?.addEventListener("click", closeCategoryModal);
+
+      categoryModalOverlay?.addEventListener("click", event => {
+        if (event.target === categoryModalOverlay) {
+          closeCategoryModal();
+        }
+      });
+
+      addCategoryForm?.addEventListener("submit", handleAddCategory);
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && categoryModalOverlay.classList.contains("show")) {
+          closeCategoryModal();
+        }
+      });
+
       logoutBtn.addEventListener("click", async () => {
         const session = getSession();
 
         try {
-          if (session && session.token && API_URL && !API_URL.includes("ضع_رابط")) {
+          if (session && session.token && API_URL) {
             await apiPost({
               action: "logout",
               token: session.token
@@ -1355,7 +1588,7 @@
     }
 
     async function loadProductsPageData() {
-      if (!API_URL || API_URL.includes("ضع_رابط")) {
+      if (!API_URL) {
         hideLoading();
         showMessage(t("apiMissing"), "error");
         return;
@@ -1411,6 +1644,11 @@
         renderNewProductCategoryOptions();
         renderCategoryFilter();
         renderProducts();
+
+        if (categoryModalOverlay.classList.contains("show")) {
+          renderExistingCategoriesList();
+        }
+
         clearMessage();
 
       } catch (error) {
@@ -1474,6 +1712,94 @@
 
       if (current && [...categoryFilter.options].some(option => option.value === current)) {
         categoryFilter.value = current;
+      }
+    }
+
+    function openCategoryModal() {
+      renderExistingCategoriesList();
+      categoryModalOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => newCategoryName.focus(), 100);
+    }
+
+    function closeCategoryModal() {
+      categoryModalOverlay.classList.remove("show");
+      document.body.style.overflow = "";
+      addCategoryForm.reset();
+    }
+
+    function renderExistingCategoriesList() {
+      existingCategoriesList.innerHTML = "";
+
+      const activeCategories = categories.filter(category => {
+        return normalizeStatus(category.Status) === "Active";
+      });
+
+      if (!activeCategories.length) {
+        existingCategoriesList.innerHTML = `<div class="empty-state">${t("noCategories")}</div>`;
+        return;
+      }
+
+      activeCategories.forEach(category => {
+        const chip = document.createElement("span");
+        chip.className = "category-chip";
+        chip.textContent = category.CategoryName || "";
+        existingCategoriesList.appendChild(chip);
+      });
+    }
+
+    async function handleAddCategory(event) {
+      event.preventDefault();
+      clearMessage();
+
+      const categoryName = newCategoryName.value.trim();
+
+      if (!categoryName) {
+        showMessage(t("categoryNameRequired"), "error");
+        return;
+      }
+
+      const exists = categories.some(category => {
+        return String(category.CategoryName || "").trim().toLowerCase() === categoryName.toLowerCase();
+      });
+
+      if (exists) {
+        showMessage(t("categoryAlreadyExists"), "warning");
+        return;
+      }
+
+      setButtonLoading(saveCategoryBtn, true, t("saving"));
+
+      try {
+        const result = await apiPost({
+          action: "addCategory",
+          token: currentUser.token,
+          category: {
+            categoryName: categoryName,
+            status: "Active"
+          }
+        });
+
+        setButtonLoading(saveCategoryBtn, false, t("saveCategory"));
+
+        if (!result.success) {
+          showMessage(result.message || t("categoryAddFailed"), "error");
+          return;
+        }
+
+        showMessage(t("categoryAdded"), "success");
+        newCategoryName.value = "";
+
+        await loadProductsPageData();
+
+        renderExistingCategoriesList();
+        renderNewProductCategoryOptions();
+        renderCategoryFilter();
+
+      } catch (error) {
+        console.error(error);
+        setButtonLoading(saveCategoryBtn, false, t("saveCategory"));
+        showMessage(t("serverError"), "error");
       }
     }
 
