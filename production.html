@@ -25,7 +25,6 @@
       --blue-dark: #004ec2;
       --purple: #6d28d9;
       --green: #16a34a;
-      --orange: #ea580c;
       --red: #dc2626;
       --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
       --topbar-height: 78px;
@@ -569,7 +568,7 @@
     .batch-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 760px;
+      min-width: 840px;
       background: #fff;
     }
 
@@ -602,16 +601,31 @@
       color: var(--blue-dark);
     }
 
-    .product-count-pill {
+    .product-count-pill,
+    .image-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-width: 44px;
       height: 34px;
       border-radius: 999px;
+      font-weight: 900;
+      padding: 0 10px;
+    }
+
+    .product-count-pill {
       background: rgba(22, 163, 74, 0.12);
       color: #0f7a35;
-      font-weight: 900;
+    }
+
+    .image-pill.has-image {
+      background: rgba(0, 102, 255, 0.12);
+      color: var(--blue-dark);
+    }
+
+    .image-pill.no-image {
+      background: rgba(102, 112, 133, 0.12);
+      color: var(--muted);
     }
 
     .actions {
@@ -1052,6 +1066,7 @@
                   <th data-i18n="shift">الشفت</th>
                   <th data-i18n="rawWasteKgShort">الهدر كجم</th>
                   <th data-i18n="enteredProductsCount">عدد المنتجات المدخلة</th>
+                  <th data-i18n="imageColumn">الصورة</th>
                   <th data-i18n="actions">الإجراء</th>
                 </tr>
               </thead>
@@ -1074,7 +1089,7 @@
   </main>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
 
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
@@ -1128,6 +1143,9 @@
         quantityPlaceholder: "الكمية",
         workersProductionTable: "جدول إنتاج العمال",
         enteredProductsCount: "عدد المنتجات المدخلة",
+        imageColumn: "الصورة",
+        hasImage: "مرفقة",
+        noImage: "لا توجد",
         addEntryToTable: "إضافة المدخلات إلى الجدول",
         updateEntryInTable: "تحديث المدخلات في الجدول",
         actions: "الإجراء",
@@ -1213,6 +1231,9 @@
         quantityPlaceholder: "Quantity",
         workersProductionTable: "Workers Production Table",
         enteredProductsCount: "Entered Products Count",
+        imageColumn: "Image",
+        hasImage: "Attached",
+        noImage: "None",
         addEntryToTable: "Add Entry to Table",
         updateEntryInTable: "Update Entry in Table",
         actions: "Action",
@@ -1370,6 +1391,7 @@
       renderProductRows();
       renderEntriesTable();
       updateEntryButtonText();
+      renderSelectedImagePreview();
     }
 
     function protectPage() {
@@ -1834,11 +1856,7 @@
       defectImage.addEventListener("change", handleImageSelect);
 
       removeImageBtn.addEventListener("click", () => {
-        selectedImage = null;
-        defectImage.value = "";
-        imagePreview.src = "";
-        imagePreviewBox.style.display = "none";
-        removeImageBtn.style.display = "none";
+        clearSelectedImage();
       });
 
       productionForm.addEventListener("submit", handleSubmit);
@@ -1944,7 +1962,30 @@
         shift: shiftValue,
         rawWasteKg: wasteValue,
         notes: notesValue,
+        image: cloneImageForEntry(selectedImage),
         items: JSON.parse(JSON.stringify(currentItems))
+      };
+    }
+
+    function cloneImageForEntry(imageObject) {
+      if (!imageObject) return null;
+
+      return {
+        fileName: imageObject.fileName || "",
+        mimeType: imageObject.mimeType || "image/jpeg",
+        dataUrl: imageObject.dataUrl || "",
+        originalName: imageObject.originalName || imageObject.fileName || "",
+        sizeText: imageObject.sizeText || ""
+      };
+    }
+
+    function imageForApi(imageObject) {
+      if (!imageObject || !imageObject.dataUrl) return null;
+
+      return {
+        fileName: imageObject.fileName || createImageFileName("image.jpg"),
+        mimeType: imageObject.mimeType || "image/jpeg",
+        dataUrl: imageObject.dataUrl
       };
     }
 
@@ -1996,7 +2037,7 @@
       if (!productionEntries.length) {
         entriesTableBody.innerHTML = `
           <tr>
-            <td colspan="5">${t("emptyTable")}</td>
+            <td colspan="6">${t("emptyTable")}</td>
           </tr>
         `;
         return;
@@ -2007,6 +2048,7 @@
         const workerNameText = worker ? worker.WorkerName : entry.workerId;
         const count = countValidItems(entry.items);
         const wasteValue = Number(entry.rawWasteKg || 0);
+        const hasImage = !!(entry.image && entry.image.dataUrl);
 
         const tr = document.createElement("tr");
         tr.dataset.index = index;
@@ -2017,6 +2059,11 @@
           <td>${escapeHtml(entry.shift)}</td>
           <td>${formatDecimal(wasteValue)}</td>
           <td><span class="product-count-pill">${count}</span></td>
+          <td>
+            <span class="image-pill ${hasImage ? "has-image" : "no-image"}">
+              ${hasImage ? t("hasImage") : t("noImage")}
+            </span>
+          </td>
           <td>
             <button class="btn btn-danger btn-small delete-entry-btn" type="button" data-index="${index}">
               ${t("deleteEntry")}
@@ -2041,6 +2088,7 @@
       shift.value = entry.shift || "";
       rawWasteKg.value = entry.rawWasteKg || "";
       notes.value = entry.notes || "";
+      selectedImage = cloneImageForEntry(entry.image);
 
       currentItems = JSON.parse(JSON.stringify(entry.items || []));
 
@@ -2055,6 +2103,7 @@
         ];
       }
 
+      renderSelectedImagePreview();
       renderProductRows();
       renderEntriesTable();
       updateEntryButtonText();
@@ -2096,6 +2145,7 @@
       shift.value = "";
       rawWasteKg.value = "";
       notes.value = "";
+      clearSelectedImage();
 
       currentItems = [
         {
@@ -2115,6 +2165,7 @@
 
       if (!file) {
         selectedImage = null;
+        renderSelectedImagePreview();
         return;
       }
 
@@ -2132,23 +2183,53 @@
 
       try {
         const compressed = await compressImage(file, 1200, 0.75);
+        const sizeText = formatBytes(compressed.sizeBytes);
 
         selectedImage = {
           fileName: createImageFileName(file.name),
           mimeType: "image/jpeg",
-          dataUrl: compressed.dataUrl
+          dataUrl: compressed.dataUrl,
+          originalName: file.name,
+          sizeText: sizeText
         };
 
-        imagePreview.src = compressed.dataUrl;
-        imageName.textContent = file.name;
-        imageSize.textContent = t("imageReady")(formatBytes(compressed.sizeBytes));
-        imagePreviewBox.style.display = "flex";
-        removeImageBtn.style.display = "inline-flex";
+        imageSize.textContent = t("imageReady")(sizeText);
+        renderSelectedImagePreview();
 
       } catch (error) {
         console.error(error);
         showMessage(t("imageFailed"), "error");
       }
+    }
+
+    function renderSelectedImagePreview() {
+      if (!selectedImage || !selectedImage.dataUrl) {
+        imagePreview.src = "";
+        imageName.textContent = "---";
+        imageSize.textContent = "---";
+        imagePreviewBox.style.display = "none";
+        removeImageBtn.style.display = "none";
+        defectImage.value = "";
+        return;
+      }
+
+      imagePreview.src = selectedImage.dataUrl;
+      imageName.textContent = selectedImage.originalName || selectedImage.fileName || "---";
+
+      if (selectedImage.sizeText) {
+        imageSize.textContent = selectedImage.sizeText;
+      } else {
+        imageSize.textContent = t("hasImage");
+      }
+
+      imagePreviewBox.style.display = "flex";
+      removeImageBtn.style.display = "inline-flex";
+    }
+
+    function clearSelectedImage() {
+      selectedImage = null;
+      defectImage.value = "";
+      renderSelectedImagePreview();
     }
 
     async function handleSubmit(event) {
@@ -2233,7 +2314,7 @@
             workerId: entry.workerId,
             rawWasteKg: Number(entry.rawWasteKg || 0),
             notes: entry.notes || "",
-            image: selectedImage
+            image: imageForApi(entry.image)
           },
           items: itemsResult.items
         });
@@ -2248,10 +2329,7 @@
       productionForm.reset();
       productionDate.value = today;
 
-      selectedImage = null;
-      imagePreview.src = "";
-      imagePreviewBox.style.display = "none";
-      removeImageBtn.style.display = "none";
+      clearSelectedImage();
 
       currentItems = [
         {
