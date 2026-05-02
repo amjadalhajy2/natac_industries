@@ -1137,7 +1137,6 @@
         supervisorDateHint: "المشرف يمكنه إدخال إنتاج اليوم فقط.",
         futureDateNotAllowed: "لا يمكن إدخال إنتاج بتاريخ مستقبلي.",
         duplicateWorkerEntry: "تمت إضافة إنتاج هذا العامل مسبقًا في الجدول.",
-        dateLockedHint: "تم تثبيت التاريخ لأن هناك مدخلات مضافة في الجدول.",
         apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة production.html.",
         tokenMissing: "لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.",
         loadFailed: "تعذر تحميل البيانات الأساسية.",
@@ -1223,7 +1222,6 @@
         supervisorDateHint: "Supervisor can enter today’s production only.",
         futureDateNotAllowed: "Future production dates are not allowed.",
         duplicateWorkerEntry: "This worker already has an entry in the table.",
-        dateLockedHint: "Date is locked because entries have been added to the table.",
         apiMissing: "Please set the Apps Script URL inside API_URL in production.html.",
         tokenMissing: "Session token not found. Make sure login page stores token in localStorage.",
         loadFailed: "Unable to load master data.",
@@ -1454,7 +1452,7 @@
 
       if (productionEntries.length > 0) {
         productionDate.disabled = true;
-        dateHint.textContent = t("dateLockedHint");
+        dateHint.textContent = "";
       } else {
         productionDate.disabled = false;
         dateHint.textContent = "";
@@ -1902,6 +1900,7 @@
       const shiftValue = shift.value;
       const workerValue = workerId.value;
       const wasteValue = Number(rawWasteKg.value || 0);
+      const notesValue = notes.value.trim();
 
       if (!dateValue) {
         showMessage(t("chooseDate"), "error");
@@ -1944,6 +1943,7 @@
         workerId: workerValue,
         shift: shiftValue,
         rawWasteKg: wasteValue,
+        notes: notesValue,
         items: JSON.parse(JSON.stringify(currentItems))
       };
     }
@@ -2040,6 +2040,7 @@
       workerId.value = entry.workerId || "";
       shift.value = entry.shift || "";
       rawWasteKg.value = entry.rawWasteKg || "";
+      notes.value = entry.notes || "";
 
       currentItems = JSON.parse(JSON.stringify(entry.items || []));
 
@@ -2094,6 +2095,7 @@
       workerId.value = "";
       shift.value = "";
       rawWasteKg.value = "";
+      notes.value = "";
 
       currentItems = [
         {
@@ -2187,7 +2189,6 @@
 
     function buildPayloads() {
       const dateValue = productionDate.value;
-      const notesValue = notes.value.trim();
 
       if (!dateValue) {
         showMessage(t("chooseDate"), "error");
@@ -2231,7 +2232,7 @@
             shift: entry.shift,
             workerId: entry.workerId,
             rawWasteKg: Number(entry.rawWasteKg || 0),
-            notes: notesValue,
+            notes: entry.notes || "",
             image: selectedImage
           },
           items: itemsResult.items
