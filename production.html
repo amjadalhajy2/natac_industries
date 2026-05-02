@@ -976,7 +976,7 @@
 
     <div id="messageBox" class="message"></div>
 
-    <form id="productionForm">
+    <form id="productionForm" novalidate>
       <section class="panel">
         <div class="panel-content">
           <div class="page-title">
@@ -986,13 +986,13 @@
           <div class="form-grid">
             <div class="field">
               <label for="productionDate" data-i18n="date">التاريخ</label>
-              <input type="date" id="productionDate" required>
+              <input type="date" id="productionDate">
               <div class="date-hint" id="dateHint"></div>
             </div>
 
             <div class="field">
               <label for="shift" data-i18n="shift">الشفت</label>
-              <select id="shift" required>
+              <select id="shift">
                 <option value="" data-i18n="chooseShift">اختر الشفت</option>
                 <option value="صباحي" data-i18n="morning">صباحي</option>
                 <option value="مسائي" data-i18n="evening">مسائي</option>
@@ -1001,7 +1001,7 @@
 
             <div class="field">
               <label for="workerId" data-i18n="workerName">اسم العامل</label>
-              <select id="workerId" required>
+              <select id="workerId">
                 <option value="" data-i18n="loading">جاري التحميل...</option>
               </select>
             </div>
@@ -1552,7 +1552,6 @@
             if (editingEntryIndex !== null && index === editingEntryIndex) {
               return "";
             }
-
             return String(entry.workerId || "");
           })
           .filter(Boolean)
@@ -1919,16 +1918,16 @@
 
     function hasCurrentEntryDraft() {
       const hasBasicData =
-        workerId.value ||
-        shift.value ||
+        !!workerId.value ||
+        !!shift.value ||
         rawWasteKg.value !== "" ||
-        notes.value.trim() ||
-        selectedImage;
+        !!notes.value.trim() ||
+        !!selectedImage;
 
       const hasProductData = currentItems.some(item => {
-        return item.category ||
-          item.machineId ||
-          item.productId ||
+        return !!item.category ||
+          !!item.machineId ||
+          !!item.productId ||
           Number(item.quantity || 0) > 0;
       });
 
