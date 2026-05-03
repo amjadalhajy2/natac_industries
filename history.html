@@ -441,7 +441,7 @@
 
     .filters-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: 220px repeat(3, minmax(0, 1fr)) auto;
       gap: 12px;
       margin-bottom: 16px;
       align-items: end;
@@ -461,7 +461,8 @@
     }
 
     input,
-    select {
+    select,
+    textarea {
       width: 100%;
       min-height: 52px;
       border: 1px solid rgba(16,24,39,0.18);
@@ -476,8 +477,16 @@
       transition: 0.18s ease;
     }
 
+    textarea {
+      min-height: 92px;
+      padding: 12px 14px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
     input:focus,
-    select:focus {
+    select:focus,
+    textarea:focus {
       border-color: rgba(0, 102, 255, 0.65);
       box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.13);
       background: #fff;
@@ -527,7 +536,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1300px;
+      min-width: 1050px;
       background: #fff;
     }
 
@@ -552,17 +561,11 @@
       color: var(--text);
     }
 
-    .id-cell,
-    .number-cell,
-    .date-cell {
+    .number-cell {
       direction: ltr;
       text-align: start;
       font-family: Arial, sans-serif;
       font-weight: 900;
-    }
-
-    .id-cell {
-      color: var(--blue-dark);
     }
 
     .image-link {
@@ -680,7 +683,7 @@
     }
 
     .modal-card {
-      width: min(720px, 100%);
+      width: min(980px, 100%);
       max-height: calc(100vh - 32px);
       overflow-y: auto;
       border-radius: 28px;
@@ -717,38 +720,42 @@
       cursor: pointer;
     }
 
-    .details-grid {
+    .entry-form-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
     }
 
-    .detail-item {
-      background: #fff;
-      border: 1px solid rgba(16,24,39,0.10);
-      border-radius: 16px;
-      padding: 12px;
+    .entry-form-grid .wide {
+      grid-column: span 2;
+    }
+
+    .entry-form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-table {
+      min-width: 900px;
+    }
+
+    .modal-section-title {
+      margin: 18px 0 10px;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--text);
       text-align: start;
     }
 
-    .detail-item span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
+    .readonly-note {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(0, 102, 255, 0.08);
+      border: 1px solid rgba(0, 102, 255, 0.14);
+      color: var(--blue-dark);
       font-weight: 900;
-      margin-bottom: 5px;
-    }
-
-    .detail-item strong {
-      display: block;
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 900;
-      word-break: break-word;
-    }
-
-    .detail-full {
-      grid-column: 1 / -1;
+      margin-bottom: 14px;
+      text-align: start;
     }
 
     @keyframes spin {
@@ -759,10 +766,14 @@
 
     @media (max-width: 1180px) {
       .filters-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .entry-form-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
@@ -815,8 +826,13 @@
 
       .filters-grid,
       .summary-grid,
-      .details-grid {
+      .entry-form-grid {
         grid-template-columns: 1fr;
+      }
+
+      .entry-form-grid .wide,
+      .entry-form-grid .full {
+        grid-column: auto;
       }
 
       .actions {
@@ -959,35 +975,21 @@
           </div>
 
           <div class="actions">
-            <button class="btn btn-secondary" type="button" id="resetFiltersBtn" data-i18n="resetFilters">إعادة ضبط</button>
-            <button class="btn btn-primary" type="button" id="applyFiltersBtn" data-i18n="applyFilters">تطبيق الفلاتر</button>
+            <button class="btn btn-secondary" type="button" id="resetFiltersBtn" data-i18n="today">اليوم</button>
+            <button class="btn btn-primary" type="button" id="applyFiltersBtn" data-i18n="applyFilters">تطبيق</button>
           </div>
         </div>
 
         <div class="filters-grid">
           <div class="field">
-            <label for="fromDateInput" data-i18n="fromDate">من تاريخ</label>
-            <input type="date" id="fromDateInput">
-          </div>
-
-          <div class="field">
-            <label for="toDateInput" data-i18n="toDate">إلى تاريخ</label>
-            <input type="date" id="toDateInput">
+            <label for="dateInput" data-i18n="date">التاريخ</label>
+            <input type="date" id="dateInput">
           </div>
 
           <div class="field">
             <label for="workerFilterInput" data-i18n="worker">العامل</label>
             <select id="workerFilterInput">
               <option value="" data-i18n="allWorkers">كل العمال</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="shiftFilterInput" data-i18n="shift">الشفت</label>
-            <select id="shiftFilterInput">
-              <option value="" data-i18n="allShifts">كل الشفتات</option>
-              <option value="صباحي" data-i18n="morningShift">صباحي</option>
-              <option value="مسائي" data-i18n="eveningShift">مسائي</option>
             </select>
           </div>
 
@@ -1004,27 +1006,32 @@
               <option value="" data-i18n="allMachines">كل المكائن</option>
             </select>
           </div>
+
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn btn-secondary" type="button" id="refreshBtn" data-i18n="refresh">تحديث</button>
+          </div>
         </div>
 
         <div class="summary-grid">
           <div class="summary-card">
-            <span data-i18n="totalRecords">عدد السجلات</span>
-            <strong id="totalRecordsValue">0</strong>
+            <span data-i18n="avgWorkHours">متوسط ساعات العمل</span>
+            <strong id="avgWorkHoursValue">0</strong>
           </div>
 
           <div class="summary-card">
-            <span data-i18n="totalOperations">عدد عمليات الإنتاج</span>
-            <strong id="totalOperationsValue">0</strong>
+            <span data-i18n="wasteIndex">مؤشر الهدر</span>
+            <strong id="wasteIndexValue">0</strong>
           </div>
 
           <div class="summary-card">
-            <span data-i18n="totalQuantity">إجمالي الكمية</span>
-            <strong id="totalQuantityValue">0</strong>
+            <span data-i18n="wastedHours">إجمالي ساعات العمل المهدرة</span>
+            <strong id="wastedHoursValue">0</strong>
           </div>
 
           <div class="summary-card">
-            <span data-i18n="totalWaste">إجمالي الهدر كجم</span>
-            <strong id="totalWasteValue">0</strong>
+            <span data-i18n="totalProduction">إجمالي الإنتاج</span>
+            <strong id="totalProductionValue">0</strong>
           </div>
         </div>
 
@@ -1032,18 +1039,15 @@
           <table>
             <thead>
               <tr>
-                <th data-i18n="date">التاريخ</th>
-                <th data-i18n="shift">الشفت</th>
                 <th data-i18n="worker">العامل</th>
                 <th data-i18n="productCategory">صنف المنتج</th>
                 <th data-i18n="productName">اسم المنتج</th>
                 <th data-i18n="machineName">المكينة</th>
                 <th data-i18n="quantity">الكمية</th>
-                <th data-i18n="rawWaste">الهدر كجم</th>
+                <th data-i18n="actualWaste">الهدر الفعلي</th>
                 <th data-i18n="notes">الملاحظات</th>
                 <th data-i18n="image">الصورة</th>
-                <th data-i18n="createdBy">مدخل البيانات</th>
-                <th data-i18n="details">التفاصيل</th>
+                <th data-i18n="details">العرض</th>
               </tr>
             </thead>
             <tbody id="historyTableBody"></tbody>
@@ -1056,11 +1060,73 @@
   <div class="modal-overlay" id="detailsModal">
     <div class="modal-card">
       <div class="modal-head">
-        <h2 data-i18n="recordDetails">تفاصيل السجل</h2>
+        <h2 data-i18n="productionDetails">تفاصيل الإنتاج</h2>
         <button class="close-modal" type="button" id="closeDetailsModalBtn">×</button>
       </div>
 
-      <div class="details-grid" id="detailsContent"></div>
+      <div id="readonlyNote" class="readonly-note" style="display:none;" data-i18n="readonlyNote">
+        العرض فقط. التعديل متاح لمدير النظام فقط.
+      </div>
+
+      <form id="editProductionForm" novalidate>
+        <input type="hidden" id="editProductionId">
+
+        <div class="entry-form-grid">
+          <div class="field">
+            <label for="editDateInput" data-i18n="date">التاريخ</label>
+            <input type="date" id="editDateInput" disabled>
+          </div>
+
+          <div class="field">
+            <label for="editShiftInput" data-i18n="shift">الشفت</label>
+            <select id="editShiftInput">
+              <option value="صباحي" data-i18n="morningShift">صباحي</option>
+              <option value="مسائي" data-i18n="eveningShift">مسائي</option>
+            </select>
+          </div>
+
+          <div class="field wide">
+            <label for="editWorkerInput" data-i18n="worker">العامل</label>
+            <select id="editWorkerInput"></select>
+          </div>
+
+          <div class="field">
+            <label for="editWasteInput" data-i18n="actualWasteKg">هدر المواد الخام (كجم)</label>
+            <input type="number" id="editWasteInput" min="0" step="0.001">
+          </div>
+
+          <div class="field wide">
+            <label data-i18n="image">الصورة</label>
+            <div id="editImageBox" style="min-height:52px;display:flex;align-items:center;"></div>
+          </div>
+
+          <div class="field full">
+            <label for="editNotesInput" data-i18n="notes">الملاحظات</label>
+            <textarea id="editNotesInput"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-section-title" data-i18n="productionItems">بيانات المنتجات</div>
+
+        <div class="table-wrap">
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th data-i18n="productCategory">صنف المنتج</th>
+                <th data-i18n="machineName">المكينة</th>
+                <th data-i18n="productName">اسم المنتج</th>
+                <th data-i18n="quantity">الكمية</th>
+              </tr>
+            </thead>
+            <tbody id="editItemsBody"></tbody>
+          </table>
+        </div>
+
+        <div class="actions admin-only" id="editActions" style="margin-top:16px;">
+          <button class="btn btn-primary" type="submit" id="saveEditBtn" data-i18n="saveChanges">حفظ التعديل</button>
+          <button class="btn btn-secondary" type="button" id="cancelEditBtn" data-i18n="cancel">إلغاء</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -1068,6 +1134,7 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const STANDARD_WORK_MINUTES = 600;
 
     const i18n = {
       ar: {
@@ -1088,35 +1155,34 @@
         machines: "المكائن",
         logout: "تسجيل الخروج",
         loadingHistory: "جاري تحميل سجل الإنتاج...",
-        applyFilters: "تطبيق الفلاتر",
-        resetFilters: "إعادة ضبط",
-        fromDate: "من تاريخ",
-        toDate: "إلى تاريخ",
+        applyFilters: "تطبيق",
+        today: "اليوم",
+        refresh: "تحديث",
+        date: "التاريخ",
         worker: "العامل",
         shift: "الشفت",
         product: "المنتج",
         machine: "المكينة",
         allWorkers: "كل العمال",
-        allShifts: "كل الشفتات",
         allProducts: "كل المنتجات",
         allMachines: "كل المكائن",
         morningShift: "صباحي",
         eveningShift: "مسائي",
-        totalRecords: "عدد السجلات",
-        totalOperations: "عدد عمليات الإنتاج",
-        totalQuantity: "إجمالي الكمية",
-        totalWaste: "إجمالي الهدر كجم",
-        date: "التاريخ",
+        avgWorkHours: "متوسط ساعات العمل",
+        wasteIndex: "مؤشر الهدر",
+        wastedHours: "إجمالي ساعات العمل المهدرة",
+        totalProduction: "إجمالي الإنتاج",
         productCategory: "صنف المنتج",
         productName: "اسم المنتج",
         machineName: "المكينة",
         quantity: "الكمية",
-        rawWaste: "الهدر كجم",
+        actualWaste: "الهدر الفعلي",
+        actualWasteKg: "هدر المواد الخام (كجم)",
         notes: "الملاحظات",
         image: "الصورة",
-        createdBy: "مدخل البيانات",
-        details: "التفاصيل",
-        recordDetails: "تفاصيل السجل",
+        details: "العرض",
+        productionDetails: "تفاصيل الإنتاج",
+        productionItems: "بيانات المنتجات",
         showDetails: "عرض",
         openImage: "فتح الصورة",
         noImage: "لا يوجد",
@@ -1124,10 +1190,19 @@
         emptyData: "لا توجد بيانات للعرض.",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
+        readonlyNote: "العرض فقط. التعديل متاح لمدير النظام فقط.",
+        saveChanges: "حفظ التعديل",
+        cancel: "إلغاء",
+        chooseCategory: "اختر الصنف",
+        chooseMachine: "اختر المكينة",
+        chooseProduct: "اختر المنتج",
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل سجل الإنتاج.",
-        invalidDates: "تاريخ البداية لا يمكن أن يكون بعد تاريخ النهاية."
+        saveFailed: "تعذر حفظ التعديل.",
+        updateActionMissing: "زر الحفظ يحتاج إضافة عملية updateProduction في Code.gs حتى يتم تحديث السجل فعليًا.",
+        updateSuccess: "تم تحديث بيانات الإنتاج بنجاح.",
+        saving: "جاري الحفظ..."
       },
       en: {
         htmlLang: "en",
@@ -1147,35 +1222,34 @@
         machines: "Machines",
         logout: "Logout",
         loadingHistory: "Loading production history...",
-        applyFilters: "Apply Filters",
-        resetFilters: "Reset",
-        fromDate: "From Date",
-        toDate: "To Date",
+        applyFilters: "Apply",
+        today: "Today",
+        refresh: "Refresh",
+        date: "Date",
         worker: "Worker",
         shift: "Shift",
         product: "Product",
         machine: "Machine",
         allWorkers: "All Workers",
-        allShifts: "All Shifts",
         allProducts: "All Products",
         allMachines: "All Machines",
         morningShift: "Morning",
         eveningShift: "Evening",
-        totalRecords: "Records",
-        totalOperations: "Production Entries",
-        totalQuantity: "Total Quantity",
-        totalWaste: "Total Waste Kg",
-        date: "Date",
+        avgWorkHours: "Average Work Hours",
+        wasteIndex: "Waste Index",
+        wastedHours: "Total Wasted Work Hours",
+        totalProduction: "Total Production",
         productCategory: "Product Category",
         productName: "Product Name",
         machineName: "Machine",
         quantity: "Quantity",
-        rawWaste: "Waste Kg",
+        actualWaste: "Actual Waste",
+        actualWasteKg: "Raw Material Waste (Kg)",
         notes: "Notes",
         image: "Image",
-        createdBy: "Created By",
-        details: "Details",
-        recordDetails: "Record Details",
+        details: "View",
+        productionDetails: "Production Details",
+        productionItems: "Production Items",
         showDetails: "View",
         openImage: "Open Image",
         noImage: "None",
@@ -1183,10 +1257,19 @@
         emptyData: "No data to display.",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
+        readonlyNote: "View only. Editing is available for system admin only.",
+        saveChanges: "Save Changes",
+        cancel: "Cancel",
+        chooseCategory: "Choose Category",
+        chooseMachine: "Choose Machine",
+        chooseProduct: "Choose Product",
         tokenMissing: "Session token not found.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         loadFailed: "Unable to load production history.",
-        invalidDates: "Start date cannot be after end date."
+        saveFailed: "Unable to save changes.",
+        updateActionMissing: "Saving requires adding updateProduction action in Code.gs to update the record.",
+        updateSuccess: "Production data updated successfully.",
+        saving: "Saving..."
       }
     };
 
@@ -1196,6 +1279,7 @@
     let products = [];
     let machines = [];
     let historyRecords = [];
+    let currentEditGroup = null;
     let messageTimer = null;
 
     const loadingBox = document.getElementById("loadingBox");
@@ -1215,25 +1299,36 @@
     const overlay = document.getElementById("overlay");
     const languageToggleBtn = document.getElementById("languageToggleBtn");
 
-    const fromDateInput = document.getElementById("fromDateInput");
-    const toDateInput = document.getElementById("toDateInput");
+    const dateInput = document.getElementById("dateInput");
     const workerFilterInput = document.getElementById("workerFilterInput");
-    const shiftFilterInput = document.getElementById("shiftFilterInput");
     const productFilterInput = document.getElementById("productFilterInput");
     const machineFilterInput = document.getElementById("machineFilterInput");
     const applyFiltersBtn = document.getElementById("applyFiltersBtn");
     const resetFiltersBtn = document.getElementById("resetFiltersBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
 
-    const totalRecordsValue = document.getElementById("totalRecordsValue");
-    const totalOperationsValue = document.getElementById("totalOperationsValue");
-    const totalQuantityValue = document.getElementById("totalQuantityValue");
-    const totalWasteValue = document.getElementById("totalWasteValue");
+    const avgWorkHoursValue = document.getElementById("avgWorkHoursValue");
+    const wasteIndexValue = document.getElementById("wasteIndexValue");
+    const wastedHoursValue = document.getElementById("wastedHoursValue");
+    const totalProductionValue = document.getElementById("totalProductionValue");
 
     const historyTableBody = document.getElementById("historyTableBody");
 
     const detailsModal = document.getElementById("detailsModal");
     const closeDetailsModalBtn = document.getElementById("closeDetailsModalBtn");
-    const detailsContent = document.getElementById("detailsContent");
+    const readonlyNote = document.getElementById("readonlyNote");
+    const editProductionForm = document.getElementById("editProductionForm");
+    const editProductionId = document.getElementById("editProductionId");
+    const editDateInput = document.getElementById("editDateInput");
+    const editShiftInput = document.getElementById("editShiftInput");
+    const editWorkerInput = document.getElementById("editWorkerInput");
+    const editWasteInput = document.getElementById("editWasteInput");
+    const editImageBox = document.getElementById("editImageBox");
+    const editNotesInput = document.getElementById("editNotesInput");
+    const editItemsBody = document.getElementById("editItemsBody");
+    const editActions = document.getElementById("editActions");
+    const saveEditBtn = document.getElementById("saveEditBtn");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
@@ -1241,7 +1336,7 @@
       initSidebar();
       initLanguage();
       bindEvents();
-      setDefaultDates();
+      setTodayDate();
       loadMasterDataAndHistory();
     });
 
@@ -1291,8 +1386,8 @@
       renderWorkersOptions();
       renderProductsOptions();
       renderMachinesOptions();
-      renderHistoryTable();
       renderSummary();
+      renderHistoryTable();
     }
 
     function protectPage() {
@@ -1335,20 +1430,23 @@
       return role || "---";
     }
 
+    function isAdmin() {
+      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
+    }
+
     function applyRoleUI(role) {
       const cleanRole = String(role || "").toLowerCase();
 
       document.querySelectorAll(".admin-only").forEach(el => {
         el.style.display = cleanRole === "admin" ? "" : "none";
       });
+
+      readonlyNote.style.display = cleanRole === "admin" ? "none" : "block";
+      editActions.style.display = cleanRole === "admin" ? "flex" : "none";
     }
 
-    function setDefaultDates() {
-      const today = new Date();
-      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-
-      fromDateInput.value = toISODate(firstDay);
-      toDateInput.value = toISODate(today);
+    function setTodayDate() {
+      dateInput.value = toISODate(new Date());
     }
 
     async function loadMasterDataAndHistory() {
@@ -1397,13 +1495,7 @@
     async function loadHistory() {
       clearMessage();
 
-      const fromDate = fromDateInput.value || "";
-      const toDate = toDateInput.value || "";
-
-      if (fromDate && toDate && fromDate > toDate) {
-        showMessage(t("invalidDates"), "error");
-        return;
-      }
+      const selectedDate = dateInput.value || toISODate(new Date());
 
       setButtonLoading(applyFiltersBtn, true, t("loadingHistory"));
 
@@ -1412,10 +1504,9 @@
           action: "getProductionHistory",
           token: currentUser.token,
           filters: {
-            fromDate: fromDate,
-            toDate: toDate,
+            fromDate: selectedDate,
+            toDate: selectedDate,
             workerId: workerFilterInput.value || "",
-            shift: shiftFilterInput.value || "",
             productId: productFilterInput.value || "",
             machineId: machineFilterInput.value || ""
           }
@@ -1446,17 +1537,27 @@
 
     function renderWorkersOptions() {
       const currentValue = workerFilterInput.value || "";
+      const editCurrentValue = editWorkerInput.value || "";
 
       workerFilterInput.innerHTML = `<option value="">${t("allWorkers")}</option>`;
+      editWorkerInput.innerHTML = "";
 
       workers.forEach(worker => {
-        const option = document.createElement("option");
-        option.value = worker.WorkerID || "";
-        option.textContent = worker.WorkerName || worker.WorkerID || "";
-        workerFilterInput.appendChild(option);
+        const label = worker.WorkerName || worker.WorkerID || "";
+
+        const filterOption = document.createElement("option");
+        filterOption.value = worker.WorkerID || "";
+        filterOption.textContent = label;
+        workerFilterInput.appendChild(filterOption);
+
+        const editOption = document.createElement("option");
+        editOption.value = worker.WorkerID || "";
+        editOption.textContent = label;
+        editWorkerInput.appendChild(editOption);
       });
 
       workerFilterInput.value = currentValue;
+      editWorkerInput.value = editCurrentValue;
     }
 
     function renderProductsOptions() {
@@ -1489,34 +1590,93 @@
       machineFilterInput.value = currentValue;
     }
 
-    function renderSummary() {
-      const productionIds = {};
-      let totalQuantity = 0;
-      let totalWaste = 0;
+    function getProductById(productId) {
+      return products.find(product => String(product.ProductID) === String(productId)) || {};
+    }
+
+    function getMachineById(machineId) {
+      return machines.find(machine => String(machine.MachineID) === String(machineId)) || {};
+    }
+
+    function getProductTime(productId) {
+      return Number(getProductById(productId).TimePerUnit || 0);
+    }
+
+    function getProductWaste(productId) {
+      return Number(getProductById(productId).WasteKgPerUnit || 0);
+    }
+
+    function getGroupedHistory() {
+      const groupsMap = {};
 
       historyRecords.forEach(record => {
         const productionId = String(record.ProductionID || "");
-        totalQuantity += Number(record.Quantity || 0);
 
-        if (productionId && !productionIds[productionId]) {
-          productionIds[productionId] = true;
-          totalWaste += Number(record.RawWasteKg || 0);
+        if (!groupsMap[productionId]) {
+          groupsMap[productionId] = {
+            ProductionID: productionId,
+            Date: record.Date,
+            Shift: record.Shift,
+            WorkerID: record.WorkerID,
+            WorkerName: record.WorkerName,
+            RawWasteKg: Number(record.RawWasteKg || 0),
+            Notes: record.Notes || "",
+            ImageURL: record.ImageURL || "",
+            items: []
+          };
         }
+
+        groupsMap[productionId].items.push(record);
       });
 
-      totalRecordsValue.textContent = formatNumber(historyRecords.length);
-      totalOperationsValue.textContent = formatNumber(Object.keys(productionIds).length);
-      totalQuantityValue.textContent = formatNumber(totalQuantity);
-      totalWasteValue.textContent = formatDecimal(totalWaste);
+      return Object.values(groupsMap);
+    }
+
+    function renderSummary() {
+      const groups = getGroupedHistory();
+
+      let totalQuantity = 0;
+      let totalTheoreticalMinutes = 0;
+      let totalExpectedWaste = 0;
+      let totalActualWaste = 0;
+      const workerIds = {};
+
+      groups.forEach(group => {
+        workerIds[group.WorkerID || group.WorkerName || group.ProductionID] = true;
+        totalActualWaste += Number(group.RawWasteKg || 0);
+
+        group.items.forEach(item => {
+          const qty = Number(item.Quantity || 0);
+          const timePerUnit = getProductTime(item.ProductID);
+          const wastePerUnit = getProductWaste(item.ProductID);
+
+          totalQuantity += qty;
+          totalTheoreticalMinutes += timePerUnit * qty;
+          totalExpectedWaste += wastePerUnit * qty;
+        });
+      });
+
+      const workersCount = Object.keys(workerIds).length;
+      const totalTheoreticalHours = totalTheoreticalMinutes / 60;
+      const avgHours = workersCount ? totalTheoreticalHours / workersCount : 0;
+      const wasteIndex = totalExpectedWaste > 0 ? totalActualWaste / totalExpectedWaste : 0;
+      const wastedHours = workersCount ? Math.max(((workersCount * STANDARD_WORK_MINUTES) - totalTheoreticalMinutes) / 60, 0) : 0;
+
+      avgWorkHoursValue.textContent = formatDecimal(avgHours);
+      wasteIndexValue.textContent = formatDecimal(wasteIndex);
+      wastedHoursValue.textContent = formatDecimal(wastedHours);
+      totalProductionValue.textContent = formatNumber(totalQuantity);
     }
 
     function renderHistoryTable() {
       historyTableBody.innerHTML = "";
 
-      if (!historyRecords.length) {
+      const groups = getGroupedHistory();
+
+      if (!groups.length) {
         historyTableBody.innerHTML = `
           <tr>
-            <td colspan="12">
+            <td colspan="9">
               <div class="empty-state">${t("emptyData")}</div>
             </td>
           </tr>
@@ -1524,90 +1684,259 @@
         return;
       }
 
-      historyRecords.forEach((record, index) => {
-        const tr = document.createElement("tr");
-        const hasImage = Boolean(record.ImageURL);
+      groups.forEach((group, groupIndex) => {
+        const rowSpan = group.items.length || 1;
 
-        tr.innerHTML = `
-          <td class="date-cell">${escapeHtml(record.Date || "")}</td>
-          <td>${escapeHtml(translateShift(record.Shift || ""))}</td>
-          <td>${escapeHtml(record.WorkerName || record.WorkerID || "")}</td>
-          <td>${escapeHtml(record.ProductCategory || "")}</td>
-          <td>${escapeHtml(record.ProductName || record.ProductID || "")}</td>
-          <td>${escapeHtml(record.MachineName || record.MachineID || "")}</td>
-          <td class="number-cell">${formatNumber(record.Quantity || 0)}</td>
-          <td class="number-cell">${formatDecimal(record.RawWasteKg || 0)}</td>
-          <td>${escapeHtml(shortText(record.Notes || t("noNotes"), 34))}</td>
-          <td>
-            ${
-              hasImage
-                ? `<a class="image-link" href="${escapeAttribute(record.ImageURL)}" target="_blank" rel="noopener">${t("openImage")}</a>`
-                : escapeHtml(t("noImage"))
-            }
-          </td>
-          <td>${escapeHtml(record.CreatedByName || record.UserID || "")}</td>
-          <td>
-            <button class="btn btn-secondary btn-small details-btn" type="button" data-index="${index}">
-              ${t("showDetails")}
-            </button>
-          </td>
-        `;
+        group.items.forEach((item, itemIndex) => {
+          const tr = document.createElement("tr");
 
-        historyTableBody.appendChild(tr);
+          const mergedCells = itemIndex === 0
+            ? `
+              <td rowspan="${rowSpan}">${escapeHtml(group.WorkerName || group.WorkerID || "")}</td>
+            `
+            : "";
+
+          const mergedEndCells = itemIndex === 0
+            ? `
+              <td rowspan="${rowSpan}" class="number-cell">${formatDecimal(group.RawWasteKg || 0)}</td>
+              <td rowspan="${rowSpan}">${escapeHtml(group.Notes || t("noNotes"))}</td>
+              <td rowspan="${rowSpan}">
+                ${
+                  group.ImageURL
+                    ? `<a class="image-link" href="${escapeAttribute(group.ImageURL)}" target="_blank" rel="noopener">${t("openImage")}</a>`
+                    : escapeHtml(t("noImage"))
+                }
+              </td>
+              <td rowspan="${rowSpan}">
+                <button class="btn btn-secondary btn-small details-btn" type="button" data-index="${groupIndex}">
+                  ${t("showDetails")}
+                </button>
+              </td>
+            `
+            : "";
+
+          tr.innerHTML = `
+            ${mergedCells}
+            <td>${escapeHtml(item.ProductCategory || "")}</td>
+            <td>${escapeHtml(item.ProductName || item.ProductID || "")}</td>
+            <td>${escapeHtml(item.MachineName || item.MachineID || "")}</td>
+            <td class="number-cell">${formatNumber(item.Quantity || 0)}</td>
+            ${mergedEndCells}
+          `;
+
+          historyTableBody.appendChild(tr);
+        });
       });
     }
 
-    function openDetails(index) {
-      const record = historyRecords[index];
+    function openDetails(groupIndex) {
+      const groups = getGroupedHistory();
+      const group = groups[groupIndex];
 
-      if (!record) return;
+      if (!group) return;
 
-      const imageHtml = record.ImageURL
-        ? `<a class="image-link" href="${escapeAttribute(record.ImageURL)}" target="_blank" rel="noopener">${t("openImage")}</a>`
-        : escapeHtml(t("noImage"));
+      currentEditGroup = JSON.parse(JSON.stringify(group));
 
-      detailsContent.innerHTML = `
-        ${detailItem("ProductionID", record.ProductionID)}
-        ${detailItem("ItemID", record.ItemID)}
-        ${detailItem(t("date"), record.Date)}
-        ${detailItem(t("shift"), translateShift(record.Shift))}
-        ${detailItem(t("worker"), record.WorkerName || record.WorkerID)}
-        ${detailItem(t("productCategory"), record.ProductCategory)}
-        ${detailItem(t("productName"), record.ProductName || record.ProductID)}
-        ${detailItem(t("machineName"), record.MachineName || record.MachineID)}
-        ${detailItem(t("quantity"), formatNumber(record.Quantity || 0))}
-        ${detailItem(t("rawWaste"), formatDecimal(record.RawWasteKg || 0))}
-        ${detailItem(t("createdBy"), record.CreatedByName || record.UserID)}
-        <div class="detail-item">
-          <span>${escapeHtml(t("image"))}</span>
-          <strong>${imageHtml}</strong>
-        </div>
-        <div class="detail-item detail-full">
-          <span>${escapeHtml(t("notes"))}</span>
-          <strong>${escapeHtml(record.Notes || t("noNotes"))}</strong>
-        </div>
-      `;
+      editProductionId.value = group.ProductionID || "";
+      editDateInput.value = group.Date || dateInput.value || "";
+      editShiftInput.value = group.Shift || "صباحي";
+      editWorkerInput.value = group.WorkerID || "";
+      editWasteInput.value = group.RawWasteKg || 0;
+      editNotesInput.value = group.Notes || "";
+
+      editImageBox.innerHTML = group.ImageURL
+        ? `<a class="image-link" href="${escapeAttribute(group.ImageURL)}" target="_blank" rel="noopener">${t("openImage")}</a>`
+        : `<strong>${escapeHtml(t("noImage"))}</strong>`;
+
+      renderEditItems(group.items || []);
+      setEditMode(isAdmin());
 
       detailsModal.classList.add("show");
       document.body.style.overflow = "hidden";
     }
 
-    function detailItem(label, value) {
-      return `
-        <div class="detail-item">
-          <span>${escapeHtml(label)}</span>
-          <strong>${escapeHtml(value || "")}</strong>
-        </div>
-      `;
+    function renderEditItems(items) {
+      editItemsBody.innerHTML = "";
+
+      items.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.dataset.index = index;
+        tr.dataset.itemId = item.ItemID || "";
+
+        tr.innerHTML = `
+          <td>
+            <select class="edit-category-select" data-index="${index}"></select>
+          </td>
+          <td>
+            <select class="edit-machine-select" data-index="${index}"></select>
+          </td>
+          <td>
+            <select class="edit-product-select" data-index="${index}"></select>
+          </td>
+          <td>
+            <input class="edit-quantity-input" type="number" min="0" step="1" value="${escapeAttribute(item.Quantity || 0)}">
+          </td>
+        `;
+
+        editItemsBody.appendChild(tr);
+
+        const categorySelect = tr.querySelector(".edit-category-select");
+        const machineSelect = tr.querySelector(".edit-machine-select");
+        const productSelect = tr.querySelector(".edit-product-select");
+
+        fillCategorySelect(categorySelect, item.ProductCategory || getProductById(item.ProductID).ProductCategory || "");
+        fillMachineSelect(machineSelect, categorySelect.value, item.MachineID || "");
+        fillProductSelect(productSelect, categorySelect.value, machineSelect.value, item.ProductID || "");
+
+        categorySelect.addEventListener("change", () => {
+          fillMachineSelect(machineSelect, categorySelect.value, "");
+          fillProductSelect(productSelect, categorySelect.value, machineSelect.value, "");
+        });
+
+        machineSelect.addEventListener("change", () => {
+          fillProductSelect(productSelect, categorySelect.value, machineSelect.value, "");
+        });
+      });
+    }
+
+    function fillCategorySelect(select, selectedValue) {
+      const categories = [...new Set(products.map(product => product.ProductCategory).filter(Boolean))];
+
+      select.innerHTML = `<option value="">${t("chooseCategory")}</option>`;
+
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        select.appendChild(option);
+      });
+
+      select.value = selectedValue || "";
+    }
+
+    function fillMachineSelect(select, category, selectedValue) {
+      select.innerHTML = `<option value="">${t("chooseMachine")}</option>`;
+
+      const machineIdsFromProducts = products
+        .filter(product => !category || product.ProductCategory === category)
+        .map(product => product.MachineID);
+
+      const uniqueMachineIds = [...new Set(machineIdsFromProducts)];
+
+      machines
+        .filter(machine => uniqueMachineIds.includes(machine.MachineID))
+        .forEach(machine => {
+          const option = document.createElement("option");
+          option.value = machine.MachineID;
+          option.textContent = machine.MachineName;
+          select.appendChild(option);
+        });
+
+      select.value = selectedValue || "";
+    }
+
+    function fillProductSelect(select, category, machineId, selectedValue) {
+      select.innerHTML = `<option value="">${t("chooseProduct")}</option>`;
+
+      products
+        .filter(product => {
+          if (category && product.ProductCategory !== category) return false;
+          if (machineId && product.MachineID !== machineId) return false;
+          return true;
+        })
+        .forEach(product => {
+          const option = document.createElement("option");
+          option.value = product.ProductID;
+          option.textContent = product.ProductName;
+          select.appendChild(option);
+        });
+
+      select.value = selectedValue || "";
+    }
+
+    function setEditMode(canEdit) {
+      const fields = detailsModal.querySelectorAll("input, select, textarea");
+
+      fields.forEach(field => {
+        if (field.id === "editDateInput") {
+          field.disabled = true;
+          return;
+        }
+
+        field.disabled = !canEdit;
+      });
+
+      readonlyNote.style.display = canEdit ? "none" : "block";
+      editActions.style.display = canEdit ? "flex" : "none";
+    }
+
+    async function handleSaveEdit(event) {
+      event.preventDefault();
+
+      if (!isAdmin()) return;
+
+      const productionId = editProductionId.value || "";
+
+      const items = Array.from(editItemsBody.querySelectorAll("tr")).map(row => {
+        return {
+          itemId: row.dataset.itemId || "",
+          productId: row.querySelector(".edit-product-select").value || "",
+          machineId: row.querySelector(".edit-machine-select").value || "",
+          quantity: Number(row.querySelector(".edit-quantity-input").value || 0)
+        };
+      });
+
+      const payload = {
+        action: "updateProduction",
+        token: currentUser.token,
+        production: {
+          productionId: productionId,
+          date: editDateInput.value || dateInput.value,
+          shift: editShiftInput.value || "",
+          workerId: editWorkerInput.value || "",
+          rawWasteKg: Number(editWasteInput.value || 0),
+          notes: editNotesInput.value || ""
+        },
+        items: items
+      };
+
+      setButtonLoading(saveEditBtn, true, t("saving"));
+
+      try {
+        const result = await apiPost(payload);
+
+        setButtonLoading(saveEditBtn, false, t("saveChanges"));
+
+        if (!result || !result.success) {
+          const msg = result && result.message ? result.message : t("saveFailed");
+
+          if (String(msg).includes("عملية غير معروفة")) {
+            showMessage(t("updateActionMissing"), "warning");
+          } else {
+            showMessage(msg, "error");
+          }
+
+          return;
+        }
+
+        closeDetailsModal();
+        showMessage(result.message || t("updateSuccess"), "success");
+        await loadHistory();
+
+      } catch (error) {
+        console.error(error);
+        setButtonLoading(saveEditBtn, false, t("saveChanges"));
+        showMessage(t("serverError"), "error");
+      }
     }
 
     function bindEvents() {
       applyFiltersBtn.addEventListener("click", loadHistory);
+      refreshBtn.addEventListener("click", loadHistory);
 
       resetFiltersBtn.addEventListener("click", () => {
-        setDefaultDates();
+        setTodayDate();
         workerFilterInput.value = "";
-        shiftFilterInput.value = "";
         productFilterInput.value = "";
         machineFilterInput.value = "";
         loadHistory();
@@ -1622,6 +1951,8 @@
       });
 
       closeDetailsModalBtn.addEventListener("click", closeDetailsModal);
+      cancelEditBtn.addEventListener("click", closeDetailsModal);
+      editProductionForm.addEventListener("submit", handleSaveEdit);
 
       detailsModal.addEventListener("click", event => {
         if (event.target === detailsModal) {
@@ -1651,7 +1982,9 @@
     function closeDetailsModal() {
       detailsModal.classList.remove("show");
       document.body.style.overflow = "";
-      detailsContent.innerHTML = "";
+      currentEditGroup = null;
+      editItemsBody.innerHTML = "";
+      editProductionForm.reset();
     }
 
     async function apiPost(payload) {
@@ -1774,29 +2107,6 @@
       const day = String(date.getDate()).padStart(2, "0");
 
       return `${year}-${month}-${day}`;
-    }
-
-    function translateShift(value) {
-      const shift = String(value || "");
-
-      if (currentLang === "ar") {
-        return shift;
-      }
-
-      if (shift === "صباحي") return "Morning";
-      if (shift === "مسائي") return "Evening";
-
-      return shift;
-    }
-
-    function shortText(value, maxLength) {
-      const text = String(value || "");
-
-      if (text.length <= maxLength) {
-        return text;
-      }
-
-      return text.slice(0, maxLength) + "...";
     }
 
     function escapeHtml(value) {
