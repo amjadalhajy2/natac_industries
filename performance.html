@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>متابعة أداء العمال | NATAC</title>
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-1: #eaf1ff;
+      --bg-2: #f7f1ea;
+      --text: #101827;
+      --muted: #667085;
+      --line: rgba(16, 24, 39, 0.12);
+      --card: rgba(255, 255, 255, 0.88);
+      --input: rgba(255, 255, 255, 0.98);
+      --blue: #0066ff;
+      --blue-dark: #004ec2;
+      --purple: #6d28d9;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #f97316;
+      --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
+      --topbar-height: 78px;
+      --sidebar-width: 310px;
+      --radius-xl: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Tajawal", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 12%, rgba(0, 102, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(109, 40, 217, 0.20), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), #ffffff 52%, var(--bg-2));
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    .floating-topbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      min-height: var(--topbar-height);
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(16, 24, 39, 0.10);
+      box-shadow: 0 12px 32px rgba(16, 24, 39, 0.10);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 22px;
+    }
+
+    .topbar-side {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .menu-btn,
+    .language-toggle {
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      font-size: 30px;
+      display: grid;
+      place-items: center;
+    }
+
+    .language-toggle {
+      min-width: 44px;
+      height: 42px;
+      font-size: 16px;
+    }
+
+    .factory-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .factory-logo,
+    .sidebar-logo {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(16,24,39,0.08);
+      flex-shrink: 0;
+    }
+
+    .factory-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+    }
+
+    .sidebar-logo {
+      width: 49px;
+      height: 49px;
+      border-radius: 18px;
+    }
+
+    .factory-logo img,
+    .sidebar-logo img {
+      width: 86%;
+      height: 86%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .factory-info,
+    .user-info,
+    .sidebar-title {
+      min-width: 0;
+      text-align: start;
+    }
+
+    .factory-info strong {
+      display: block;
+      font-size: 19px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .factory-info span {
+      display: block;
+      margin-top: 2px;
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-user-box {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, var(--blue), var(--purple));
+      color: #fff;
+      font-weight: 900;
+      flex-shrink: 0;
+      box-shadow: 0 8px 18px rgba(0,102,255,0.20);
+    }
+
+    .user-info strong,
+    .user-info span {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-info strong {
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .user-info span {
+      margin-top: 1px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(16, 24, 39, 0.28);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: var(--sidebar-width);
+      max-width: 88vw;
+      height: 100vh;
+      z-index: 200;
+      padding: 22px 18px;
+      overflow-y: auto;
+      transform: translateX(105%);
+      transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
+      background: rgba(255,255,255,0.94);
+      border-left: 1px solid rgba(16,24,39,0.10);
+      box-shadow: -28px 0 70px rgba(16, 24, 39, 0.18);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+    }
+
+    html[dir="ltr"] .sidebar {
+      right: auto;
+      left: 0;
+      transform: translateX(-105%);
+      border-left: 0;
+      border-right: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 28px 0 70px rgba(16, 24, 39, 0.18);
+    }
+
+    .sidebar.open,
+    html[dir="ltr"] .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-title {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .sidebar-title strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .sidebar-title span {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .close-sidebar {
+      width: 43px;
+      height: 43px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(220, 38, 38, 0.08);
+      color: var(--red);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .nav {
+      display: grid;
+    }
+
+    .nav a,
+    .logout-btn {
+      width: 100%;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      padding: 13px 4px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+      background: transparent;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      text-align: start;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .nav a:hover,
+    .logout-btn:hover,
+    .nav a.active {
+      color: var(--blue-dark);
+      padding-inline-start: 10px;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .main {
+      width: 100%;
+      max-width: 1450px;
+      margin: 0 auto;
+      padding: 116px 24px 32px;
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+      padding: 22px;
+      border-radius: var(--radius-xl);
+      background: var(--card);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
+    }
+
+    .page-title {
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      text-align: start;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      min-height: 46px;
+      border: 1px solid rgba(0, 102, 255, 0.22);
+      border-radius: 16px;
+      padding: 0 18px;
+      background: #fff;
+      color: var(--blue-dark);
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(145deg, #0066ff, #5b21b6);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(0, 102, 255, 0.22);
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: end;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      text-align: start;
+    }
+
+    label {
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid rgba(16,24,39,0.18);
+      border-radius: 16px;
+      padding: 0 14px;
+      font-family: inherit;
+      font-size: 15px;
+      background: var(--input);
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 2px 0 rgba(16,24,39,0.03);
+      transition: 0.18s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(0, 102, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.13);
+      background: #fff;
+    }
+
+    .btn {
+      min-height: 46px;
+      border: 0;
+      border-radius: 16px;
+      padding: 0 18px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(145deg, #0066ff, #5b21b6);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(0, 102, 255, 0.22);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--blue-dark);
+      border: 1px solid rgba(0, 102, 255, 0.28);
+      box-shadow: 0 8px 20px rgba(16,24,39,0.06);
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid rgba(16,24,39,0.10);
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 10px 24px rgba(16,24,39,0.06);
+      text-align: start;
+    }
+
+    .summary-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .summary-card strong {
+      display: block;
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 900;
+      direction: ltr;
+      text-align: start;
+      font-family: Arial, sans-serif;
+    }
+
+    .table-wrap {
+      border-radius: 18px;
+      overflow-x: auto;
+      border: 1px solid rgba(16,24,39,0.16);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+      background: #fff;
+    }
+
+    th,
+    td {
+      border: 1px solid rgba(16,24,39,0.12);
+      padding: 12px;
+      text-align: start;
+      vertical-align: middle;
+      font-weight: 800;
+    }
+
+    th {
+      background: #eef4ff;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    td {
+      background: #fff;
+    }
+
+    .number-cell,
+    .date-cell {
+      direction: ltr;
+      text-align: start;
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .status-good {
+      background: rgba(22, 163, 74, 0.10);
+      color: #166534;
+      border-color: rgba(22, 163, 74, 0.22);
+    }
+
+    .status-medium {
+      background: rgba(249, 115, 22, 0.10);
+      color: #9a3412;
+      border-color: rgba(249, 115, 22, 0.22);
+    }
+
+    .status-bad {
+      background: rgba(220, 38, 38, 0.10);
+      color: #991b1b;
+      border-color: rgba(220, 38, 38, 0.22);
+    }
+
+    .empty-state {
+      padding: 18px;
+      border-radius: 18px;
+      background: #f9fafb;
+      color: var(--muted);
+      font-weight: 900;
+      text-align: center;
+      border: 1px dashed rgba(16,24,39,0.16);
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 900;
+      margin-bottom: 16px;
+      padding: 13px 15px;
+      width: fit-content;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 8px 22px rgba(16,24,39,0.07);
+    }
+
+    .spinner,
+    .mini-spinner {
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 102, 255, 0.14);
+      border-top-color: var(--blue);
+    }
+
+    .mini-spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255,255,255,0.45);
+      border-top-color: #fff;
+      display: inline-block;
+    }
+
+    .message {
+      display: none;
+      position: fixed;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1200;
+      min-width: min(520px, calc(100vw - 28px));
+      max-width: calc(100vw - 28px);
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.7;
+      border: 1px solid transparent;
+      box-shadow: 0 18px 48px rgba(16, 24, 39, 0.24);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      text-align: center;
+    }
+
+    .message.error {
+      display: block;
+      color: #991b1b;
+      background: rgba(254, 242, 242, 0.98);
+      border-color: #fecaca;
+    }
+
+    .message.success {
+      display: block;
+      color: #166534;
+      background: rgba(240, 253, 244, 0.98);
+      border-color: #bbf7d0;
+    }
+
+    .message.warning {
+      display: block;
+      color: #9a3412;
+      background: rgba(255, 247, 237, 0.98);
+      border-color: #fed7aa;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .filters-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .floating-topbar {
+        min-height: 72px;
+        padding: 10px 12px;
+      }
+
+      .menu-btn,
+      .factory-logo {
+        width: 44px;
+        height: 44px;
+      }
+
+      .factory-info strong {
+        font-size: 15px;
+      }
+
+      .factory-info span {
+        font-size: 12px;
+      }
+
+      .top-user-box {
+        max-width: 130px;
+      }
+
+      .user-info span {
+        display: none;
+      }
+
+      .language-toggle {
+        min-width: 36px;
+        font-size: 14px;
+      }
+
+      .main {
+        padding: 94px 14px 24px;
+      }
+
+      .panel {
+        padding: 16px;
+        border-radius: 24px;
+      }
+
+      .page-title h1 {
+        font-size: 26px;
+      }
+
+      .filters-grid,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-btn,
+      .btn {
+        width: 100%;
+      }
+
+      .message {
+        top: 82px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="floating-topbar">
+    <div class="topbar-side">
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="فتح القائمة">☰</button>
+
+      <div class="factory-brand">
+        <div class="factory-logo">
+          <img src="assets/img/logo.png" alt="NATAC Logo">
+        </div>
+        <div class="factory-info">
+          <strong id="factoryName">ناتاك</strong>
+          <span id="factorySubtitle">نظام متابعة الإنتاج اليومي</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="topbar-side">
+      <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
+
+      <div class="top-user-box">
+        <div class="avatar" id="userAvatar">U</div>
+        <div class="user-info">
+          <strong id="userName">مستخدم</strong>
+          <span id="userRole">---</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-title">
+        <div class="sidebar-logo">
+          <img src="assets/img/logo.png" alt="NATAC Logo">
+        </div>
+        <div>
+          <strong data-i18n="mainMenu">القائمة الرئيسية</strong>
+          <span data-i18n="productionSystem">نظام الإنتاج</span>
+        </div>
+      </div>
+
+      <button class="close-sidebar" id="closeSidebarBtn" type="button" aria-label="إغلاق القائمة">×</button>
+    </div>
+
+    <nav class="nav">
+      <a href="dashboard.html">
+        <span data-i18n="dashboard">لوحة التحكم</span>
+        <span class="nav-icon">📊</span>
+      </a>
+
+      <a href="production.html">
+        <span data-i18n="productionEntry">إدخال الإنتاج</span>
+        <span class="nav-icon">🏭</span>
+      </a>
+
+      <a href="evaluation.html">
+        <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
+        <span class="nav-icon">⭐</span>
+      </a>
+
+      <a href="history.html">
+        <span data-i18n="productionHistory">سجل الإنتاج</span>
+        <span class="nav-icon">📋</span>
+      </a>
+
+      <a href="performance.html" class="active">
+        <span data-i18n="workerPerformance">متابعة أداء العمال</span>
+        <span class="nav-icon">📈</span>
+      </a>
+
+      <a href="workers.html">
+        <span data-i18n="workers">العمال</span>
+        <span class="nav-icon">👷</span>
+      </a>
+
+      <a href="products.html" class="admin-only">
+        <span data-i18n="products">المنتجات</span>
+        <span class="nav-icon">📦</span>
+      </a>
+
+      <a href="machines.html" class="admin-only">
+        <span data-i18n="machines">المكائن</span>
+        <span class="nav-icon">⚙️</span>
+      </a>
+
+      <button class="logout-btn" type="button" id="logoutBtn">
+        <span data-i18n="logout">تسجيل الخروج</span>
+        <span class="nav-icon">🚪</span>
+      </button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div id="loadingBox" class="loading">
+      <span class="spinner"></span>
+      <span data-i18n="loadingData">جاري تحميل البيانات...</span>
+    </div>
+
+    <div id="messageBox" class="message"></div>
+
+    <section class="panel">
+      <div class="page-title">
+        <div>
+          <h1 data-i18n="workerPerformance">متابعة أداء العمال</h1>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" type="button" id="singleTabBtn" data-mode="single" data-i18n="singleWorkerMode">
+          أداء عامل محدد
+        </button>
+
+        <button class="tab-btn" type="button" id="allTabBtn" data-mode="all" data-i18n="allWorkersMode">
+          متوسط جميع العمال
+        </button>
+      </div>
+
+      <div id="singleFilters" class="filters-grid">
+        <div class="field">
+          <label for="singleWorkerInput" data-i18n="worker">العامل</label>
+          <select id="singleWorkerInput">
+            <option value="" data-i18n="chooseWorker">اختر العامل</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="singleFromDateInput" data-i18n="fromDate">من تاريخ</label>
+          <input type="date" id="singleFromDateInput">
+        </div>
+
+        <div class="field">
+          <label for="singleToDateInput" data-i18n="toDate">إلى تاريخ</label>
+          <input type="date" id="singleToDateInput">
+        </div>
+
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" type="button" id="loadSingleBtn" data-i18n="showResults">عرض النتائج</button>
+        </div>
+      </div>
+
+      <div id="allFilters" class="filters-grid" style="display:none;">
+        <div class="field">
+          <label for="allFromDateInput" data-i18n="fromDate">من تاريخ</label>
+          <input type="date" id="allFromDateInput">
+        </div>
+
+        <div class="field">
+          <label for="allToDateInput" data-i18n="toDate">إلى تاريخ</label>
+          <input type="date" id="allToDateInput">
+        </div>
+
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" type="button" id="loadAllBtn" data-i18n="showResults">عرض النتائج</button>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span data-i18n="totalProduction">إجمالي الإنتاج</span>
+          <strong id="totalProductionValue">0</strong>
+        </div>
+
+        <div class="summary-card">
+          <span data-i18n="avgEvaluation">متوسط تقييم المشرف</span>
+          <strong id="avgEvaluationValue">0</strong>
+        </div>
+
+        <div class="summary-card">
+          <span data-i18n="actualWaste">الهدر الفعلي</span>
+          <strong id="actualWasteValue">0</strong>
+        </div>
+
+        <div class="summary-card">
+          <span data-i18n="expectedWaste">الهدر المتوقع</span>
+          <strong id="expectedWasteValue">0</strong>
+        </div>
+
+        <div class="summary-card">
+          <span data-i18n="rawWasteIndex">مؤشر هدر المواد الخام</span>
+          <strong id="wasteIndexValue">0</strong>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead id="resultTableHead"></thead>
+          <tbody id="resultTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
+    const SESSION_KEY = "factoryUserSession";
+    const LANGUAGE_KEY = "factoryLanguage";
+
+    const i18n = {
+      ar: {
+        htmlLang: "ar",
+        dir: "rtl",
+        languageButton: "EN",
+        pageTitle: "متابعة أداء العمال | ناتاك",
+        factoryName: "ناتاك",
+        factorySubtitle: "نظام متابعة الإنتاج اليومي",
+        mainMenu: "القائمة الرئيسية",
+        productionSystem: "نظام الإنتاج",
+        dashboard: "لوحة التحكم",
+        productionEntry: "إدخال الإنتاج",
+        supervisorEvaluation: "تقييم المشرف",
+        productionHistory: "سجل الإنتاج",
+        workerPerformance: "متابعة أداء العمال",
+        workers: "العمال",
+        products: "المنتجات",
+        machines: "المكائن",
+        logout: "تسجيل الخروج",
+        loadingData: "جاري تحميل البيانات...",
+        singleWorkerMode: "أداء عامل محدد",
+        allWorkersMode: "متوسط جميع العمال",
+        worker: "العامل",
+        chooseWorker: "اختر العامل",
+        fromDate: "من تاريخ",
+        toDate: "إلى تاريخ",
+        showResults: "عرض النتائج",
+        totalProduction: "إجمالي الإنتاج",
+        avgEvaluation: "متوسط تقييم المشرف",
+        actualWaste: "الهدر الفعلي",
+        expectedWaste: "الهدر المتوقع",
+        rawWasteIndex: "مؤشر هدر المواد الخام",
+        date: "التاريخ",
+        productionQty: "كمية الإنتاج",
+        expectedHours: "ساعات العمل النظرية",
+        supervisorEvaluationAvg: "متوسط تقييم المشرف",
+        quality: "الجودة",
+        cleanliness: "النظافة",
+        attendance: "الحضور والانضباط",
+        cooperation: "التعاون والسلوك",
+        problemSolving: "حل المشكلات",
+        innovation: "الابتكار",
+        performanceLevel: "مستوى الأداء",
+        excellent: "ممتاز",
+        good: "جيد",
+        average: "متوسط",
+        weak: "ضعيف",
+        emptyData: "لا توجد بيانات للعرض.",
+        roleAdmin: "مدير النظام",
+        roleSupervisor: "مشرف",
+        tokenMissing: "لم يتم العثور على رمز الجلسة token.",
+        serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
+        loadFailed: "تعذر تحميل البيانات.",
+        dateRequired: "يرجى اختيار فترة صحيحة.",
+        workerRequired: "يرجى اختيار العامل.",
+        invalidDates: "تاريخ البداية لا يمكن أن يكون بعد تاريخ النهاية.",
+        saving: "جاري التحميل..."
+      },
+      en: {
+        htmlLang: "en",
+        dir: "ltr",
+        languageButton: "عربي",
+        pageTitle: "Worker Performance | NATAC",
+        factoryName: "NATAC",
+        factorySubtitle: "Daily Production Monitoring System",
+        mainMenu: "Main Menu",
+        productionSystem: "Production System",
+        dashboard: "Dashboard",
+        productionEntry: "Production Entry",
+        supervisorEvaluation: "Supervisor Evaluation",
+        productionHistory: "Production History",
+        workerPerformance: "Worker Performance",
+        workers: "Workers",
+        products: "Products",
+        machines: "Machines",
+        logout: "Logout",
+        loadingData: "Loading data...",
+        singleWorkerMode: "Single Worker Performance",
+        allWorkersMode: "All Workers Average",
+        worker: "Worker",
+        chooseWorker: "Choose Worker",
+        fromDate: "From Date",
+        toDate: "To Date",
+        showResults: "Show Results",
+        totalProduction: "Total Production",
+        avgEvaluation: "Average Supervisor Evaluation",
+        actualWaste: "Actual Waste",
+        expectedWaste: "Expected Waste",
+        rawWasteIndex: "Raw Material Waste Index",
+        date: "Date",
+        productionQty: "Production Quantity",
+        expectedHours: "Theoretical Hours",
+        supervisorEvaluationAvg: "Average Supervisor Evaluation",
+        quality: "Quality",
+        cleanliness: "Cleanliness",
+        attendance: "Attendance & Discipline",
+        cooperation: "Cooperation & Behavior",
+        problemSolving: "Problem Solving",
+        innovation: "Innovation",
+        performanceLevel: "Performance Level",
+        excellent: "Excellent",
+        good: "Good",
+        average: "Average",
+        weak: "Weak",
+        emptyData: "No data to display.",
+        roleAdmin: "System Admin",
+        roleSupervisor: "Supervisor",
+        tokenMissing: "Session token not found.",
+        serverError: "Unable to connect to server.",
+        loadFailed: "Unable to load data.",
+        dateRequired: "Please choose a valid date range.",
+        workerRequired: "Please choose worker.",
+        invalidDates: "Start date cannot be after end date.",
+        saving: "Loading..."
+      }
+    };
+
+    let currentLang = localStorage.getItem(LANGUAGE_KEY) || "ar";
+    let currentUser = null;
+    let workers = [];
+    let currentMode = "single";
+    let messageTimer = null;
+
+    const loadingBox = document.getElementById("loadingBox");
+    const messageBox = document.getElementById("messageBox");
+
+    const factoryName = document.getElementById("factoryName");
+    const factorySubtitle = document.getElementById("factorySubtitle");
+
+    const userName = document.getElementById("userName");
+    const userRole = document.getElementById("userRole");
+    const userAvatar = document.getElementById("userAvatar");
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeSidebarBtn = document.getElementById("closeSidebarBtn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const languageToggleBtn = document.getElementById("languageToggleBtn");
+
+    const singleTabBtn = document.getElementById("singleTabBtn");
+    const allTabBtn = document.getElementById("allTabBtn");
+    const singleFilters = document.getElementById("singleFilters");
+    const allFilters = document.getElementById("allFilters");
+
+    const singleWorkerInput = document.getElementById("singleWorkerInput");
+    const singleFromDateInput = document.getElementById("singleFromDateInput");
+    const singleToDateInput = document.getElementById("singleToDateInput");
+    const allFromDateInput = document.getElementById("allFromDateInput");
+    const allToDateInput = document.getElementById("allToDateInput");
+
+    const loadSingleBtn = document.getElementById("loadSingleBtn");
+    const loadAllBtn = document.getElementById("loadAllBtn");
+
+    const totalProductionValue = document.getElementById("totalProductionValue");
+    const avgEvaluationValue = document.getElementById("avgEvaluationValue");
+    const actualWasteValue = document.getElementById("actualWasteValue");
+    const expectedWasteValue = document.getElementById("expectedWasteValue");
+    const wasteIndexValue = document.getElementById("wasteIndexValue");
+
+    const resultTableHead = document.getElementById("resultTableHead");
+    const resultTableBody = document.getElementById("resultTableBody");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      applyLanguage(currentLang);
+      protectPage();
+      initSidebar();
+      initLanguage();
+      bindEvents();
+      setDefaultDates();
+      loadWorkers();
+    });
+
+    function t(key) {
+      return i18n[currentLang][key];
+    }
+
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+      return {
+        ...user,
+        ...session,
+        token: session.token || user.token || "",
+        Role: session.Role || session.role || user.Role || user.role || "",
+        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
+        Username: session.Username || session.username || user.Username || user.username || ""
+      };
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem(LANGUAGE_KEY, lang);
+
+      document.documentElement.lang = i18n[lang].htmlLang;
+      document.documentElement.dir = i18n[lang].dir;
+      document.title = i18n[lang].pageTitle;
+
+      factoryName.textContent = i18n[lang].factoryName;
+      factorySubtitle.textContent = i18n[lang].factorySubtitle;
+      languageToggleBtn.textContent = i18n[lang].languageButton;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (i18n[lang][key]) {
+          el.textContent = i18n[lang][key];
+        }
+      });
+
+      const session = getSession();
+
+      if (session) {
+        currentUser = normalizeSession(session);
+        renderUser(currentUser);
+        applyRoleUI(currentUser.Role || currentUser.role);
+      }
+
+      renderWorkersOptions();
+      renderEmptyTable();
+    }
+
+    function protectPage() {
+      const session = getSession();
+
+      if (!session) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      currentUser = normalizeSession(session);
+      renderUser(currentUser);
+      applyRoleUI(currentUser.Role || currentUser.role);
+    }
+
+    function renderUser(session) {
+      const name =
+        session.FullName ||
+        session.fullName ||
+        session.name ||
+        session.Username ||
+        session.username ||
+        "User";
+
+      const role = session.Role || session.role || "---";
+
+      userName.textContent = name;
+      userRole.textContent = normalizeRoleLabel(role);
+
+      const firstLetter = String(name).trim().charAt(0) || "U";
+      userAvatar.textContent = firstLetter;
+    }
+
+    function normalizeRoleLabel(role) {
+      const cleanRole = String(role || "").toLowerCase();
+
+      if (cleanRole === "admin") return t("roleAdmin");
+      if (cleanRole === "supervisor") return t("roleSupervisor");
+
+      return role || "---";
+    }
+
+    function applyRoleUI(role) {
+      const cleanRole = String(role || "").toLowerCase();
+
+      document.querySelectorAll(".admin-only").forEach(el => {
+        el.style.display = cleanRole === "admin" ? "" : "none";
+      });
+    }
+
+    function bindEvents() {
+      singleTabBtn.addEventListener("click", () => switchMode("single"));
+      allTabBtn.addEventListener("click", () => switchMode("all"));
+
+      loadSingleBtn.addEventListener("click", loadSinglePerformance);
+      loadAllBtn.addEventListener("click", loadAllPerformance);
+
+      logoutBtn.addEventListener("click", async () => {
+        const session = getSession();
+
+        try {
+          if (session && session.token && API_URL) {
+            await apiPost({
+              action: "logout",
+              token: session.token
+            });
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+
+        localStorage.removeItem(SESSION_KEY);
+        window.location.href = "index.html";
+      });
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+
+      singleTabBtn.classList.toggle("active", mode === "single");
+      allTabBtn.classList.toggle("active", mode === "all");
+
+      singleFilters.style.display = mode === "single" ? "grid" : "none";
+      allFilters.style.display = mode === "all" ? "grid" : "none";
+
+      clearSummary();
+      renderEmptyTable();
+    }
+
+    function setDefaultDates() {
+      const today = new Date();
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+
+      singleFromDateInput.value = toISODate(firstDay);
+      singleToDateInput.value = toISODate(today);
+      allFromDateInput.value = toISODate(firstDay);
+      allToDateInput.value = toISODate(today);
+    }
+
+    async function loadWorkers() {
+      if (!currentUser || !currentUser.token) {
+        hideLoading();
+        showMessage(t("tokenMissing"), "error");
+        return;
+      }
+
+      try {
+        const result = await apiPost({
+          action: "getWorkers",
+          token: currentUser.token,
+          activeOnly: false
+        });
+
+        hideLoading();
+
+        if (!result || !result.success) {
+          showMessage((result && result.message) || t("loadFailed"), "error");
+          workers = [];
+          renderWorkersOptions();
+          return;
+        }
+
+        workers = result.workers || [];
+        renderWorkersOptions();
+        renderEmptyTable();
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        showMessage(t("serverError"), "error");
+      }
+    }
+
+    function renderWorkersOptions() {
+      const currentValue = singleWorkerInput.value || "";
+
+      singleWorkerInput.innerHTML = `<option value="">${t("chooseWorker")}</option>`;
+
+      workers.forEach(worker => {
+        const option = document.createElement("option");
+        option.value = worker.WorkerID || "";
+        option.textContent = worker.WorkerName || worker.WorkerID || "";
+        singleWorkerInput.appendChild(option);
+      });
+
+      if ([...singleWorkerInput.options].some(option => option.value === currentValue)) {
+        singleWorkerInput.value = currentValue;
+      }
+    }
+
+    async function loadSinglePerformance() {
+      const workerId = singleWorkerInput.value || "";
+      const fromDate = singleFromDateInput.value || "";
+      const toDate = singleToDateInput.value || "";
+
+      if (!workerId) {
+        showMessage(t("workerRequired"), "error");
+        return;
+      }
+
+      if (!validateDates(fromDate, toDate)) {
+        return;
+      }
+
+      setButtonLoading(loadSingleBtn, true, t("saving"));
+
+      try {
+        const result = await apiPost({
+          action: "getWorkerPerformance",
+          token: currentUser.token,
+          mode: "single",
+          filters: {
+            workerId,
+            fromDate,
+            toDate
+          }
+        });
+
+        setButtonLoading(loadSingleBtn, false, t("showResults"));
+
+        if (!result || !result.success) {
+          showMessage((result && result.message) || t("loadFailed"), "error");
+          return;
+        }
+
+        renderSummary(result.summary || {});
+        renderSingleTable(result.records || []);
+
+      } catch (error) {
+        console.error(error);
+        setButtonLoading(loadSingleBtn, false, t("showResults"));
+        showMessage(t("serverError"), "error");
+      }
+    }
+
+    async function loadAllPerformance() {
+      const fromDate = allFromDateInput.value || "";
+      const toDate = allToDateInput.value || "";
+
+      if (!validateDates(fromDate, toDate)) {
+        return;
+      }
+
+      setButtonLoading(loadAllBtn, true, t("saving"));
+
+      try {
+        const result = await apiPost({
+          action: "getWorkerPerformance",
+          token: currentUser.token,
+          mode: "all",
+          filters: {
+            fromDate,
+            toDate
+          }
+        });
+
+        setButtonLoading(loadAllBtn, false, t("showResults"));
+
+        if (!result || !result.success) {
+          showMessage((result && result.message) || t("loadFailed"), "error");
+          return;
+        }
+
+        renderSummary(result.summary || {});
+        renderAllTable(result.records || []);
+
+      } catch (error) {
+        console.error(error);
+        setButtonLoading(loadAllBtn, false, t("showResults"));
+        showMessage(t("serverError"), "error");
+      }
+    }
+
+    function validateDates(fromDate, toDate) {
+      if (!fromDate || !toDate) {
+        showMessage(t("dateRequired"), "error");
+        return false;
+      }
+
+      if (fromDate > toDate) {
+        showMessage(t("invalidDates"), "error");
+        return false;
+      }
+
+      return true;
+    }
+
+    function renderSummary(summary) {
+      totalProductionValue.textContent = formatNumber(summary.totalQuantity || 0);
+      avgEvaluationValue.textContent = formatDecimal(summary.averageEvaluation || 0);
+      actualWasteValue.textContent = formatDecimal(summary.actualWaste || 0);
+      expectedWasteValue.textContent = formatDecimal(summary.expectedWaste || 0);
+      wasteIndexValue.textContent = formatDecimal(summary.wasteIndex || 0);
+    }
+
+    function clearSummary() {
+      renderSummary({
+        totalQuantity: 0,
+        averageEvaluation: 0,
+        actualWaste: 0,
+        expectedWaste: 0,
+        wasteIndex: 0
+      });
+    }
+
+    function renderEmptyTable() {
+      if (currentMode === "single") {
+        resultTableHead.innerHTML = `
+          <tr>
+            <th>${t("date")}</th>
+            <th>${t("productionQty")}</th>
+            <th>${t("actualWaste")}</th>
+            <th>${t("expectedWaste")}</th>
+            <th>${t("rawWasteIndex")}</th>
+            <th>${t("expectedHours")}</th>
+            <th>${t("supervisorEvaluationAvg")}</th>
+            <th>${t("performanceLevel")}</th>
+          </tr>
+        `;
+        resultTableBody.innerHTML = `<tr><td colspan="8"><div class="empty-state">${t("emptyData")}</div></td></tr>`;
+      } else {
+        resultTableHead.innerHTML = `
+          <tr>
+            <th>${t("worker")}</th>
+            <th>${t("productionQty")}</th>
+            <th>${t("actualWaste")}</th>
+            <th>${t("expectedWaste")}</th>
+            <th>${t("rawWasteIndex")}</th>
+            <th>${t("expectedHours")}</th>
+            <th>${t("supervisorEvaluationAvg")}</th>
+            <th>${t("performanceLevel")}</th>
+          </tr>
+        `;
+        resultTableBody.innerHTML = `<tr><td colspan="8"><div class="empty-state">${t("emptyData")}</div></td></tr>`;
+      }
+    }
+
+    function renderSingleTable(records) {
+      resultTableHead.innerHTML = `
+        <tr>
+          <th>${t("date")}</th>
+          <th>${t("productionQty")}</th>
+          <th>${t("actualWaste")}</th>
+          <th>${t("expectedWaste")}</th>
+          <th>${t("rawWasteIndex")}</th>
+          <th>${t("expectedHours")}</th>
+          <th>${t("supervisorEvaluationAvg")}</th>
+          <th>${t("performanceLevel")}</th>
+        </tr>
+      `;
+
+      if (!records.length) {
+        resultTableBody.innerHTML = `<tr><td colspan="8"><div class="empty-state">${t("emptyData")}</div></td></tr>`;
+        return;
+      }
+
+      resultTableBody.innerHTML = "";
+
+      records.forEach(row => {
+        const tr = document.createElement("tr");
+        const level = getLevel(row.averageEvaluation, row.wasteIndex);
+
+        tr.innerHTML = `
+          <td class="date-cell">${escapeHtml(row.date || "")}</td>
+          <td class="number-cell">${formatNumber(row.totalQuantity || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.actualWaste || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.expectedWaste || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.wasteIndex || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.theoreticalHours || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.averageEvaluation || 0)}</td>
+          <td>${renderLevel(level)}</td>
+        `;
+
+        resultTableBody.appendChild(tr);
+      });
+    }
+
+    function renderAllTable(records) {
+      resultTableHead.innerHTML = `
+        <tr>
+          <th>${t("worker")}</th>
+          <th>${t("productionQty")}</th>
+          <th>${t("actualWaste")}</th>
+          <th>${t("expectedWaste")}</th>
+          <th>${t("rawWasteIndex")}</th>
+          <th>${t("expectedHours")}</th>
+          <th>${t("supervisorEvaluationAvg")}</th>
+          <th>${t("performanceLevel")}</th>
+        </tr>
+      `;
+
+      if (!records.length) {
+        resultTableBody.innerHTML = `<tr><td colspan="8"><div class="empty-state">${t("emptyData")}</div></td></tr>`;
+        return;
+      }
+
+      resultTableBody.innerHTML = "";
+
+      records.forEach(row => {
+        const tr = document.createElement("tr");
+        const level = getLevel(row.averageEvaluation, row.wasteIndex);
+
+        tr.innerHTML = `
+          <td>${escapeHtml(row.workerName || row.workerId || "")}</td>
+          <td class="number-cell">${formatNumber(row.totalQuantity || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.actualWaste || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.expectedWaste || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.wasteIndex || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.theoreticalHours || 0)}</td>
+          <td class="number-cell">${formatDecimal(row.averageEvaluation || 0)}</td>
+          <td>${renderLevel(level)}</td>
+        `;
+
+        resultTableBody.appendChild(tr);
+      });
+    }
+
+    function getLevel(avgEvaluation, wasteIndex) {
+      const evaluation = Number(avgEvaluation || 0);
+      const waste = Number(wasteIndex || 0);
+
+      if (evaluation >= 9 && waste <= 1) return "excellent";
+      if (evaluation >= 7 && waste <= 1.2) return "good";
+      if (evaluation >= 5 && waste <= 1.5) return "average";
+      return "weak";
+    }
+
+    function renderLevel(level) {
+      const map = {
+        excellent: { label: t("excellent"), cls: "status-good" },
+        good: { label: t("good"), cls: "status-good" },
+        average: { label: t("average"), cls: "status-medium" },
+        weak: { label: t("weak"), cls: "status-bad" }
+      };
+
+      const item = map[level] || map.weak;
+
+      return `<span class="status-pill ${item.cls}">${item.label}</span>`;
+    }
+
+    async function apiPost(payload) {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+
+      return await response.json();
+    }
+
+    function getSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (error) {
+        localStorage.removeItem(SESSION_KEY);
+        return null;
+      }
+    }
+
+    function initSidebar() {
+      menuBtn.addEventListener("click", openSidebar);
+      closeSidebarBtn.addEventListener("click", closeSidebar);
+      overlay.addEventListener("click", closeSidebar);
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          closeSidebar();
+        }
+      });
+
+      document.querySelectorAll(".nav a").forEach(link => {
+        link.addEventListener("click", closeSidebar);
+      });
+    }
+
+    function openSidebar() {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function initLanguage() {
+      languageToggleBtn.addEventListener("click", () => {
+        const nextLang = currentLang === "ar" ? "en" : "ar";
+        applyLanguage(nextLang);
+      });
+    }
+
+    function hideLoading() {
+      loadingBox.style.display = "none";
+    }
+
+    function setButtonLoading(button, isLoading, text) {
+      button.disabled = isLoading;
+
+      if (isLoading) {
+        button.innerHTML = '<span class="mini-spinner"></span>' + text;
+      } else {
+        button.textContent = text;
+      }
+    }
+
+    function showMessage(text, type) {
+      clearTimeout(messageTimer);
+
+      messageBox.textContent = text;
+      messageBox.className = "message " + type;
+
+      messageTimer = setTimeout(() => {
+        clearMessage();
+      }, 3000);
+    }
+
+    function clearMessage() {
+      clearTimeout(messageTimer);
+      messageBox.textContent = "";
+      messageBox.className = "message";
+    }
+
+    function formatNumber(value) {
+      const number = Number(value || 0);
+
+      return number.toLocaleString("en-US", {
+        maximumFractionDigits: 0
+      });
+    }
+
+    function formatDecimal(value) {
+      const number = Number(value || 0);
+
+      return number.toLocaleString("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function toISODate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
