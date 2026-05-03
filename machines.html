@@ -9,26 +9,25 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googles.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-1: #f7f9ff;
-      --bg-2: #eef4ff;
-      --bg-3: #f8efe7;
-      --text: #172033;
-      --muted: #6d7483;
-      --blue: #007aff;
-      --blue-dark: #005fd1;
-      --purple: #7c3aed;
-      --green: #34c759;
-      --orange: #ff9500;
-      --red: #ff3b30;
-      --glass-border: rgba(255, 255, 255, 0.72);
-      --shadow: 0 24px 70px rgba(50, 70, 110, 0.15);
+      --bg-1: #eaf1ff;
+      --bg-2: #f7f1ea;
+      --text: #101827;
+      --muted: #667085;
+      --line: rgba(16, 24, 39, 0.12);
+      --card: rgba(255, 255, 255, 0.88);
+      --input: rgba(255, 255, 255, 0.98);
+      --blue: #0066ff;
+      --blue-dark: #004ec2;
+      --purple: #6d28d9;
+      --red: #dc2626;
+      --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
       --topbar-height: 78px;
       --sidebar-width: 310px;
-      --radius-xl: 30px;
+      --radius-xl: 28px;
     }
 
     * {
@@ -46,23 +45,11 @@
       font-family: "Tajawal", Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 12% 18%, rgba(0, 122, 255, 0.20), transparent 28%),
-        radial-gradient(circle at 88% 12%, rgba(124, 58, 237, 0.14), transparent 30%),
-        radial-gradient(circle at 50% 92%, rgba(255, 149, 0, 0.16), transparent 34%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+        radial-gradient(circle at 10% 12%, rgba(0, 102, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(109, 40, 217, 0.20), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), #ffffff 52%, var(--bg-2));
       background-attachment: fixed;
       overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(120deg, rgba(255,255,255,0.34), transparent 34%, rgba(255,255,255,0.22)),
-        radial-gradient(circle at 60% 20%, rgba(255,255,255,0.34), transparent 22%);
-      z-index: -1;
     }
 
     .floating-topbar {
@@ -72,11 +59,11 @@
       left: 0;
       min-height: var(--topbar-height);
       z-index: 100;
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(26px) saturate(180%);
-      -webkit-backdrop-filter: blur(26px) saturate(180%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.82);
-      box-shadow: 0 18px 45px rgba(50, 70, 110, 0.10);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(16, 24, 39, 0.10);
+      box-shadow: 0 12px 32px rgba(16, 24, 39, 0.10);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -91,19 +78,30 @@
       min-width: 0;
     }
 
-    .menu-btn {
-      width: 42px;
-      height: 42px;
+    .menu-btn,
+    .language-toggle {
       border: 0;
       background: transparent;
       color: var(--text);
-      font-size: 30px;
+      font-family: inherit;
       font-weight: 900;
       cursor: pointer;
-      display: grid;
-      place-items: center;
       padding: 0;
       flex-shrink: 0;
+    }
+
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      font-size: 30px;
+      display: grid;
+      place-items: center;
+    }
+
+    .language-toggle {
+      min-width: 44px;
+      height: 42px;
+      font-size: 16px;
     }
 
     .factory-brand {
@@ -113,15 +111,26 @@
       min-width: 0;
     }
 
+    .factory-logo,
+    .sidebar-logo {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(16,24,39,0.08);
+      flex-shrink: 0;
+    }
+
     .factory-logo {
       width: 50px;
       height: 50px;
       border-radius: 18px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: rgba(255,255,255,0.35);
-      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      width: 49px;
+      height: 49px;
+      border-radius: 18px;
     }
 
     .factory-logo img,
@@ -132,8 +141,11 @@
       display: block;
     }
 
-    .factory-info {
+    .factory-info,
+    .user-info,
+    .sidebar-title {
       min-width: 0;
+      text-align: start;
     }
 
     .factory-info strong {
@@ -156,19 +168,6 @@
       text-overflow: ellipsis;
     }
 
-    .language-select {
-      height: 42px;
-      border: 0;
-      background: transparent;
-      color: var(--text);
-      font-family: inherit;
-      font-weight: 900;
-      font-size: 15px;
-      outline: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
     .top-user-box {
       display: flex;
       align-items: center;
@@ -177,8 +176,8 @@
     }
 
     .avatar {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: grid;
       place-items: center;
@@ -186,10 +185,7 @@
       color: #fff;
       font-weight: 900;
       flex-shrink: 0;
-    }
-
-    .user-info {
-      min-width: 0;
+      box-shadow: 0 8px 18px rgba(0,102,255,0.20);
     }
 
     .user-info strong,
@@ -217,7 +213,7 @@
       position: fixed;
       inset: 0;
       z-index: 150;
-      background: rgba(20, 28, 44, 0.26);
+      background: rgba(16, 24, 39, 0.28);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
@@ -238,9 +234,9 @@
       overflow-y: auto;
       transform: translateX(105%);
       transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
-      background: rgba(255,255,255,0.72);
-      border-left: 1px solid rgba(255,255,255,0.78);
-      box-shadow: -28px 0 70px rgba(50, 70, 110, 0.18);
+      background: rgba(255,255,255,0.94);
+      border-left: 1px solid rgba(16,24,39,0.10);
+      box-shadow: -28px 0 70px rgba(16, 24, 39, 0.18);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
     }
@@ -250,8 +246,8 @@
       left: 0;
       transform: translateX(-105%);
       border-left: 0;
-      border-right: 1px solid rgba(255,255,255,0.78);
-      box-shadow: 28px 0 70px rgba(50, 70, 110, 0.18);
+      border-right: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 28px 0 70px rgba(16, 24, 39, 0.18);
     }
 
     .sidebar.open,
@@ -264,25 +260,15 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
     }
 
     .sidebar-title {
       display: flex;
       align-items: center;
       gap: 11px;
-      min-width: 0;
-    }
-
-    .sidebar-logo {
-      width: 49px;
-      height: 49px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: rgba(255,255,255,0.42);
-      flex-shrink: 0;
     }
 
     .sidebar-title strong {
@@ -302,8 +288,8 @@
       width: 43px;
       height: 43px;
       border: 0;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.42);
+      border-radius: 14px;
+      background: rgba(220, 38, 38, 0.08);
       color: var(--red);
       font-size: 24px;
       cursor: pointer;
@@ -312,76 +298,43 @@
 
     .nav {
       display: grid;
-      gap: 8px;
     }
 
     .nav a,
     .logout-btn {
       width: 100%;
-      min-height: 51px;
+      min-height: 54px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       text-decoration: none;
       color: var(--text);
-      padding: 12px 13px;
-      border-radius: 19px;
+      padding: 13px 4px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+      background: transparent;
       font-family: inherit;
       font-size: 15px;
       font-weight: 900;
-      text-align: inherit;
+      text-align: start;
       cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.58);
-      background: rgba(255,255,255,0.38);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.68);
       transition: 0.18s ease;
-    }
-
-    .logout-btn {
-      border: 0;
     }
 
     .nav a:hover,
     .logout-btn:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.68);
+      color: var(--blue-dark);
+      padding-inline-start: 10px;
     }
 
     .nav a.active {
-      color: #fff;
-      border-color: rgba(255,255,255,0.54);
-      background:
-        radial-gradient(circle at 25% 12%, rgba(255,255,255,0.48), transparent 28%),
-        linear-gradient(145deg, #0a84ff, #7c3aed);
-      box-shadow: 0 18px 38px rgba(0, 122, 255, 0.20);
+      color: var(--blue-dark);
     }
 
     .nav-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 13px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.58);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+      font-size: 20px;
       flex-shrink: 0;
-    }
-
-    .nav a.active .nav-icon {
-      background: rgba(255,255,255,0.22);
-    }
-
-    .sidebar-footer {
-      margin-top: 24px;
-      padding: 14px;
-      border-radius: 22px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-      background: rgba(255,255,255,0.44);
-      border: 1px solid rgba(255,255,255,0.66);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
     }
 
     .main {
@@ -391,47 +344,34 @@
       padding: 116px 24px 32px;
     }
 
-    .hero,
     .panel {
       position: relative;
       overflow: hidden;
+      margin-bottom: 16px;
+      padding: 22px;
       border-radius: var(--radius-xl);
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.68), rgba(255,255,255,0.35)),
-        radial-gradient(circle at 12% 18%, rgba(0,122,255,0.16), transparent 28%),
-        radial-gradient(circle at 88% 20%, rgba(124,58,237,0.12), transparent 30%);
-      border: 1px solid var(--glass-border);
+      background: var(--card);
+      border: 1px solid rgba(16,24,39,0.10);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
     }
 
-    .hero {
-      margin-bottom: 18px;
-      padding: 26px;
-    }
-
-    .hero::after,
-    .panel::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(125deg, rgba(255,255,255,0.34), transparent 32%, rgba(255,255,255,0.12) 66%, transparent);
-    }
-
-    .hero-content,
     .panel-content {
       position: relative;
       z-index: 1;
     }
 
-    .hero-content {
+    .page-title {
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
       display: flex;
+      align-items: flex-start;
       justify-content: space-between;
-      align-items: flex-end;
-      gap: 18px;
+      gap: 14px;
+      flex-wrap: wrap;
+      text-align: start;
     }
 
     .page-title h1 {
@@ -442,179 +382,19 @@
       color: var(--text);
     }
 
-    .page-title p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 15px;
-    }
-
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 42px;
-      padding: 0 14px;
-      border-radius: 999px;
-      color: var(--blue-dark);
-      font-weight: 900;
-      background: rgba(255,255,255,0.58);
-      border: 1px solid rgba(255,255,255,0.76);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.76);
-      white-space: nowrap;
-    }
-
-    .panel {
-      margin-bottom: 16px;
-      padding: 22px;
-    }
-
-    .panel-header {
+    .actions {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
       gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .panel-header h2 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--text);
-    }
-
-    .tools-row {
-      display: grid;
-      grid-template-columns: 1fr 220px 220px;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    input,
-    select {
-      width: 100%;
-      min-height: 50px;
-      border: 1px solid rgba(255,255,255,0.78);
-      border-radius: 18px;
-      padding: 0 14px;
-      font-family: inherit;
-      font-size: 15px;
-      background: rgba(255,255,255,0.54);
-      color: var(--text);
-      outline: none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      transition: 0.18s ease;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: rgba(0, 122, 255, 0.45);
-      box-shadow:
-        0 0 0 4px rgba(0, 122, 255, 0.10),
-        inset 0 1px 0 rgba(255,255,255,0.72);
-      background: rgba(255,255,255,0.72);
-    }
-
-    label {
-      font-weight: 900;
-      color: var(--text);
-      font-size: 14px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 180px auto;
-      gap: 12px;
-      align-items: end;
-    }
-
-    .field {
-      display: grid;
-      gap: 8px;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid rgba(255,255,255,0.72);
-      border-radius: 24px;
-      background: rgba(255,255,255,0.38);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.70);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 900px;
-    }
-
-    th {
-      background: rgba(255,255,255,0.46);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 900;
-      text-align: inherit;
-      padding: 14px;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 12px;
-      border-top: 1px solid rgba(255,255,255,0.58);
-      vertical-align: middle;
-    }
-
-    td input,
-    td select {
-      min-height: 44px;
-      border-radius: 16px;
-    }
-
-    .id-badge {
-      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.54);
-      color: var(--blue-dark);
-      font-weight: 900;
-      border: 1px solid rgba(255,255,255,0.72);
-      white-space: nowrap;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 0 10px;
-      border-radius: 999px;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .status-active {
-      color: #0f7a35;
-      background: rgba(52, 199, 89, 0.12);
-      border: 1px solid rgba(52, 199, 89, 0.20);
-    }
-
-    .status-inactive {
-      color: #9a6700;
-      background: rgba(255, 149, 0, 0.12);
-      border: 1px solid rgba(255, 149, 0, 0.20);
+      justify-content: flex-start;
+      flex-wrap: wrap;
     }
 
     .btn {
-      min-height: 50px;
+      min-height: 46px;
       border: 0;
-      border-radius: 18px;
-      padding: 0 22px;
+      border-radius: 16px;
+      padding: 0 18px;
       font-family: inherit;
       font-size: 15px;
       font-weight: 900;
@@ -629,20 +409,28 @@
     }
 
     .btn-primary {
-      background: linear-gradient(145deg, #0a84ff, #7c3aed);
+      background: linear-gradient(145deg, #0066ff, #5b21b6);
       color: #fff;
-      box-shadow: 0 18px 38px rgba(0, 122, 255, 0.20);
+      box-shadow: 0 14px 30px rgba(0, 102, 255, 0.22);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
+      box-shadow: 0 18px 36px rgba(0, 102, 255, 0.27);
     }
 
     .btn-secondary {
-      background: rgba(255,255,255,0.52);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+      background: #fff;
+      color: var(--blue-dark);
+      border: 1px solid rgba(0, 102, 255, 0.28);
+      box-shadow: 0 8px 20px rgba(16,24,39,0.06);
+    }
+
+    .btn-small {
+      min-height: 38px;
+      border-radius: 12px;
+      padding: 0 13px;
+      font-size: 13px;
     }
 
     .btn:disabled {
@@ -651,43 +439,155 @@
       transform: none;
     }
 
-    .row-actions {
+    .filters-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px 230px;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: end;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      padding-inline-start: 48px;
+    }
+
+    .search-icon {
+      position: absolute;
+      inset-inline-start: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      text-align: start;
+    }
+
+    label {
+      font-weight: 900;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid rgba(16,24,39,0.18);
+      border-radius: 16px;
+      padding: 0 14px;
+      font-family: inherit;
+      font-size: 15px;
+      background: var(--input);
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 2px 0 rgba(16,24,39,0.03);
+      transition: 0.18s ease;
+    }
+
+    input::placeholder {
+      color: #98a2b3;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(0, 102, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.13);
+      background: #fff;
+    }
+
+    .table-wrap {
+      border-radius: 18px;
+      overflow-x: auto;
+      border: 1px solid rgba(16,24,39,0.16);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+      background: #fff;
+    }
+
+    th,
+    td {
+      border: 1px solid rgba(16,24,39,0.12);
+      padding: 12px;
+      text-align: start;
+      vertical-align: middle;
+      font-weight: 800;
+    }
+
+    th {
+      background: #eef4ff;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    td {
+      background: #fff;
+      color: var(--text);
+    }
+
+    .id-cell {
+      direction: ltr;
+      text-align: start;
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      color: var(--blue-dark);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status-active {
+      background: rgba(22, 163, 74, 0.10);
+      color: #166534;
+      border: 1px solid rgba(22, 163, 74, 0.18);
+    }
+
+    .status-inactive {
+      background: rgba(220, 38, 38, 0.08);
+      color: #991b1b;
+      border: 1px solid rgba(220, 38, 38, 0.18);
+    }
+
+    .table-actions {
       display: flex;
       gap: 8px;
       align-items: center;
+      justify-content: flex-start;
       flex-wrap: wrap;
     }
 
-    .message {
-      display: none;
-      margin-bottom: 16px;
-      padding: 14px 16px;
-      border-radius: 20px;
-      font-size: 15px;
-      line-height: 1.7;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .message.error {
-      display: block;
-      color: #b42318;
-      background: rgba(255, 59, 48, 0.10);
-      border: 1px solid rgba(255, 59, 48, 0.18);
-    }
-
-    .message.success {
-      display: block;
-      color: #0f7a35;
-      background: rgba(52, 199, 89, 0.12);
-      border: 1px solid rgba(52, 199, 89, 0.20);
-    }
-
-    .message.warning {
-      display: block;
-      color: #9a6700;
-      background: rgba(255, 149, 0, 0.12);
-      border: 1px solid rgba(255, 149, 0, 0.22);
+    .empty-state {
+      padding: 18px;
+      border-radius: 18px;
+      background: #f9fafb;
+      color: var(--muted);
+      font-weight: 900;
+      text-align: center;
+      border: 1px dashed rgba(16,24,39,0.16);
     }
 
     .loading {
@@ -700,10 +600,9 @@
       padding: 13px 15px;
       width: fit-content;
       border-radius: 999px;
-      background: rgba(255,255,255,0.50);
-      border: 1px solid rgba(255,255,255,0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background: #fff;
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 8px 22px rgba(16,24,39,0.07);
     }
 
     .spinner,
@@ -715,7 +614,7 @@
     .spinner {
       width: 20px;
       height: 20px;
-      border: 3px solid rgba(0, 122, 255, 0.16);
+      border: 3px solid rgba(0, 102, 255, 0.14);
       border-top-color: var(--blue);
     }
 
@@ -727,30 +626,144 @@
       display: inline-block;
     }
 
+    .message {
+      display: none;
+      position: fixed;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1200;
+      min-width: min(520px, calc(100vw - 28px));
+      max-width: calc(100vw - 28px);
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.7;
+      border: 1px solid transparent;
+      box-shadow: 0 18px 48px rgba(16, 24, 39, 0.24);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      text-align: center;
+    }
+
+    .message.error {
+      display: block;
+      color: #991b1b;
+      background: rgba(254, 242, 242, 0.98);
+      border-color: #fecaca;
+    }
+
+    .message.success {
+      display: block;
+      color: #166534;
+      background: rgba(240, 253, 244, 0.98);
+      border-color: #bbf7d0;
+    }
+
+    .message.warning {
+      display: block;
+      color: #9a3412;
+      background: rgba(255, 247, 237, 0.98);
+      border-color: #fed7aa;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 600;
+      background: rgba(16, 24, 39, 0.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 16px;
+      place-items: center;
+    }
+
+    .modal-overlay.show {
+      display: grid;
+    }
+
+    .modal-card {
+      width: min(560px, 100%);
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 28px 70px rgba(16,24,39,0.22);
+      padding: 22px;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .close-modal {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(220, 38, 38, 0.08);
+      color: var(--red);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .modal-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .category-list {
+      display: grid;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(16,24,39,0.12);
+      background: #fff;
+    }
+
+    .category-row {
+      min-height: 44px;
+      border-radius: 14px;
+      padding: 8px 10px;
+      background: #f9fafb;
+      border: 1px solid rgba(16,24,39,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 900;
+    }
+
     @keyframes spin {
       to {
         transform: rotate(360deg);
       }
     }
 
-    .empty-state {
-      padding: 18px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.48);
-      border: 1px solid rgba(255,255,255,0.72);
-      color: var(--muted);
-      text-align: center;
-      font-weight: 800;
-      line-height: 1.7;
-    }
-
-    @media (max-width: 1000px) {
-      .form-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 960px) {
+      .filters-row {
+        grid-template-columns: 1fr 1fr;
       }
 
-      .tools-row {
-        grid-template-columns: 1fr;
+      .filters-row .search-box {
+        grid-column: 1 / -1;
       }
     }
 
@@ -775,12 +788,15 @@
       }
 
       .top-user-box {
+        max-width: 130px;
+      }
+
+      .user-info span {
         display: none;
       }
 
-      .language-select {
-        width: auto;
-        height: 40px;
+      .language-toggle {
+        min-width: 36px;
         font-size: 14px;
       }
 
@@ -788,35 +804,31 @@
         padding: 94px 14px 24px;
       }
 
-      .hero {
-        padding: 20px;
-        border-radius: 26px;
-      }
-
-      .hero-content {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .hero-pill {
-        width: 100%;
+      .panel {
+        padding: 16px;
+        border-radius: 24px;
       }
 
       .page-title h1 {
         font-size: 26px;
       }
 
-      .panel {
-        padding: 16px;
+      .filters-row {
+        grid-template-columns: 1fr;
+      }
+
+      .actions,
+      .table-actions {
+        display: grid;
+        grid-template-columns: 1fr;
       }
 
       .btn {
         width: 100%;
       }
 
-      .row-actions {
-        display: grid;
-        grid-template-columns: 1fr;
+      .message {
+        top: 82px;
       }
     }
 
@@ -857,10 +869,7 @@
     </div>
 
     <div class="topbar-side">
-      <select id="languageSelect" class="language-select" aria-label="اللغة">
-        <option value="ar">العربية</option>
-        <option value="en">English</option>
-      </select>
+      <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
       <div class="top-user-box">
         <div class="avatar" id="userAvatar">U</div>
@@ -930,93 +939,58 @@
         <span class="nav-icon">🚪</span>
       </button>
     </nav>
-
-    <div class="sidebar-footer" data-i18n="sidebarNote">
-      القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.
-    </div>
   </aside>
 
   <main class="main">
-    <section class="hero">
-      <div class="hero-content">
-        <div class="page-title">
-          <h1 data-i18n="machines">المكائن</h1>
-          <p id="welcomeText">إدارة المكائن وتصنيفها حسب نوع المكينة.</p>
-        </div>
-
-        <div class="hero-pill">
-          <span>●</span>
-          <span data-i18n="connected">متصل ببيانات Google Sheets</span>
-        </div>
-      </div>
-    </section>
-
     <div id="loadingBox" class="loading">
       <span class="spinner"></span>
-      <span data-i18n="loadingMachines">جاري تحميل بيانات المكائن...</span>
+      <span data-i18n="loadingMachines">جاري تحميل المكائن...</span>
     </div>
 
     <div id="messageBox" class="message"></div>
 
-    <section class="panel admin-only" id="addMachinePanel">
+    <section class="panel">
       <div class="panel-content">
-        <div class="panel-header">
-          <h2 data-i18n="addMachine">إضافة مكينة جديدة</h2>
+        <div class="page-title">
+          <div>
+            <h1 data-i18n="machines">المكائن</h1>
+          </div>
+
+          <div class="actions admin-only">
+            <button class="btn btn-secondary" type="button" id="openCategoryModalBtn">
+              <span>＋</span>
+              <span data-i18n="addCategory">إضافة صنف</span>
+            </button>
+
+            <button class="btn btn-primary" type="button" id="openAddMachineBtn">
+              <span>＋</span>
+              <span data-i18n="addMachine">إضافة مكينة</span>
+            </button>
+          </div>
         </div>
 
-        <form id="addMachineForm" class="form-grid">
+        <div class="filters-row">
+          <div class="search-box">
+            <span class="search-icon">🔎</span>
+            <input type="search" id="machinesSearchInput" autocomplete="off" placeholder="بحث في قائمة المكائن">
+          </div>
+
           <div class="field">
-            <label for="newMachineCategory" data-i18n="machineCategory">صنف المكينة</label>
-            <select id="newMachineCategory" required>
-              <option value="" data-i18n="chooseCategory">اختر الصنف</option>
+            <select id="categoryFilterInput">
+              <option value="all" data-i18n="allCategories">كل الأصناف</option>
             </select>
           </div>
 
           <div class="field">
-            <label for="newMachineName" data-i18n="machineName">اسم المكينة</label>
-            <input id="newMachineName" type="text" required>
-          </div>
-
-          <div class="field">
-            <label for="newMachineStatus" data-i18n="status">الحالة</label>
-            <select id="newMachineStatus">
+            <select id="statusFilterInput">
+              <option value="all" data-i18n="allStatuses">كل الحالات</option>
               <option value="Active" data-i18n="active">نشط</option>
               <option value="Inactive" data-i18n="inactive">غير نشط</option>
             </select>
           </div>
-
-          <button class="btn btn-primary" type="submit" id="addMachineBtn" data-i18n="save">
-            حفظ
-          </button>
-        </form>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="panel-content">
-        <div class="panel-header">
-          <h2 data-i18n="machinesList">قائمة المكائن</h2>
         </div>
 
-        <div class="tools-row">
-          <input id="searchInput" type="search" placeholder="بحث باسم المكينة أو الصنف...">
-
-          <select id="categoryFilter">
-            <option value="all" data-i18n="allCategories">كل الأصناف</option>
-          </select>
-
-          <select id="statusFilter">
-            <option value="all" data-i18n="allStatuses">كل الحالات</option>
-            <option value="Active" data-i18n="active">نشط</option>
-            <option value="Inactive" data-i18n="inactive">غير نشط</option>
-          </select>
-        </div>
-
-        <div id="emptyState" class="empty-state" style="display:none;" data-i18n="noMachines">
-          لا توجد بيانات مكائن لعرضها.
-        </div>
-
-        <div class="table-wrap" id="tableWrap">
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
@@ -1024,19 +998,80 @@
                 <th data-i18n="machineCategory">صنف المكينة</th>
                 <th data-i18n="machineName">اسم المكينة</th>
                 <th data-i18n="status">الحالة</th>
-                <th class="admin-only" data-i18n="actions">الإجراءات</th>
+                <th class="admin-only" data-i18n="actions">الإجراء</th>
               </tr>
             </thead>
-            <tbody id="machinesBody"></tbody>
+            <tbody id="machinesTableBody"></tbody>
           </table>
         </div>
       </div>
     </section>
   </main>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec";
+  <div class="modal-overlay" id="machineModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="machineModalTitle" data-i18n="addMachine">إضافة مكينة</h2>
+        <button class="close-modal" type="button" id="closeMachineModalBtn">×</button>
+      </div>
 
+      <form id="machineForm" class="modal-form" novalidate>
+        <input type="hidden" id="machineIdInput">
+
+        <div class="field">
+          <label for="machineCategoryInput" data-i18n="machineCategory">صنف المكينة</label>
+          <select id="machineCategoryInput"></select>
+        </div>
+
+        <div class="field">
+          <label for="machineNameInput" data-i18n="machineName">اسم المكينة</label>
+          <input type="text" id="machineNameInput" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label for="machineStatusInput" data-i18n="status">الحالة</label>
+          <select id="machineStatusInput">
+            <option value="Active" data-i18n="active">نشط</option>
+            <option value="Inactive" data-i18n="inactive">غير نشط</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" id="saveMachineBtn" data-i18n="save">حفظ</button>
+          <button class="btn btn-secondary" type="button" id="cancelMachineBtn" data-i18n="cancel">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 data-i18n="categories">الأصناف</h2>
+        <button class="close-modal" type="button" id="closeCategoryModalBtn">×</button>
+      </div>
+
+      <div class="field">
+        <label data-i18n="existingCategories">الأصناف الموجودة</label>
+        <div class="category-list" id="categoriesList"></div>
+      </div>
+
+      <form id="categoryForm" class="modal-form" novalidate style="margin-top:14px;">
+        <div class="field">
+          <label for="categoryNameInput" data-i18n="newCategoryName">اسم الصنف الجديد</label>
+          <input type="text" id="categoryNameInput" autocomplete="off">
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" id="saveCategoryBtn" data-i18n="saveCategory">حفظ الصنف</button>
+          <button class="btn btn-secondary" type="button" id="cancelCategoryBtn" data-i18n="cancel">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
 
@@ -1044,6 +1079,7 @@
       ar: {
         htmlLang: "ar",
         dir: "rtl",
+        languageButton: "EN",
         pageTitle: "المكائن | ناتاك",
         factoryName: "ناتاك",
         factorySubtitle: "نظام متابعة الإنتاج اليومي",
@@ -1057,46 +1093,49 @@
         products: "المنتجات",
         machines: "المكائن",
         logout: "تسجيل الخروج",
-        sidebarNote: "القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.",
-        connected: "متصل ببيانات Google Sheets",
-        loadingMachines: "جاري تحميل بيانات المكائن...",
-        addMachine: "إضافة مكينة جديدة",
-        machinesList: "قائمة المكائن",
+        loadingMachines: "جاري تحميل المكائن...",
+        addMachine: "إضافة مكينة",
+        editMachine: "تعديل مكينة",
+        addCategory: "إضافة صنف",
+        categories: "الأصناف",
+        existingCategories: "الأصناف الموجودة",
+        newCategoryName: "اسم الصنف الجديد",
+        saveCategory: "حفظ الصنف",
         machineId: "رقم المكينة",
         machineCategory: "صنف المكينة",
         machineName: "اسم المكينة",
-        chooseCategory: "اختر الصنف",
         status: "الحالة",
-        active: "نشط",
-        inactive: "غير نشط",
-        save: "حفظ",
-        update: "تحديث",
-        actions: "الإجراءات",
         allCategories: "كل الأصناف",
         allStatuses: "كل الحالات",
-        noMachines: "لا توجد بيانات مكائن لعرضها.",
-        searchPlaceholder: "بحث باسم المكينة أو الصنف...",
-        welcome: name => "مرحبًا " + name + "، يمكنك إدارة المكائن وتصنيفها من هذه الصفحة.",
+        active: "نشط",
+        inactive: "غير نشط",
+        actions: "الإجراء",
+        save: "حفظ",
+        cancel: "إلغاء",
+        edit: "تعديل",
+        emptyData: "لا توجد بيانات للعرض.",
+        noCategories: "لا توجد أصناف.",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
-        apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة machines.html.",
-        tokenMissing: "لم يتم العثور على رمز الجلسة token. يرجى تسجيل الدخول مرة أخرى.",
-        loadFailed: "تعذر تحميل بيانات المكائن.",
-        categoriesLoadFailed: "تعذر تحميل قائمة الأصناف.",
+        tokenMissing: "لم يتم العثور على رمز الجلسة token.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
+        loadFailed: "تعذر تحميل بيانات المكائن.",
         categoryRequired: "يرجى اختيار صنف المكينة.",
-        nameRequired: "يرجى إدخال اسم المكينة.",
+        machineNameRequired: "يرجى إدخال اسم المكينة.",
+        categoryNameRequired: "يرجى إدخال اسم الصنف.",
+        duplicateMachine: "هذه المكينة موجودة مسبقًا لنفس الصنف.",
+        duplicateCategory: "هذا الصنف موجود مسبقًا.",
         addSuccess: "تمت إضافة المكينة بنجاح.",
-        addFailed: "تعذر إضافة المكينة.",
-        updateConfirm: "هل تريد تحديث بيانات هذه المكينة؟",
         updateSuccess: "تم تحديث بيانات المكينة بنجاح.",
-        updateFailed: "تعذر تحديث بيانات المكينة.",
+        categoryAddSuccess: "تمت إضافة الصنف بنجاح.",
         saving: "جاري الحفظ...",
-        updating: "جاري التحديث..."
+        searchPlaceholder: "بحث في قائمة المكائن",
+        chooseCategory: "اختر الصنف"
       },
       en: {
         htmlLang: "en",
         dir: "ltr",
+        languageButton: "عربي",
         pageTitle: "Machines | NATAC",
         factoryName: "NATAC",
         factorySubtitle: "Daily Production Monitoring System",
@@ -1110,42 +1149,44 @@
         products: "Products",
         machines: "Machines",
         logout: "Logout",
-        sidebarNote: "The menu stays hidden and appears only when you press the menu button in the top bar.",
-        connected: "Connected to Google Sheets data",
-        loadingMachines: "Loading machines data...",
-        addMachine: "Add New Machine",
-        machinesList: "Machines List",
+        loadingMachines: "Loading machines...",
+        addMachine: "Add Machine",
+        editMachine: "Edit Machine",
+        addCategory: "Add Category",
+        categories: "Categories",
+        existingCategories: "Existing Categories",
+        newCategoryName: "New Category Name",
+        saveCategory: "Save Category",
         machineId: "Machine ID",
         machineCategory: "Machine Category",
         machineName: "Machine Name",
-        chooseCategory: "Choose category",
         status: "Status",
+        allCategories: "All Categories",
+        allStatuses: "All Statuses",
         active: "Active",
         inactive: "Inactive",
+        actions: "Action",
         save: "Save",
-        update: "Update",
-        actions: "Actions",
-        allCategories: "All categories",
-        allStatuses: "All statuses",
-        noMachines: "No machines data to display.",
-        searchPlaceholder: "Search by machine name or category...",
-        welcome: name => "Welcome " + name + ", you can manage and classify machines from this page.",
+        cancel: "Cancel",
+        edit: "Edit",
+        emptyData: "No data to display.",
+        noCategories: "No categories.",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
-        apiMissing: "Please set the Apps Script URL inside API_URL in machines.html.",
-        tokenMissing: "Session token not found. Please log in again.",
-        loadFailed: "Unable to load machines data.",
-        categoriesLoadFailed: "Unable to load categories list.",
+        tokenMissing: "Session token not found.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
-        categoryRequired: "Please choose the machine category.",
-        nameRequired: "Please enter the machine name.",
+        loadFailed: "Unable to load machines data.",
+        categoryRequired: "Please choose machine category.",
+        machineNameRequired: "Please enter machine name.",
+        categoryNameRequired: "Please enter category name.",
+        duplicateMachine: "This machine already exists for the same category.",
+        duplicateCategory: "This category already exists.",
         addSuccess: "Machine added successfully.",
-        addFailed: "Unable to add machine.",
-        updateConfirm: "Do you want to update this machine?",
         updateSuccess: "Machine updated successfully.",
-        updateFailed: "Unable to update machine.",
+        categoryAddSuccess: "Category added successfully.",
         saving: "Saving...",
-        updating: "Updating..."
+        searchPlaceholder: "Search machines list",
+        chooseCategory: "Choose category"
       }
     };
 
@@ -1153,6 +1194,8 @@
     let currentUser = null;
     let machines = [];
     let categories = [];
+    let editingMachineId = "";
+    let messageTimer = null;
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
@@ -1163,28 +1206,40 @@
     const userName = document.getElementById("userName");
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
-    const welcomeText = document.getElementById("welcomeText");
-
-    const addMachinePanel = document.getElementById("addMachinePanel");
-    const addMachineForm = document.getElementById("addMachineForm");
-    const newMachineCategory = document.getElementById("newMachineCategory");
-    const newMachineName = document.getElementById("newMachineName");
-    const newMachineStatus = document.getElementById("newMachineStatus");
-    const addMachineBtn = document.getElementById("addMachineBtn");
-
-    const machinesBody = document.getElementById("machinesBody");
-    const searchInput = document.getElementById("searchInput");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const statusFilter = document.getElementById("statusFilter");
-    const emptyState = document.getElementById("emptyState");
-    const tableWrap = document.getElementById("tableWrap");
 
     const logoutBtn = document.getElementById("logoutBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
-    const languageSelect = document.getElementById("languageSelect");
+    const languageToggleBtn = document.getElementById("languageToggleBtn");
+
+    const openAddMachineBtn = document.getElementById("openAddMachineBtn");
+    const openCategoryModalBtn = document.getElementById("openCategoryModalBtn");
+
+    const machinesSearchInput = document.getElementById("machinesSearchInput");
+    const categoryFilterInput = document.getElementById("categoryFilterInput");
+    const statusFilterInput = document.getElementById("statusFilterInput");
+    const machinesTableBody = document.getElementById("machinesTableBody");
+
+    const machineModal = document.getElementById("machineModal");
+    const closeMachineModalBtn = document.getElementById("closeMachineModalBtn");
+    const cancelMachineBtn = document.getElementById("cancelMachineBtn");
+    const machineForm = document.getElementById("machineForm");
+    const machineModalTitle = document.getElementById("machineModalTitle");
+    const machineIdInput = document.getElementById("machineIdInput");
+    const machineCategoryInput = document.getElementById("machineCategoryInput");
+    const machineNameInput = document.getElementById("machineNameInput");
+    const machineStatusInput = document.getElementById("machineStatusInput");
+    const saveMachineBtn = document.getElementById("saveMachineBtn");
+
+    const categoryModal = document.getElementById("categoryModal");
+    const closeCategoryModalBtn = document.getElementById("closeCategoryModalBtn");
+    const cancelCategoryBtn = document.getElementById("cancelCategoryBtn");
+    const categoryForm = document.getElementById("categoryForm");
+    const categoriesList = document.getElementById("categoriesList");
+    const categoryNameInput = document.getElementById("categoryNameInput");
+    const saveCategoryBtn = document.getElementById("saveCategoryBtn");
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
@@ -1192,11 +1247,23 @@
       initSidebar();
       initLanguage();
       bindEvents();
-      loadMachinesPageData();
+      loadData();
     });
 
     function t(key) {
       return i18n[currentLang][key];
+    }
+
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+      return {
+        ...user,
+        ...session,
+        token: session.token || user.token || "",
+        Role: session.Role || session.role || user.Role || user.role || "",
+        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
+        Username: session.Username || session.username || user.Username || user.username || ""
+      };
     }
 
     function applyLanguage(lang) {
@@ -1209,6 +1276,8 @@
 
       factoryName.textContent = i18n[lang].factoryName;
       factorySubtitle.textContent = i18n[lang].factorySubtitle;
+      languageToggleBtn.textContent = i18n[lang].languageButton;
+      machinesSearchInput.placeholder = i18n[lang].searchPlaceholder;
 
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
@@ -1217,22 +1286,19 @@
         }
       });
 
-      searchInput.placeholder = t("searchPlaceholder");
-      languageSelect.value = lang;
-
       const session = getSession();
+
       if (session) {
-        renderUser(session);
+        currentUser = normalizeSession(session);
+        renderUser(currentUser);
+        applyRoleUI(currentUser.Role || currentUser.role);
       }
 
-      if (categories.length) {
-        renderNewMachineCategoryOptions();
-        renderCategoryFilter();
-      }
-
-      if (machines.length) {
-        renderMachines();
-      }
+      renderCategoryFilters();
+      renderMachineFormCategories();
+      renderMachinesTable();
+      renderCategoriesList();
+      updateMachineModalTitle();
     }
 
     function protectPage() {
@@ -1243,18 +1309,24 @@
         return;
       }
 
-      currentUser = session;
-      renderUser(session);
-      applyRoleUI(session.Role || session.role);
+      currentUser = normalizeSession(session);
+      renderUser(currentUser);
+      applyRoleUI(currentUser.Role || currentUser.role);
     }
 
     function renderUser(session) {
-      const name = session.FullName || session.fullName || session.username || session.Username || "User";
+      const name =
+        session.FullName ||
+        session.fullName ||
+        session.name ||
+        session.Username ||
+        session.username ||
+        "User";
+
       const role = session.Role || session.role || "---";
 
       userName.textContent = name;
       userRole.textContent = normalizeRoleLabel(role);
-      welcomeText.textContent = t("welcome")(name);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
@@ -1274,51 +1346,14 @@
     }
 
     function applyRoleUI(role) {
-      const admin = String(role || "").toLowerCase() === "admin";
+      const cleanRole = String(role || "").toLowerCase();
 
       document.querySelectorAll(".admin-only").forEach(el => {
-        el.style.display = admin ? "" : "none";
-      });
-
-      addMachinePanel.style.display = admin ? "" : "none";
-
-      if (!admin) {
-        showMessage("هذه الصفحة مخصصة لمدير النظام فقط.", "warning");
-      }
-    }
-
-    function bindEvents() {
-      searchInput.addEventListener("input", renderMachines);
-      categoryFilter.addEventListener("change", renderMachines);
-      statusFilter.addEventListener("change", renderMachines);
-      addMachineForm.addEventListener("submit", handleAddMachine);
-
-      logoutBtn.addEventListener("click", async () => {
-        const session = getSession();
-
-        try {
-          if (session && session.token && API_URL && !API_URL.includes("ضع_رابط")) {
-            await apiPost({
-              action: "logout",
-              token: session.token
-            });
-          }
-        } catch (error) {
-          console.warn(error);
-        }
-
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = "index.html";
+        el.style.display = cleanRole === "admin" ? "" : "none";
       });
     }
 
-    async function loadMachinesPageData() {
-      if (!API_URL || API_URL.includes("ضع_رابط")) {
-        hideLoading();
-        showMessage(t("apiMissing"), "error");
-        return;
-      }
-
+    async function loadData() {
       if (!currentUser || !currentUser.token) {
         hideLoading();
         showMessage(t("tokenMissing"), "error");
@@ -1335,29 +1370,24 @@
           apiPost({
             action: "getCategories",
             token: currentUser.token,
-            activeOnly: true
+            activeOnly: false
           })
         ]);
 
         hideLoading();
 
-        if (!machinesResult.success) {
-          showMessage(machinesResult.message || t("loadFailed"), "error");
-          return;
-        }
-
-        if (!categoriesResult.success) {
-          showMessage(categoriesResult.message || t("categoriesLoadFailed"), "error");
+        if (!machinesResult || !machinesResult.success) {
+          showMessage((machinesResult && machinesResult.message) || t("loadFailed"), "error");
           return;
         }
 
         machines = machinesResult.machines || [];
-        categories = categoriesResult.categories || [];
+        categories = categoriesResult && categoriesResult.success ? categoriesResult.categories || [] : [];
 
-        renderNewMachineCategoryOptions();
-        renderCategoryFilter();
-        renderMachines();
-        clearMessage();
+        renderCategoryFilters();
+        renderMachineFormCategories();
+        renderMachinesTable();
+        renderCategoriesList();
 
       } catch (error) {
         console.error(error);
@@ -1366,141 +1396,267 @@
       }
     }
 
-    function renderNewMachineCategoryOptions() {
-      const current = newMachineCategory.value;
+    function bindEvents() {
+      openAddMachineBtn.addEventListener("click", openAddMachineModal);
+      closeMachineModalBtn.addEventListener("click", closeMachineModal);
+      cancelMachineBtn.addEventListener("click", closeMachineModal);
+      machineForm.addEventListener("submit", handleSaveMachine);
 
-      newMachineCategory.innerHTML = `<option value="">${t("chooseCategory")}</option>`;
+      machineModal.addEventListener("click", event => {
+        if (event.target === machineModal) {
+          closeMachineModal();
+        }
+      });
 
-      categories
-        .filter(category => normalizeStatus(category.Status) === "Active")
-        .forEach(category => {
-          const option = document.createElement("option");
-          option.value = category.CategoryName;
-          option.textContent = category.CategoryName;
-          newMachineCategory.appendChild(option);
-        });
+      machinesSearchInput.addEventListener("input", renderMachinesTable);
+      categoryFilterInput.addEventListener("change", renderMachinesTable);
+      statusFilterInput.addEventListener("change", renderMachinesTable);
 
-      if (current && [...newMachineCategory.options].some(option => option.value === current)) {
-        newMachineCategory.value = current;
+      machinesTableBody.addEventListener("click", event => {
+        const editBtn = event.target.closest(".edit-machine-btn");
+
+        if (editBtn) {
+          openEditMachineModal(editBtn.dataset.id);
+        }
+      });
+
+      openCategoryModalBtn.addEventListener("click", openCategoryModal);
+      closeCategoryModalBtn.addEventListener("click", closeCategoryModal);
+      cancelCategoryBtn.addEventListener("click", closeCategoryModal);
+      categoryForm.addEventListener("submit", handleAddCategory);
+
+      categoryModal.addEventListener("click", event => {
+        if (event.target === categoryModal) {
+          closeCategoryModal();
+        }
+      });
+
+      logoutBtn.addEventListener("click", async () => {
+        const session = getSession();
+
+        try {
+          if (session && session.token && API_URL) {
+            await apiPost({
+              action: "logout",
+              token: session.token
+            });
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+
+        localStorage.removeItem(SESSION_KEY);
+        window.location.href = "index.html";
+      });
+    }
+
+    function renderCategoryFilters() {
+      const currentValue = categoryFilterInput.value || "all";
+
+      categoryFilterInput.innerHTML = `<option value="all">${t("allCategories")}</option>`;
+
+      getCategoryNames().forEach(categoryName => {
+        const option = document.createElement("option");
+        option.value = categoryName;
+        option.textContent = categoryName;
+        categoryFilterInput.appendChild(option);
+      });
+
+      if ([...categoryFilterInput.options].some(option => option.value === currentValue)) {
+        categoryFilterInput.value = currentValue;
       }
     }
 
-    function renderCategoryFilter() {
-      const current = categoryFilter.value;
+    function renderMachineFormCategories() {
+      const currentValue = machineCategoryInput.value || "";
 
-      categoryFilter.innerHTML = `<option value="all">${t("allCategories")}</option>`;
+      machineCategoryInput.innerHTML = `<option value="">${t("chooseCategory")}</option>`;
 
-      categories
-        .filter(category => normalizeStatus(category.Status) === "Active")
-        .forEach(category => {
-          const option = document.createElement("option");
-          option.value = category.CategoryName;
-          option.textContent = category.CategoryName;
-          categoryFilter.appendChild(option);
-        });
+      getCategoryNames(true).forEach(categoryName => {
+        const option = document.createElement("option");
+        option.value = categoryName;
+        option.textContent = categoryName;
+        machineCategoryInput.appendChild(option);
+      });
 
-      if (current && [...categoryFilter.options].some(option => option.value === current)) {
-        categoryFilter.value = current;
+      if ([...machineCategoryInput.options].some(option => option.value === currentValue)) {
+        machineCategoryInput.value = currentValue;
       }
     }
 
-    function renderMachines() {
-      const search = searchInput.value.trim().toLowerCase();
-      const category = categoryFilter.value;
-      const status = statusFilter.value;
+    function renderCategoriesList() {
+      categoriesList.innerHTML = "";
 
-      let filtered = machines.slice();
-
-      if (search) {
-        filtered = filtered.filter(machine => {
-          const name = String(machine.MachineName || "").toLowerCase();
-          const machineCategory = String(machine.MachineCategory || "").toLowerCase();
-          return name.includes(search) || machineCategory.includes(search);
-        });
-      }
-
-      if (category !== "all") {
-        filtered = filtered.filter(machine => String(machine.MachineCategory || "") === category);
-      }
-
-      if (status !== "all") {
-        filtered = filtered.filter(machine => normalizeStatus(machine.Status) === status);
-      }
-
-      machinesBody.innerHTML = "";
-
-      if (!filtered.length) {
-        tableWrap.style.display = "none";
-        emptyState.style.display = "block";
+      if (!categories.length) {
+        categoriesList.innerHTML = `<div class="empty-state">${t("noCategories")}</div>`;
         return;
       }
 
-      tableWrap.style.display = "";
-      emptyState.style.display = "none";
+      categories.forEach(category => {
+        const active = normalizeStatus(category.Status || "Active") === "Active";
 
-      filtered.forEach(machine => {
-        const tr = document.createElement("tr");
+        const row = document.createElement("div");
+        row.className = "category-row";
 
-        const machineId = escapeHtml(machine.MachineID || "");
-        const machineCategory = escapeHtml(machine.MachineCategory || "");
-        const machineName = escapeHtml(machine.MachineName || "");
-        const statusValue = normalizeStatus(machine.Status);
+        row.innerHTML = `
+          <span>${escapeHtml(category.CategoryName || "")}</span>
+          <span class="status-pill ${active ? "status-active" : "status-inactive"}">
+            ${active ? t("active") : t("inactive")}
+          </span>
+        `;
 
-        if (isAdmin()) {
-          tr.innerHTML = `
-            <td>
-              <span class="id-badge">${machineId}</span>
-            </td>
-            <td>
-              <select class="edit-category" data-id="${machineId}">
-                ${getCategoryOptionsHtml(machineCategory)}
-              </select>
-            </td>
-            <td>
-              <input class="edit-name" data-id="${machineId}" value="${machineName}">
-            </td>
-            <td>
-              <select class="edit-status" data-id="${machineId}">
-                <option value="Active" ${statusValue === "Active" ? "selected" : ""}>${t("active")}</option>
-                <option value="Inactive" ${statusValue === "Inactive" ? "selected" : ""}>${t("inactive")}</option>
-              </select>
-            </td>
-            <td>
-              <div class="row-actions">
-                <button class="btn btn-secondary update-machine-btn" type="button" data-id="${machineId}">
-                  ${t("update")}
-                </button>
-              </div>
-            </td>
-          `;
-        } else {
-          tr.innerHTML = `
-            <td>
-              <span class="id-badge">${machineId}</span>
-            </td>
-            <td>${machineCategory}</td>
-            <td>${machineName}</td>
-            <td>${getStatusBadge(statusValue)}</td>
-          `;
-        }
-
-        machinesBody.appendChild(tr);
-      });
-
-      document.querySelectorAll(".update-machine-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          handleUpdateMachine(btn.dataset.id, btn);
-        });
+        categoriesList.appendChild(row);
       });
     }
 
-    async function handleAddMachine(event) {
+    function getCategoryNames(activeOnly = false) {
+      const fromCategories = categories
+        .filter(category => {
+          if (!activeOnly) return true;
+          return normalizeStatus(category.Status || "Active") === "Active";
+        })
+        .map(category => category.CategoryName)
+        .filter(Boolean);
+
+      const fromMachines = machines
+        .map(machine => machine.MachineCategory)
+        .filter(Boolean);
+
+      return [...new Set([...fromCategories, ...fromMachines])];
+    }
+
+    function getFilteredMachines() {
+      const keyword = String(machinesSearchInput.value || "").trim().toLowerCase();
+      const selectedCategory = categoryFilterInput.value || "all";
+      const selectedStatus = statusFilterInput.value || "all";
+
+      return machines.filter(machine => {
+        const status = normalizeStatus(machine.Status || "Active");
+
+        if (selectedStatus !== "all" && status !== selectedStatus) {
+          return false;
+        }
+
+        if (selectedCategory !== "all" && String(machine.MachineCategory || "") !== String(selectedCategory)) {
+          return false;
+        }
+
+        if (!keyword) {
+          return true;
+        }
+
+        const statusText = status === "Active" ? t("active") : t("inactive");
+
+        return String(machine.MachineID || "").toLowerCase().includes(keyword) ||
+          String(machine.MachineCategory || "").toLowerCase().includes(keyword) ||
+          String(machine.MachineName || "").toLowerCase().includes(keyword) ||
+          statusText.toLowerCase().includes(keyword);
+      });
+    }
+
+    function renderMachinesTable() {
+      machinesTableBody.innerHTML = "";
+
+      const filteredMachines = getFilteredMachines();
+
+      if (!filteredMachines.length) {
+        const colspan = isAdmin() ? 5 : 4;
+        machinesTableBody.innerHTML = `
+          <tr>
+            <td colspan="${colspan}">
+              <div class="empty-state">${t("emptyData")}</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filteredMachines.forEach(machine => {
+        const machineId = machine.MachineID || "";
+        const active = normalizeStatus(machine.Status || "Active") === "Active";
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td class="id-cell">${escapeHtml(machineId)}</td>
+          <td>${escapeHtml(machine.MachineCategory || "")}</td>
+          <td>${escapeHtml(machine.MachineName || "")}</td>
+          <td>
+            <span class="status-pill ${active ? "status-active" : "status-inactive"}">
+              ${active ? t("active") : t("inactive")}
+            </span>
+          </td>
+          ${
+            isAdmin()
+              ? `
+                <td>
+                  <div class="table-actions">
+                    <button class="btn btn-secondary btn-small edit-machine-btn" type="button" data-id="${escapeHtml(machineId)}">
+                      ${t("edit")}
+                    </button>
+                  </div>
+                </td>
+              `
+              : ""
+          }
+        `;
+
+        machinesTableBody.appendChild(tr);
+      });
+    }
+
+    function openAddMachineModal() {
+      editingMachineId = "";
+      machineForm.reset();
+      machineIdInput.value = "";
+      machineStatusInput.value = "Active";
+      updateMachineModalTitle();
+      renderMachineFormCategories();
+
+      machineModal.classList.add("show");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => machineCategoryInput.focus(), 50);
+    }
+
+    function openEditMachineModal(machineId) {
+      const machine = machines.find(item => String(item.MachineID) === String(machineId));
+
+      if (!machine) return;
+
+      editingMachineId = machine.MachineID || "";
+      machineIdInput.value = machine.MachineID || "";
+      machineCategoryInput.value = machine.MachineCategory || "";
+      machineNameInput.value = machine.MachineName || "";
+      machineStatusInput.value = normalizeStatus(machine.Status || "Active");
+
+      updateMachineModalTitle();
+
+      machineModal.classList.add("show");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => machineNameInput.focus(), 50);
+    }
+
+    function closeMachineModal() {
+      machineModal.classList.remove("show");
+      document.body.style.overflow = "";
+      editingMachineId = "";
+      machineForm.reset();
+      machineStatusInput.value = "Active";
+      updateMachineModalTitle();
+    }
+
+    function updateMachineModalTitle() {
+      if (!machineModalTitle) return;
+      machineModalTitle.textContent = editingMachineId ? t("editMachine") : t("addMachine");
+    }
+
+    async function handleSaveMachine(event) {
       event.preventDefault();
       clearMessage();
 
-      const machineCategory = newMachineCategory.value.trim();
-      const machineName = newMachineName.value.trim();
-      const status = newMachineStatus.value;
+      const machineCategory = machineCategoryInput.value.trim();
+      const machineName = machineNameInput.value.trim();
+      const status = machineStatusInput.value || "Active";
 
       if (!machineCategory) {
         showMessage(t("categoryRequired"), "error");
@@ -1508,136 +1664,133 @@
       }
 
       if (!machineName) {
-        showMessage(t("nameRequired"), "error");
+        showMessage(t("machineNameRequired"), "error");
         return;
       }
 
-      setButtonLoading(addMachineBtn, true, t("saving"));
+      if (machineExists(machineName, machineCategory, editingMachineId)) {
+        showMessage(t("duplicateMachine"), "error");
+        return;
+      }
+
+      const payloadMachine = {
+        machineCategory,
+        machineName,
+        status
+      };
+
+      if (editingMachineId) {
+        payloadMachine.machineId = editingMachineId;
+      }
+
+      setButtonLoading(saveMachineBtn, true, t("saving"));
 
       try {
         const result = await apiPost({
-          action: "addMachine",
+          action: editingMachineId ? "updateMachine" : "addMachine",
           token: currentUser.token,
-          machine: {
-            machineCategory: machineCategory,
-            machineName: machineName,
-            status: status
-          }
+          machine: payloadMachine
         });
 
-        setButtonLoading(addMachineBtn, false, t("save"));
+        setButtonLoading(saveMachineBtn, false, t("save"));
 
-        if (!result.success) {
-          showMessage(result.message || t("addFailed"), "error");
+        if (!result || !result.success) {
+          showMessage((result && result.message) || t("serverError"), "error");
           return;
         }
 
-        showMessage(t("addSuccess"), "success");
-        addMachineForm.reset();
-        newMachineStatus.value = "Active";
-
-        await loadMachinesPageData();
+        closeMachineModal();
+        showMessage(result.message || (editingMachineId ? t("updateSuccess") : t("addSuccess")), "success");
+        await loadData();
 
       } catch (error) {
         console.error(error);
-        setButtonLoading(addMachineBtn, false, t("save"));
+        setButtonLoading(saveMachineBtn, false, t("save"));
         showMessage(t("serverError"), "error");
       }
     }
 
-    async function handleUpdateMachine(machineId, btn) {
+    function machineExists(machineName, machineCategory, excludeMachineId = "") {
+      const cleanName = normalizeText(machineName);
+      const cleanCategory = normalizeText(machineCategory);
+
+      return machines.some(machine => {
+        const sameId = String(machine.MachineID || "") === String(excludeMachineId || "");
+
+        if (sameId) return false;
+
+        return normalizeText(machine.MachineName) === cleanName &&
+          normalizeText(machine.MachineCategory) === cleanCategory;
+      });
+    }
+
+    function openCategoryModal() {
+      categoryNameInput.value = "";
+      renderCategoriesList();
+      categoryModal.classList.add("show");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => categoryNameInput.focus(), 50);
+    }
+
+    function closeCategoryModal() {
+      categoryModal.classList.remove("show");
+      document.body.style.overflow = "";
+      categoryForm.reset();
+    }
+
+    async function handleAddCategory(event) {
+      event.preventDefault();
       clearMessage();
 
-      const categoryInput = document.querySelector(`.edit-category[data-id="${cssEscape(machineId)}"]`);
-      const nameInput = document.querySelector(`.edit-name[data-id="${cssEscape(machineId)}"]`);
-      const statusInput = document.querySelector(`.edit-status[data-id="${cssEscape(machineId)}"]`);
+      const categoryName = categoryNameInput.value.trim();
 
-      const machineCategory = categoryInput ? categoryInput.value.trim() : "";
-      const machineName = nameInput ? nameInput.value.trim() : "";
-      const status = statusInput ? statusInput.value : "Active";
-
-      if (!machineCategory) {
-        showMessage(t("categoryRequired"), "error");
+      if (!categoryName) {
+        showMessage(t("categoryNameRequired"), "error");
         return;
       }
 
-      if (!machineName) {
-        showMessage(t("nameRequired"), "error");
+      if (categoryExists(categoryName)) {
+        showMessage(t("duplicateCategory"), "error");
         return;
       }
 
-      if (!confirm(t("updateConfirm"))) {
-        return;
-      }
-
-      setButtonLoading(btn, true, t("updating"));
+      setButtonLoading(saveCategoryBtn, true, t("saving"));
 
       try {
         const result = await apiPost({
-          action: "updateMachine",
+          action: "addCategory",
           token: currentUser.token,
-          machine: {
-            machineId: machineId,
-            machineCategory: machineCategory,
-            machineName: machineName,
-            status: status
+          category: {
+            categoryName,
+            status: "Active"
           }
         });
 
-        setButtonLoading(btn, false, t("update"));
+        setButtonLoading(saveCategoryBtn, false, t("saveCategory"));
 
-        if (!result.success) {
-          showMessage(result.message || t("updateFailed"), "error");
+        if (!result || !result.success) {
+          showMessage((result && result.message) || t("serverError"), "error");
           return;
         }
 
-        showMessage(t("updateSuccess"), "success");
-        await loadMachinesPageData();
+        categoryNameInput.value = "";
+        showMessage(result.message || t("categoryAddSuccess"), "success");
+        await loadData();
+        renderCategoriesList();
 
       } catch (error) {
         console.error(error);
-        setButtonLoading(btn, false, t("update"));
+        setButtonLoading(saveCategoryBtn, false, t("saveCategory"));
         showMessage(t("serverError"), "error");
       }
     }
 
-    function getCategoryOptionsHtml(selectedCategory) {
-      let html = `<option value="">${t("chooseCategory")}</option>`;
+    function categoryExists(categoryName) {
+      const cleanName = normalizeText(categoryName);
 
-      categories
-        .filter(category => normalizeStatus(category.Status) === "Active")
-        .forEach(category => {
-          const name = escapeHtml(category.CategoryName || "");
-          const selected = String(category.CategoryName || "") === String(selectedCategory || "") ? "selected" : "";
-          html += `<option value="${name}" ${selected}>${name}</option>`;
-        });
-
-      return html;
-    }
-
-    function getStatusBadge(status) {
-      const clean = normalizeStatus(status);
-
-      if (clean === "Active") {
-        return `<span class="status-badge status-active">${t("active")}</span>`;
-      }
-
-      return `<span class="status-badge status-inactive">${t("inactive")}</span>`;
-    }
-
-    function normalizeStatus(status) {
-      const value = String(status || "").toLowerCase();
-
-      if (
-        value === "active" ||
-        value === "نشط" ||
-        value === "مفعل" ||
-        value === "فعال"
-      ) {
-        return "Active";
-      }
-
-      return "Inactive";
+      return categories.some(category => {
+        return normalizeText(category.CategoryName) === cleanName;
+      });
     }
 
     async function apiPost(payload) {
@@ -1656,16 +1809,6 @@
       return await response.json();
     }
 
-    function setButtonLoading(button, isLoading, text) {
-      button.disabled = isLoading;
-
-      if (isLoading) {
-        button.innerHTML = '<span class="mini-spinner"></span> ' + text;
-      } else {
-        button.textContent = text;
-      }
-    }
-
     function getSession() {
       try {
         const raw = localStorage.getItem(SESSION_KEY);
@@ -1677,24 +1820,6 @@
       }
     }
 
-    function hideLoading() {
-      loadingBox.style.display = "none";
-    }
-
-    function showMessage(text, type) {
-      messageBox.textContent = text;
-      messageBox.className = "message " + type;
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    }
-
-    function clearMessage() {
-      messageBox.textContent = "";
-      messageBox.className = "message";
-    }
-
     function initSidebar() {
       menuBtn.addEventListener("click", openSidebar);
       closeSidebarBtn.addEventListener("click", closeSidebar);
@@ -1703,6 +1828,8 @@
       document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
           closeSidebar();
+          closeMachineModal();
+          closeCategoryModal();
         }
       });
 
@@ -1720,15 +1847,70 @@
     function closeSidebar() {
       sidebar.classList.remove("open");
       overlay.classList.remove("show");
-      document.body.style.overflow = "";
+
+      if (!machineModal.classList.contains("show") && !categoryModal.classList.contains("show")) {
+        document.body.style.overflow = "";
+      }
     }
 
     function initLanguage() {
-      languageSelect.value = currentLang;
-
-      languageSelect.addEventListener("change", () => {
-        applyLanguage(languageSelect.value);
+      languageToggleBtn.addEventListener("click", () => {
+        const nextLang = currentLang === "ar" ? "en" : "ar";
+        applyLanguage(nextLang);
       });
+    }
+
+    function normalizeStatus(status) {
+      const value = String(status || "").toLowerCase();
+
+      if (
+        value === "active" ||
+        value === "نشط" ||
+        value === "مفعل" ||
+        value === "فعال"
+      ) {
+        return "Active";
+      }
+
+      return "Inactive";
+    }
+
+    function normalizeText(value) {
+      return String(value || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+    }
+
+    function hideLoading() {
+      loadingBox.style.display = "none";
+    }
+
+    function setButtonLoading(button, isLoading, text) {
+      button.disabled = isLoading;
+
+      if (isLoading) {
+        button.innerHTML = '<span class="mini-spinner"></span>' + text;
+      } else {
+        button.textContent = text;
+      }
+    }
+
+    function showMessage(text, type) {
+      clearTimeout(messageTimer);
+
+      messageBox.textContent = text;
+      messageBox.className = "message " + type;
+
+      messageTimer = setTimeout(() => {
+        clearMessage();
+      }, 3000);
+    }
+
+    function clearMessage() {
+      clearTimeout(messageTimer);
+      messageBox.textContent = "";
+      messageBox.className = "message";
     }
 
     function escapeHtml(value) {
@@ -1738,14 +1920,6 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-    }
-
-    function cssEscape(value) {
-      if (window.CSS && CSS.escape) {
-        return CSS.escape(value);
-      }
-
-      return String(value).replace(/"/g, '\\"');
     }
   </script>
 </body>
