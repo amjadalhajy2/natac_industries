@@ -365,9 +365,9 @@
     }
 
     .page-title {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: 0;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -447,11 +447,29 @@
       transform: none;
     }
 
-    .form-grid {
+    .search-row {
       display: grid;
-      grid-template-columns: 1.5fr 1fr auto;
-      gap: 14px;
-      align-items: end;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      padding-inline-start: 48px;
+    }
+
+    .search-icon {
+      position: absolute;
+      inset-inline-start: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--muted);
+      pointer-events: none;
     }
 
     .field {
@@ -709,19 +727,14 @@
       cursor: pointer;
     }
 
+    .modal-form {
+      display: grid;
+      gap: 14px;
+    }
+
     @keyframes spin {
       to {
         transform: rotate(360deg);
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .form-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .form-grid .actions {
-        grid-column: 1 / -1;
       }
     }
 
@@ -769,10 +782,6 @@
 
       .page-title h1 {
         font-size: 26px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
       }
 
       .actions,
@@ -917,37 +926,14 @@
             </button>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section class="panel admin-only" id="addWorkerPanel" style="display:none;">
-      <div class="panel-content">
-        <form id="workerForm" novalidate>
-          <div class="form-grid">
-            <div class="field">
-              <label for="workerNameInput" data-i18n="workerName">اسم العامل</label>
-              <input type="text" id="workerNameInput" autocomplete="off">
-            </div>
-
-            <div class="field">
-              <label for="workerStatusInput" data-i18n="status">الحالة</label>
-              <select id="workerStatusInput">
-                <option value="Active" data-i18n="active">نشط</option>
-                <option value="Inactive" data-i18n="inactive">غير نشط</option>
-              </select>
-            </div>
-
-            <div class="actions">
-              <button class="btn btn-primary" type="submit" id="saveWorkerBtn" data-i18n="save">حفظ</button>
-              <button class="btn btn-secondary" type="button" id="cancelWorkerBtn" data-i18n="cancel">إلغاء</button>
-            </div>
+        <div class="search-row">
+          <div class="search-box">
+            <span class="search-icon">🔎</span>
+            <input type="search" id="workersSearchInput" autocomplete="off" placeholder="بحث في قائمة العمال">
           </div>
-        </form>
-      </div>
-    </section>
+        </div>
 
-    <section class="panel">
-      <div class="panel-content">
         <div class="table-wrap">
           <table>
             <thead>
@@ -965,6 +951,35 @@
     </section>
   </main>
 
+  <div class="modal-overlay" id="addWorkerModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 data-i18n="addWorker">إضافة عامل</h2>
+        <button class="close-modal" type="button" id="closeAddWorkerModalBtn">×</button>
+      </div>
+
+      <form id="workerForm" class="modal-form" novalidate>
+        <div class="field">
+          <label for="workerNameInput" data-i18n="workerName">اسم العامل</label>
+          <input type="text" id="workerNameInput" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label for="workerStatusInput" data-i18n="status">الحالة</label>
+          <select id="workerStatusInput">
+            <option value="Active" data-i18n="active">نشط</option>
+            <option value="Inactive" data-i18n="inactive">غير نشط</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" id="saveWorkerBtn" data-i18n="save">حفظ</button>
+          <button class="btn btn-secondary" type="button" id="cancelWorkerBtn" data-i18n="cancel">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="editModal">
     <div class="modal-card">
       <div class="modal-head">
@@ -972,15 +987,15 @@
         <button class="close-modal" type="button" id="closeEditModalBtn">×</button>
       </div>
 
-      <form id="editWorkerForm" novalidate>
+      <form id="editWorkerForm" class="modal-form" novalidate>
         <input type="hidden" id="editWorkerId">
 
-        <div class="field" style="margin-bottom:14px;">
+        <div class="field">
           <label for="editWorkerName" data-i18n="workerName">اسم العامل</label>
           <input type="text" id="editWorkerName" autocomplete="off">
         </div>
 
-        <div class="field" style="margin-bottom:18px;">
+        <div class="field">
           <label for="editWorkerStatus" data-i18n="status">الحالة</label>
           <select id="editWorkerStatus">
             <option value="Active" data-i18n="active">نشط</option>
@@ -1045,7 +1060,8 @@
         updateSuccess: "تم تحديث بيانات العامل بنجاح.",
         confirmDeactivate: "هل تريد إيقاف هذا العامل؟",
         confirmActivate: "هل تريد تفعيل هذا العامل؟",
-        saving: "جاري الحفظ..."
+        saving: "جاري الحفظ...",
+        searchPlaceholder: "بحث في قائمة العمال"
       },
       en: {
         htmlLang: "en",
@@ -1090,7 +1106,8 @@
         updateSuccess: "Worker updated successfully.",
         confirmDeactivate: "Do you want to deactivate this worker?",
         confirmActivate: "Do you want to activate this worker?",
-        saving: "Saving..."
+        saving: "Saving...",
+        searchPlaceholder: "Search workers list"
       }
     };
 
@@ -1117,13 +1134,15 @@
     const languageToggleBtn = document.getElementById("languageToggleBtn");
 
     const openAddWorkerBtn = document.getElementById("openAddWorkerBtn");
-    const addWorkerPanel = document.getElementById("addWorkerPanel");
+    const addWorkerModal = document.getElementById("addWorkerModal");
+    const closeAddWorkerModalBtn = document.getElementById("closeAddWorkerModalBtn");
     const workerForm = document.getElementById("workerForm");
     const workerNameInput = document.getElementById("workerNameInput");
     const workerStatusInput = document.getElementById("workerStatusInput");
     const saveWorkerBtn = document.getElementById("saveWorkerBtn");
     const cancelWorkerBtn = document.getElementById("cancelWorkerBtn");
 
+    const workersSearchInput = document.getElementById("workersSearchInput");
     const workersTableBody = document.getElementById("workersTableBody");
 
     const editModal = document.getElementById("editModal");
@@ -1171,6 +1190,7 @@
       factoryName.textContent = i18n[lang].factoryName;
       factorySubtitle.textContent = i18n[lang].factorySubtitle;
       languageToggleBtn.textContent = i18n[lang].languageButton;
+      workersSearchInput.placeholder = i18n[lang].searchPlaceholder;
 
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
@@ -1276,10 +1296,30 @@
       }
     }
 
+    function getFilteredWorkers() {
+      const keyword = String(workersSearchInput.value || "").trim().toLowerCase();
+
+      if (!keyword) {
+        return workers;
+      }
+
+      return workers.filter(worker => {
+        const workerId = String(worker.WorkerID || "").toLowerCase();
+        const workerName = String(worker.WorkerName || "").toLowerCase();
+        const statusText = normalizeStatus(worker.Status || "Active") === "Active" ? t("active") : t("inactive");
+
+        return workerId.includes(keyword) ||
+          workerName.includes(keyword) ||
+          statusText.toLowerCase().includes(keyword);
+      });
+    }
+
     function renderWorkersTable() {
       workersTableBody.innerHTML = "";
 
-      if (!workers.length) {
+      const filteredWorkers = getFilteredWorkers();
+
+      if (!filteredWorkers.length) {
         const colspan = isAdmin() ? 4 : 3;
         workersTableBody.innerHTML = `
           <tr>
@@ -1291,7 +1331,7 @@
         return;
       }
 
-      workers.forEach(worker => {
+      filteredWorkers.forEach(worker => {
         const workerId = worker.WorkerID || "";
         const workerName = worker.WorkerName || "";
         const status = normalizeStatus(worker.Status || "Active");
@@ -1330,17 +1370,19 @@
     }
 
     function bindEvents() {
-      openAddWorkerBtn.addEventListener("click", () => {
-        addWorkerPanel.style.display = addWorkerPanel.style.display === "none" ? "block" : "none";
-        workerNameInput.focus();
-      });
+      openAddWorkerBtn.addEventListener("click", openAddWorkerModal);
+      closeAddWorkerModalBtn.addEventListener("click", closeAddWorkerModal);
+      cancelWorkerBtn.addEventListener("click", closeAddWorkerModal);
 
-      cancelWorkerBtn.addEventListener("click", () => {
-        resetAddForm();
-        addWorkerPanel.style.display = "none";
+      addWorkerModal.addEventListener("click", event => {
+        if (event.target === addWorkerModal) {
+          closeAddWorkerModal();
+        }
       });
 
       workerForm.addEventListener("submit", handleAddWorker);
+
+      workersSearchInput.addEventListener("input", renderWorkersTable);
 
       workersTableBody.addEventListener("click", event => {
         const editBtn = event.target.closest(".edit-worker-btn");
@@ -1385,6 +1427,19 @@
       });
     }
 
+    function openAddWorkerModal() {
+      resetAddForm();
+      addWorkerModal.classList.add("show");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => workerNameInput.focus(), 50);
+    }
+
+    function closeAddWorkerModal() {
+      addWorkerModal.classList.remove("show");
+      document.body.style.overflow = "";
+      resetAddForm();
+    }
+
     async function handleAddWorker(event) {
       event.preventDefault();
       clearMessage();
@@ -1416,9 +1471,8 @@
           return;
         }
 
+        closeAddWorkerModal();
         showMessage(result.message || t("addSuccess"), "success");
-        resetAddForm();
-        addWorkerPanel.style.display = "none";
         await loadWorkers();
 
       } catch (error) {
@@ -1439,7 +1493,7 @@
 
       editModal.classList.add("show");
       document.body.style.overflow = "hidden";
-      editWorkerName.focus();
+      setTimeout(() => editWorkerName.focus(), 50);
     }
 
     function closeEditModal() {
@@ -1570,6 +1624,7 @@
       document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
           closeSidebar();
+          closeAddWorkerModal();
           closeEditModal();
         }
       });
@@ -1588,7 +1643,10 @@
     function closeSidebar() {
       sidebar.classList.remove("open");
       overlay.classList.remove("show");
-      document.body.style.overflow = "";
+
+      if (!addWorkerModal.classList.contains("show") && !editModal.classList.contains("show")) {
+        document.body.style.overflow = "";
+      }
     }
 
     function initLanguage() {
