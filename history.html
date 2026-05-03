@@ -24,6 +24,7 @@
       --blue-dark: #004ec2;
       --purple: #6d28d9;
       --red: #dc2626;
+      --green: #16a34a;
       --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
       --topbar-height: 78px;
       --sidebar-width: 310px;
@@ -426,6 +427,12 @@
       box-shadow: 0 8px 20px rgba(16,24,39,0.06);
     }
 
+    .btn-danger {
+      background: rgba(220, 38, 38, 0.10);
+      color: var(--red);
+      border: 1px solid rgba(220, 38, 38, 0.22);
+    }
+
     .btn-small {
       min-height: 38px;
       border-radius: 12px;
@@ -506,6 +513,14 @@
       padding: 15px;
       box-shadow: 0 10px 24px rgba(16,24,39,0.06);
       text-align: start;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0,102,255,0.25);
+      box-shadow: 0 16px 32px rgba(0,102,255,0.10);
     }
 
     .summary-card span {
@@ -630,7 +645,7 @@
       top: 92px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 1200;
+      z-index: 1400;
       min-width: min(520px, calc(100vw - 28px));
       max-width: calc(100vw - 28px);
       padding: 14px 18px;
@@ -691,6 +706,10 @@
       border: 1px solid rgba(16,24,39,0.10);
       box-shadow: 0 28px 70px rgba(16,24,39,0.22);
       padding: 22px;
+    }
+
+    .modal-card.small {
+      width: min(560px, 100%);
     }
 
     .modal-head {
@@ -756,6 +775,28 @@
       font-weight: 900;
       margin-bottom: 14px;
       text-align: start;
+    }
+
+    .image-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-height: 52px;
+      padding: 8px 0;
+    }
+
+    .image-input {
+      padding: 12px;
+      min-height: auto;
+      border-style: dashed;
+    }
+
+    .hint-text {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.6;
     }
 
     @keyframes spin {
@@ -973,11 +1014,6 @@
           <div>
             <h1 data-i18n="productionHistory">سجل الإنتاج</h1>
           </div>
-
-          <div class="actions">
-            <button class="btn btn-secondary" type="button" id="resetFiltersBtn" data-i18n="today">اليوم</button>
-            <button class="btn btn-primary" type="button" id="applyFiltersBtn" data-i18n="applyFilters">تطبيق</button>
-          </div>
         </div>
 
         <div class="filters-grid">
@@ -1014,22 +1050,22 @@
         </div>
 
         <div class="summary-grid">
-          <div class="summary-card">
+          <div class="summary-card" data-indicator="avgWorkHours">
             <span data-i18n="avgWorkHours">متوسط ساعات العمل</span>
             <strong id="avgWorkHoursValue">0</strong>
           </div>
 
-          <div class="summary-card">
-            <span data-i18n="wasteIndex">مؤشر الهدر</span>
+          <div class="summary-card" data-indicator="rawWasteIndex">
+            <span data-i18n="rawWasteIndex">مؤشر هدر المواد الخام</span>
             <strong id="wasteIndexValue">0</strong>
           </div>
 
-          <div class="summary-card">
+          <div class="summary-card" data-indicator="wastedHours">
             <span data-i18n="wastedHours">إجمالي ساعات العمل المهدرة</span>
             <strong id="wastedHoursValue">0</strong>
           </div>
 
-          <div class="summary-card">
+          <div class="summary-card" data-indicator="totalProduction">
             <span data-i18n="totalProduction">إجمالي الإنتاج</span>
             <strong id="totalProductionValue">0</strong>
           </div>
@@ -1097,7 +1133,13 @@
 
           <div class="field wide">
             <label data-i18n="image">الصورة</label>
-            <div id="editImageBox" style="min-height:52px;display:flex;align-items:center;"></div>
+            <div class="image-actions" id="currentImageBox"></div>
+          </div>
+
+          <div class="field wide admin-only" id="imageUploadBox">
+            <label for="editImageInput" data-i18n="changeImage">إضافة / استبدال الصورة</label>
+            <input class="image-input" type="file" id="editImageInput" accept="image/*">
+            <div class="hint-text" id="selectedImageName"></div>
           </div>
 
           <div class="field full">
@@ -1130,8 +1172,18 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="indicatorModal">
+    <div class="modal-card small">
+      <div class="modal-head">
+        <h2 id="indicatorTitle">شرح المؤشر</h2>
+        <button class="close-modal" type="button" id="closeIndicatorModalBtn">×</button>
+      </div>
+      <p id="indicatorDescription" style="margin:0;color:var(--text);font-weight:800;line-height:1.9;text-align:start;"></p>
+    </div>
+  </div>
+
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwcshM_6mzlh5V8GrL9zdZ8S3yIxG2mJXVX9rAIxXrQ30SWoQKG27e1rMogpwL5PBo-/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
     const STANDARD_WORK_MINUTES = 600;
@@ -1155,8 +1207,6 @@
         machines: "المكائن",
         logout: "تسجيل الخروج",
         loadingHistory: "جاري تحميل سجل الإنتاج...",
-        applyFilters: "تطبيق",
-        today: "اليوم",
         refresh: "تحديث",
         date: "التاريخ",
         worker: "العامل",
@@ -1169,7 +1219,7 @@
         morningShift: "صباحي",
         eveningShift: "مسائي",
         avgWorkHours: "متوسط ساعات العمل",
-        wasteIndex: "مؤشر الهدر",
+        rawWasteIndex: "مؤشر هدر المواد الخام",
         wastedHours: "إجمالي ساعات العمل المهدرة",
         totalProduction: "إجمالي الإنتاج",
         productCategory: "صنف المنتج",
@@ -1180,11 +1230,15 @@
         actualWasteKg: "هدر المواد الخام (كجم)",
         notes: "الملاحظات",
         image: "الصورة",
+        changeImage: "إضافة / استبدال الصورة",
         details: "العرض",
         productionDetails: "تفاصيل الإنتاج",
         productionItems: "بيانات المنتجات",
         showDetails: "عرض",
         openImage: "فتح الصورة",
+        removeImage: "حذف الصورة",
+        imageWillBeRemoved: "سيتم حذف رابط الصورة عند حفظ التعديل.",
+        imageWillBeReplaced: "سيتم استبدال الصورة عند حفظ التعديل.",
         noImage: "لا يوجد",
         noNotes: "لا توجد",
         emptyData: "لا توجد بيانات للعرض.",
@@ -1200,9 +1254,13 @@
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل سجل الإنتاج.",
         saveFailed: "تعذر حفظ التعديل.",
-        updateActionMissing: "زر الحفظ يحتاج إضافة عملية updateProduction في Code.gs حتى يتم تحديث السجل فعليًا.",
         updateSuccess: "تم تحديث بيانات الإنتاج بنجاح.",
-        saving: "جاري الحفظ..."
+        saving: "جاري الحفظ...",
+        indicatorTitle: "شرح المؤشر",
+        avgWorkHoursExplain: "يمثل متوسط ساعات العمل النظرية لكل عامل، ويتم حسابه من خلال إجمالي الوقت النظري لإنتاج الكميات المدخلة مقسومًا على عدد العمال الذين لديهم إنتاج في التاريخ المحدد.",
+        rawWasteIndexExplain: "يوضح مستوى هدر المواد الخام، ويتم حسابه بقسمة الهدر الفعلي على الهدر المتوقع حسب بيانات المنتجات. إذا كان المؤشر أكبر من 1 فهذا يعني أن الهدر الفعلي أعلى من المتوقع.",
+        wastedHoursExplain: "يمثل الفرق بين ساعات العمل القياسية المتوقعة للعمال وساعات الإنتاج النظرية الفعلية. يتم حسابه بناءً على 600 دقيقة كمعيار يومي لكل عامل.",
+        totalProductionExplain: "يمثل مجموع الكميات المنتجة لجميع العمال في التاريخ المحدد وبعد تطبيق الفلاتر."
       },
       en: {
         htmlLang: "en",
@@ -1222,8 +1280,6 @@
         machines: "Machines",
         logout: "Logout",
         loadingHistory: "Loading production history...",
-        applyFilters: "Apply",
-        today: "Today",
         refresh: "Refresh",
         date: "Date",
         worker: "Worker",
@@ -1236,7 +1292,7 @@
         morningShift: "Morning",
         eveningShift: "Evening",
         avgWorkHours: "Average Work Hours",
-        wasteIndex: "Waste Index",
+        rawWasteIndex: "Raw Material Waste Index",
         wastedHours: "Total Wasted Work Hours",
         totalProduction: "Total Production",
         productCategory: "Product Category",
@@ -1247,11 +1303,15 @@
         actualWasteKg: "Raw Material Waste (Kg)",
         notes: "Notes",
         image: "Image",
+        changeImage: "Add / Replace Image",
         details: "View",
         productionDetails: "Production Details",
         productionItems: "Production Items",
         showDetails: "View",
         openImage: "Open Image",
+        removeImage: "Remove Image",
+        imageWillBeRemoved: "The image link will be removed when saving changes.",
+        imageWillBeReplaced: "The image will be replaced when saving changes.",
         noImage: "None",
         noNotes: "None",
         emptyData: "No data to display.",
@@ -1267,9 +1327,13 @@
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         loadFailed: "Unable to load production history.",
         saveFailed: "Unable to save changes.",
-        updateActionMissing: "Saving requires adding updateProduction action in Code.gs to update the record.",
         updateSuccess: "Production data updated successfully.",
-        saving: "Saving..."
+        saving: "Saving...",
+        indicatorTitle: "Indicator Explanation",
+        avgWorkHoursExplain: "Average theoretical work hours per worker. It is calculated by dividing total theoretical production time by the number of workers who have production on the selected date.",
+        rawWasteIndexExplain: "Shows the raw material waste level. It is actual waste divided by expected waste based on product data. If the index is above 1, actual waste is higher than expected.",
+        wastedHoursExplain: "Represents the difference between standard expected working hours and actual theoretical production hours, based on 600 minutes per worker per day.",
+        totalProductionExplain: "Represents the total produced quantity for the selected date after applying filters."
       }
     };
 
@@ -1280,6 +1344,8 @@
     let machines = [];
     let historyRecords = [];
     let currentEditGroup = null;
+    let currentImageAction = "keep";
+    let replacementImage = null;
     let messageTimer = null;
 
     const loadingBox = document.getElementById("loadingBox");
@@ -1303,8 +1369,6 @@
     const workerFilterInput = document.getElementById("workerFilterInput");
     const productFilterInput = document.getElementById("productFilterInput");
     const machineFilterInput = document.getElementById("machineFilterInput");
-    const applyFiltersBtn = document.getElementById("applyFiltersBtn");
-    const resetFiltersBtn = document.getElementById("resetFiltersBtn");
     const refreshBtn = document.getElementById("refreshBtn");
 
     const avgWorkHoursValue = document.getElementById("avgWorkHoursValue");
@@ -1323,12 +1387,19 @@
     const editShiftInput = document.getElementById("editShiftInput");
     const editWorkerInput = document.getElementById("editWorkerInput");
     const editWasteInput = document.getElementById("editWasteInput");
-    const editImageBox = document.getElementById("editImageBox");
+    const currentImageBox = document.getElementById("currentImageBox");
+    const editImageInput = document.getElementById("editImageInput");
+    const selectedImageName = document.getElementById("selectedImageName");
     const editNotesInput = document.getElementById("editNotesInput");
     const editItemsBody = document.getElementById("editItemsBody");
     const editActions = document.getElementById("editActions");
     const saveEditBtn = document.getElementById("saveEditBtn");
     const cancelEditBtn = document.getElementById("cancelEditBtn");
+
+    const indicatorModal = document.getElementById("indicatorModal");
+    const indicatorTitle = document.getElementById("indicatorTitle");
+    const indicatorDescription = document.getElementById("indicatorDescription");
+    const closeIndicatorModalBtn = document.getElementById("closeIndicatorModalBtn");
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
@@ -1497,7 +1568,7 @@
 
       const selectedDate = dateInput.value || toISODate(new Date());
 
-      setButtonLoading(applyFiltersBtn, true, t("loadingHistory"));
+      setButtonLoading(refreshBtn, true, t("loadingHistory"));
 
       try {
         const result = await apiPost({
@@ -1513,7 +1584,7 @@
         });
 
         hideLoading();
-        setButtonLoading(applyFiltersBtn, false, t("applyFilters"));
+        setButtonLoading(refreshBtn, false, t("refresh"));
 
         if (!result || !result.success) {
           showMessage((result && result.message) || t("loadFailed"), "error");
@@ -1530,7 +1601,7 @@
       } catch (error) {
         console.error(error);
         hideLoading();
-        setButtonLoading(applyFiltersBtn, false, t("applyFilters"));
+        setButtonLoading(refreshBtn, false, t("refresh"));
         showMessage(t("serverError"), "error");
       }
     }
@@ -1592,10 +1663,6 @@
 
     function getProductById(productId) {
       return products.find(product => String(product.ProductID) === String(productId)) || {};
-    }
-
-    function getMachineById(machineId) {
-      return machines.find(machine => String(machine.MachineID) === String(machineId)) || {};
     }
 
     function getProductTime(productId) {
@@ -1690,10 +1757,8 @@
         group.items.forEach((item, itemIndex) => {
           const tr = document.createElement("tr");
 
-          const mergedCells = itemIndex === 0
-            ? `
-              <td rowspan="${rowSpan}">${escapeHtml(group.WorkerName || group.WorkerID || "")}</td>
-            `
+          const workerCell = itemIndex === 0
+            ? `<td rowspan="${rowSpan}">${escapeHtml(group.WorkerName || group.WorkerID || "")}</td>`
             : "";
 
           const mergedEndCells = itemIndex === 0
@@ -1716,7 +1781,7 @@
             : "";
 
           tr.innerHTML = `
-            ${mergedCells}
+            ${workerCell}
             <td>${escapeHtml(item.ProductCategory || "")}</td>
             <td>${escapeHtml(item.ProductName || item.ProductID || "")}</td>
             <td>${escapeHtml(item.MachineName || item.MachineID || "")}</td>
@@ -1736,6 +1801,8 @@
       if (!group) return;
 
       currentEditGroup = JSON.parse(JSON.stringify(group));
+      currentImageAction = "keep";
+      replacementImage = null;
 
       editProductionId.value = group.ProductionID || "";
       editDateInput.value = group.Date || dateInput.value || "";
@@ -1743,16 +1810,43 @@
       editWorkerInput.value = group.WorkerID || "";
       editWasteInput.value = group.RawWasteKg || 0;
       editNotesInput.value = group.Notes || "";
+      editImageInput.value = "";
+      selectedImageName.textContent = "";
 
-      editImageBox.innerHTML = group.ImageURL
-        ? `<a class="image-link" href="${escapeAttribute(group.ImageURL)}" target="_blank" rel="noopener">${t("openImage")}</a>`
-        : `<strong>${escapeHtml(t("noImage"))}</strong>`;
-
+      renderCurrentImage(group.ImageURL || "");
       renderEditItems(group.items || []);
       setEditMode(isAdmin());
 
       detailsModal.classList.add("show");
       document.body.style.overflow = "hidden";
+    }
+
+    function renderCurrentImage(imageUrl) {
+      if (imageUrl) {
+        currentImageBox.innerHTML = `
+          <a class="image-link" href="${escapeAttribute(imageUrl)}" target="_blank" rel="noopener">${t("openImage")}</a>
+          ${
+            isAdmin()
+              ? `<button class="btn btn-danger btn-small" type="button" id="removeImageBtn">${t("removeImage")}</button>`
+              : ""
+          }
+        `;
+
+        const removeImageBtn = document.getElementById("removeImageBtn");
+
+        if (removeImageBtn) {
+          removeImageBtn.addEventListener("click", () => {
+            currentImageAction = "remove";
+            replacementImage = null;
+            editImageInput.value = "";
+            selectedImageName.textContent = t("imageWillBeRemoved");
+            currentImageBox.innerHTML = `<strong>${escapeHtml(t("noImage"))}</strong>`;
+          });
+        }
+
+      } else {
+        currentImageBox.innerHTML = `<strong>${escapeHtml(t("noImage"))}</strong>`;
+      }
     }
 
     function renderEditItems(items) {
@@ -1868,6 +1962,28 @@
 
       readonlyNote.style.display = canEdit ? "none" : "block";
       editActions.style.display = canEdit ? "flex" : "none";
+      document.getElementById("imageUploadBox").style.display = canEdit ? "" : "none";
+    }
+
+    function handleImageSelection() {
+      const file = editImageInput.files && editImageInput.files[0];
+
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = event => {
+        replacementImage = {
+          fileName: file.name,
+          mimeType: file.type || "image/jpeg",
+          dataUrl: event.target.result
+        };
+
+        currentImageAction = "replace";
+        selectedImageName.textContent = t("imageWillBeReplaced") + " " + file.name;
+      };
+
+      reader.readAsDataURL(file);
     }
 
     async function handleSaveEdit(event) {
@@ -1895,7 +2011,9 @@
           shift: editShiftInput.value || "",
           workerId: editWorkerInput.value || "",
           rawWasteKg: Number(editWasteInput.value || 0),
-          notes: editNotesInput.value || ""
+          notes: editNotesInput.value || "",
+          imageAction: currentImageAction,
+          image: replacementImage
         },
         items: items
       };
@@ -1908,14 +2026,7 @@
         setButtonLoading(saveEditBtn, false, t("saveChanges"));
 
         if (!result || !result.success) {
-          const msg = result && result.message ? result.message : t("saveFailed");
-
-          if (String(msg).includes("عملية غير معروفة")) {
-            showMessage(t("updateActionMissing"), "warning");
-          } else {
-            showMessage(msg, "error");
-          }
-
+          showMessage((result && result.message) || t("saveFailed"), "error");
           return;
         }
 
@@ -1930,16 +2041,48 @@
       }
     }
 
+    function openIndicatorInfo(type) {
+      const map = {
+        avgWorkHours: {
+          title: t("avgWorkHours"),
+          text: t("avgWorkHoursExplain")
+        },
+        rawWasteIndex: {
+          title: t("rawWasteIndex"),
+          text: t("rawWasteIndexExplain")
+        },
+        wastedHours: {
+          title: t("wastedHours"),
+          text: t("wastedHoursExplain")
+        },
+        totalProduction: {
+          title: t("totalProduction"),
+          text: t("totalProductionExplain")
+        }
+      };
+
+      const info = map[type];
+
+      if (!info) return;
+
+      indicatorTitle.textContent = info.title;
+      indicatorDescription.textContent = info.text;
+      indicatorModal.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
     function bindEvents() {
-      applyFiltersBtn.addEventListener("click", loadHistory);
       refreshBtn.addEventListener("click", loadHistory);
 
-      resetFiltersBtn.addEventListener("click", () => {
-        setTodayDate();
-        workerFilterInput.value = "";
-        productFilterInput.value = "";
-        machineFilterInput.value = "";
-        loadHistory();
+      dateInput.addEventListener("change", loadHistory);
+      workerFilterInput.addEventListener("change", loadHistory);
+      productFilterInput.addEventListener("change", loadHistory);
+      machineFilterInput.addEventListener("change", loadHistory);
+
+      document.querySelectorAll(".summary-card").forEach(card => {
+        card.addEventListener("click", () => {
+          openIndicatorInfo(card.dataset.indicator);
+        });
       });
 
       historyTableBody.addEventListener("click", event => {
@@ -1950,6 +2093,8 @@
         }
       });
 
+      editImageInput.addEventListener("change", handleImageSelection);
+
       closeDetailsModalBtn.addEventListener("click", closeDetailsModal);
       cancelEditBtn.addEventListener("click", closeDetailsModal);
       editProductionForm.addEventListener("submit", handleSaveEdit);
@@ -1957,6 +2102,14 @@
       detailsModal.addEventListener("click", event => {
         if (event.target === detailsModal) {
           closeDetailsModal();
+        }
+      });
+
+      closeIndicatorModalBtn.addEventListener("click", closeIndicatorModal);
+
+      indicatorModal.addEventListener("click", event => {
+        if (event.target === indicatorModal) {
+          closeIndicatorModal();
         }
       });
 
@@ -1981,10 +2134,25 @@
 
     function closeDetailsModal() {
       detailsModal.classList.remove("show");
-      document.body.style.overflow = "";
+
+      if (!indicatorModal.classList.contains("show")) {
+        document.body.style.overflow = "";
+      }
+
       currentEditGroup = null;
+      currentImageAction = "keep";
+      replacementImage = null;
       editItemsBody.innerHTML = "";
       editProductionForm.reset();
+      selectedImageName.textContent = "";
+    }
+
+    function closeIndicatorModal() {
+      indicatorModal.classList.remove("show");
+
+      if (!detailsModal.classList.contains("show") && !sidebar.classList.contains("open")) {
+        document.body.style.overflow = "";
+      }
     }
 
     async function apiPost(payload) {
@@ -2023,6 +2191,7 @@
         if (event.key === "Escape") {
           closeSidebar();
           closeDetailsModal();
+          closeIndicatorModal();
         }
       });
 
@@ -2041,7 +2210,7 @@
       sidebar.classList.remove("open");
       overlay.classList.remove("show");
 
-      if (!detailsModal.classList.contains("show")) {
+      if (!detailsModal.classList.contains("show") && !indicatorModal.classList.contains("show")) {
         document.body.style.overflow = "";
       }
     }
