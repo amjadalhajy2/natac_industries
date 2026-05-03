@@ -9,28 +9,28 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googles.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-1: #f7f9ff;
-      --bg-2: #eef4ff;
-      --bg-3: #f8efe7;
-      --text: #172033;
-      --muted: #6d7483;
-      --blue: #007aff;
-      --blue-dark: #005fd1;
-      --purple: #7c3aed;
-      --green: #34c759;
-      --orange: #ff9500;
-      --red: #ff3b30;
-      --glass-border: rgba(255, 255, 255, 0.72);
-      --shadow: 0 24px 70px rgba(50, 70, 110, 0.15);
-      --soft-shadow: 0 12px 34px rgba(50, 70, 110, 0.11);
-      --radius-xl: 30px;
-      --radius-lg: 24px;
+      --bg-1: #eaf1ff;
+      --bg-2: #f7f1ea;
+      --text: #101827;
+      --muted: #667085;
+      --line: rgba(16, 24, 39, 0.12);
+      --card: rgba(255, 255, 255, 0.88);
+      --card-strong: rgba(255, 255, 255, 0.98);
+      --input: rgba(255, 255, 255, 0.98);
+      --blue: #0066ff;
+      --blue-dark: #004ec2;
+      --purple: #6d28d9;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #ea580c;
+      --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
       --topbar-height: 78px;
       --sidebar-width: 310px;
+      --radius-xl: 28px;
     }
 
     * {
@@ -48,23 +48,16 @@
       font-family: "Tajawal", Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 12% 18%, rgba(0, 122, 255, 0.20), transparent 28%),
-        radial-gradient(circle at 88% 12%, rgba(124, 58, 237, 0.14), transparent 30%),
-        radial-gradient(circle at 50% 92%, rgba(255, 149, 0, 0.16), transparent 34%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+        radial-gradient(circle at 10% 12%, rgba(0, 102, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(109, 40, 217, 0.20), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), #ffffff 52%, var(--bg-2));
       background-attachment: fixed;
       overflow-x: hidden;
+      direction: inherit;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(120deg, rgba(255,255,255,0.34), transparent 34%, rgba(255,255,255,0.22)),
-        radial-gradient(circle at 60% 20%, rgba(255,255,255,0.34), transparent 22%);
-      z-index: -1;
+    html[dir="ltr"] body {
+      direction: ltr;
     }
 
     .floating-topbar {
@@ -74,11 +67,11 @@
       left: 0;
       min-height: var(--topbar-height);
       z-index: 100;
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(26px) saturate(180%);
-      -webkit-backdrop-filter: blur(26px) saturate(180%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.82);
-      box-shadow: 0 18px 45px rgba(50, 70, 110, 0.10);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(16, 24, 39, 0.10);
+      box-shadow: 0 12px 32px rgba(16, 24, 39, 0.10);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -93,19 +86,30 @@
       min-width: 0;
     }
 
-    .menu-btn {
-      width: 42px;
-      height: 42px;
+    .menu-btn,
+    .language-toggle {
       border: 0;
       background: transparent;
       color: var(--text);
-      font-size: 30px;
+      font-family: inherit;
       font-weight: 900;
       cursor: pointer;
-      display: grid;
-      place-items: center;
       padding: 0;
       flex-shrink: 0;
+    }
+
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      font-size: 30px;
+      display: grid;
+      place-items: center;
+    }
+
+    .language-toggle {
+      min-width: 44px;
+      height: 42px;
+      font-size: 16px;
     }
 
     .factory-brand {
@@ -115,18 +119,30 @@
       min-width: 0;
     }
 
+    .factory-logo,
+    .sidebar-logo {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(16,24,39,0.08);
+      flex-shrink: 0;
+    }
+
     .factory-logo {
       width: 50px;
       height: 50px;
       border-radius: 18px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: rgba(255,255,255,0.35);
-      flex-shrink: 0;
     }
 
-    .factory-logo img {
+    .sidebar-logo {
+      width: 49px;
+      height: 49px;
+      border-radius: 18px;
+    }
+
+    .factory-logo img,
+    .sidebar-logo img {
       width: 86%;
       height: 86%;
       object-fit: contain;
@@ -135,6 +151,7 @@
 
     .factory-info {
       min-width: 0;
+      text-align: start;
     }
 
     .factory-info strong {
@@ -157,19 +174,6 @@
       text-overflow: ellipsis;
     }
 
-    .language-select {
-      height: 42px;
-      border: 0;
-      background: transparent;
-      color: var(--text);
-      font-family: inherit;
-      font-weight: 900;
-      font-size: 15px;
-      outline: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
     .top-user-box {
       display: flex;
       align-items: center;
@@ -178,8 +182,8 @@
     }
 
     .avatar {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: grid;
       place-items: center;
@@ -187,10 +191,12 @@
       color: #fff;
       font-weight: 900;
       flex-shrink: 0;
+      box-shadow: 0 8px 18px rgba(0,102,255,0.20);
     }
 
     .user-info {
       min-width: 0;
+      text-align: start;
     }
 
     .user-info strong,
@@ -218,7 +224,7 @@
       position: fixed;
       inset: 0;
       z-index: 150;
-      background: rgba(20, 28, 44, 0.26);
+      background: rgba(16, 24, 39, 0.28);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
@@ -239,9 +245,9 @@
       overflow-y: auto;
       transform: translateX(105%);
       transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
-      background: rgba(255,255,255,0.72);
-      border-left: 1px solid rgba(255,255,255,0.78);
-      box-shadow: -28px 0 70px rgba(50, 70, 110, 0.18);
+      background: rgba(255,255,255,0.94);
+      border-left: 1px solid rgba(16,24,39,0.10);
+      box-shadow: -28px 0 70px rgba(16, 24, 39, 0.18);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
     }
@@ -251,8 +257,8 @@
       left: 0;
       transform: translateX(-105%);
       border-left: 0;
-      border-right: 1px solid rgba(255,255,255,0.78);
-      box-shadow: 28px 0 70px rgba(50, 70, 110, 0.18);
+      border-right: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 28px 0 70px rgba(16, 24, 39, 0.18);
     }
 
     .sidebar.open,
@@ -265,7 +271,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
     }
 
     .sidebar-title {
@@ -273,24 +281,7 @@
       align-items: center;
       gap: 11px;
       min-width: 0;
-    }
-
-    .sidebar-logo {
-      width: 49px;
-      height: 49px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: rgba(255,255,255,0.42);
-      flex-shrink: 0;
-    }
-
-    .sidebar-logo img {
-      width: 86%;
-      height: 86%;
-      object-fit: contain;
-      display: block;
+      text-align: start;
     }
 
     .sidebar-title strong {
@@ -310,8 +301,8 @@
       width: 43px;
       height: 43px;
       border: 0;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.42);
+      border-radius: 14px;
+      background: rgba(220, 38, 38, 0.08);
       color: var(--red);
       font-size: 24px;
       cursor: pointer;
@@ -320,76 +311,49 @@
 
     .nav {
       display: grid;
-      gap: 8px;
     }
 
     .nav a,
     .logout-btn {
       width: 100%;
-      min-height: 51px;
+      min-height: 54px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       text-decoration: none;
       color: var(--text);
-      padding: 12px 13px;
-      border-radius: 19px;
+      padding: 13px 4px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+      background: transparent;
       font-family: inherit;
       font-size: 15px;
       font-weight: 900;
-      text-align: inherit;
+      text-align: start;
       cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.58);
-      background: rgba(255,255,255,0.38);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.68);
       transition: 0.18s ease;
-    }
-
-    .logout-btn {
-      border: 0;
     }
 
     .nav a:hover,
     .logout-btn:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.68);
+      color: var(--blue-dark);
+      padding-inline-start: 10px;
     }
 
     .nav a.active {
-      color: #fff;
-      border-color: rgba(255,255,255,0.54);
-      background:
-        radial-gradient(circle at 25% 12%, rgba(255,255,255,0.48), transparent 28%),
-        linear-gradient(145deg, #0a84ff, #7c3aed);
-      box-shadow: 0 18px 38px rgba(0, 122, 255, 0.20);
+      color: var(--blue-dark);
     }
 
     .nav-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 13px;
-      display: grid;
+      width: auto;
+      height: auto;
+      display: inline-grid;
       place-items: center;
-      background: rgba(255,255,255,0.58);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+      background: transparent;
+      box-shadow: none;
       flex-shrink: 0;
-    }
-
-    .nav a.active .nav-icon {
-      background: rgba(255,255,255,0.22);
-    }
-
-    .sidebar-footer {
-      margin-top: 24px;
-      padding: 14px;
-      border-radius: 22px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-      background: rgba(255,255,255,0.44);
-      border: 1px solid rgba(255,255,255,0.66);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+      font-size: 20px;
     }
 
     .main {
@@ -399,38 +363,39 @@
       padding: 116px 24px 32px;
     }
 
-    .hero {
+    .panel {
       position: relative;
       overflow: hidden;
-      margin-bottom: 18px;
-      padding: 26px;
+      margin-bottom: 16px;
+      padding: 22px;
       border-radius: var(--radius-xl);
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.68), rgba(255,255,255,0.35)),
-        radial-gradient(circle at 12% 18%, rgba(0,122,255,0.16), transparent 28%),
-        radial-gradient(circle at 88% 20%, rgba(124,58,237,0.12), transparent 30%);
-      border: 1px solid var(--glass-border);
+      background: var(--card);
+      border: 1px solid rgba(16,24,39,0.10);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
     }
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(125deg, rgba(255,255,255,0.44), transparent 32%, rgba(255,255,255,0.16) 66%, transparent);
-    }
-
-    .hero-content {
+    .panel-content {
       position: relative;
       z-index: 1;
+    }
+
+    .hero-panel {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.94), rgba(255,255,255,0.78)),
+        radial-gradient(circle at 90% 10%, rgba(0,102,255,0.20), transparent 35%);
+    }
+
+    .page-title {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
       display: flex;
+      align-items: flex-start;
       justify-content: space-between;
-      align-items: flex-end;
-      gap: 18px;
+      gap: 14px;
+      flex-wrap: wrap;
     }
 
     .page-title h1 {
@@ -442,64 +407,286 @@
     }
 
     .page-title p {
-      margin: 8px 0 0;
+      margin: 6px 0 0;
       color: var(--muted);
-      line-height: 1.8;
       font-size: 15px;
+      line-height: 1.7;
+      font-weight: 700;
     }
 
-    .hero-status {
-      display: grid;
-      gap: 8px;
-      min-width: 260px;
-    }
-
-    .hero-pill {
+    .status-pill {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
       min-height: 42px;
       padding: 0 14px;
       border-radius: 999px;
-      color: var(--blue-dark);
       font-weight: 900;
-      background: rgba(255,255,255,0.58);
-      border: 1px solid rgba(255,255,255,0.76);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.76);
+      font-size: 14px;
+      border: 1px solid rgba(22, 163, 74, 0.18);
+      background: rgba(22, 163, 74, 0.10);
+      color: #166534;
       white-space: nowrap;
     }
 
-    .hero-status-small {
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.10);
+    }
+
+    .status-pill.error {
+      border-color: rgba(220, 38, 38, 0.20);
+      background: rgba(220, 38, 38, 0.08);
+      color: #991b1b;
+    }
+
+    .status-pill.error .status-dot {
+      background: #dc2626;
+      box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.10);
+    }
+
+    .week-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       color: var(--muted);
-      font-size: 13px;
+      font-weight: 900;
+      font-size: 14px;
+      background: rgba(255,255,255,0.80);
+      border: 1px solid rgba(16,24,39,0.10);
+      padding: 10px 13px;
+      border-radius: 999px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      min-height: 165px;
+      padding: 20px;
+      border-radius: 26px;
+      background: var(--card-strong);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 14px 34px rgba(16,24,39,0.08);
+      display: grid;
+      align-content: space-between;
+      gap: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border-radius: 999px;
+      inset-inline-end: -42px;
+      top: -42px;
+      background: rgba(0,102,255,0.09);
+    }
+
+    .stat-head {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .stat-title {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 900;
       line-height: 1.6;
-      text-align: center;
     }
 
-    .message {
-      display: none;
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+      background: rgba(0,102,255,0.10);
+      color: var(--blue-dark);
+      flex-shrink: 0;
+    }
+
+    .stat-value {
+      position: relative;
+      z-index: 1;
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      word-break: break-word;
+    }
+
+    .stat-sub {
+      position: relative;
+      z-index: 1;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
+    .rank-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .rank-card {
+      padding: 20px;
+      border-radius: 26px;
+      background: var(--card-strong);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 14px 34px rgba(16,24,39,0.08);
+    }
+
+    .rank-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       margin-bottom: 16px;
-      padding: 14px 16px;
-      border-radius: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+    }
+
+    .rank-head h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .rank-badge {
+      min-width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    .rank-badge.best {
+      background: rgba(22, 163, 74, 0.10);
+      color: #166534;
+    }
+
+    .rank-badge.worst {
+      background: rgba(220, 38, 38, 0.10);
+      color: #991b1b;
+    }
+
+    .rank-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rank-item {
+      min-height: 58px;
+      border-radius: 18px;
+      border: 1px solid rgba(16,24,39,0.09);
+      background: #fff;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .rank-person {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .rank-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: rgba(0,102,255,0.10);
+      color: var(--blue-dark);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .rank-name {
       font-size: 15px;
-      line-height: 1.7;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      font-weight: 900;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .message.error {
-      display: block;
-      color: #b42318;
-      background: rgba(255, 59, 48, 0.10);
-      border: 1px solid rgba(255, 59, 48, 0.18);
+    .rank-score {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--muted);
+      white-space: nowrap;
     }
 
-    .message.success {
-      display: block;
-      color: #0f7a35;
-      background: rgba(52, 199, 89, 0.12);
-      border: 1px solid rgba(52, 199, 89, 0.20);
+    .empty-state {
+      padding: 18px;
+      border-radius: 18px;
+      background: #f9fafb;
+      color: var(--muted);
+      font-weight: 900;
+      text-align: center;
+      border: 1px dashed rgba(16,24,39,0.16);
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .quick-link {
+      min-height: 84px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 10px 26px rgba(16,24,39,0.06);
+      text-decoration: none;
+      color: var(--text);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: 0.18s ease;
+    }
+
+    .quick-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0,102,255,0.25);
+      box-shadow: 0 16px 32px rgba(0,102,255,0.10);
+    }
+
+    .quick-link strong {
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .quick-link span {
+      font-size: 24px;
+      flex-shrink: 0;
     }
 
     .loading {
@@ -512,19 +699,60 @@
       padding: 13px 15px;
       width: fit-content;
       border-radius: 999px;
-      background: rgba(255,255,255,0.50);
-      border: 1px solid rgba(255,255,255,0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background: #fff;
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 8px 22px rgba(16,24,39,0.07);
     }
 
     .spinner {
       width: 20px;
       height: 20px;
-      border: 3px solid rgba(0, 122, 255, 0.16);
+      border: 3px solid rgba(0, 102, 255, 0.14);
       border-top-color: var(--blue);
       border-radius: 50%;
       animation: spin 0.75s linear infinite;
+    }
+
+    .message {
+      display: none;
+      position: fixed;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      min-width: min(520px, calc(100vw - 28px));
+      max-width: calc(100vw - 28px);
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.7;
+      border: 1px solid transparent;
+      box-shadow: 0 18px 48px rgba(16, 24, 39, 0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      text-align: center;
+    }
+
+    .message.error {
+      display: block;
+      color: #991b1b;
+      background: rgba(254, 242, 242, 0.96);
+      border-color: #fecaca;
+    }
+
+    .message.success {
+      display: block;
+      color: #166534;
+      background: rgba(240, 253, 244, 0.96);
+      border-color: #bbf7d0;
+    }
+
+    .message.warning {
+      display: block;
+      color: #9a3412;
+      background: rgba(255, 247, 237, 0.96);
+      border-color: #fed7aa;
     }
 
     @keyframes spin {
@@ -533,261 +761,15 @@
       }
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .stat-card {
-      position: relative;
-      overflow: hidden;
-      min-height: 154px;
-      padding: 20px;
-      border-radius: var(--radius-lg);
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.38));
-      border: 1px solid rgba(255,255,255,0.76);
-      box-shadow: var(--soft-shadow);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-    }
-
-    .stat-card::before {
-      content: "";
-      position: absolute;
-      top: -35px;
-      left: -35px;
-      width: 115px;
-      height: 115px;
-      border-radius: 50%;
-      background: rgba(0,122,255,0.12);
-    }
-
-    .stat-card:nth-child(2)::before {
-      background: rgba(124, 58, 237, 0.12);
-    }
-
-    .stat-card:nth-child(3)::before {
-      background: rgba(255, 149, 0, 0.14);
-    }
-
-    .stat-card:nth-child(4)::before {
-      background: rgba(52, 199, 89, 0.14);
-    }
-
-    .stat-card:nth-child(5)::before {
-      background: rgba(255, 59, 48, 0.11);
-    }
-
-    .stat-head,
-    .stat-value,
-    .stat-note {
-      position: relative;
-      z-index: 1;
-    }
-
-    .stat-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 17px;
-    }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    .stat-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      background: rgba(255,255,255,0.58);
-      border: 1px solid rgba(255,255,255,0.74);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
-    }
-
-    .stat-value {
-      font-size: 35px;
-      font-weight: 900;
-      color: var(--text);
-      line-height: 1;
-    }
-
-    .stat-note {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      align-items: start;
-      margin-bottom: 16px;
-    }
-
-    .panel {
-      padding: 20px;
-      border-radius: var(--radius-lg);
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.38));
-      border: 1px solid rgba(255,255,255,0.76);
-      box-shadow: var(--soft-shadow);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-    }
-
-    .panel.full {
-      grid-column: 1 / -1;
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .panel-header h2 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .panel-header span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .action-card {
-      display: block;
-      min-height: 116px;
-      text-decoration: none;
-      color: var(--text);
-      padding: 16px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.48);
-      border: 1px solid rgba(255,255,255,0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
-      transition: 0.18s ease;
-    }
-
-    .action-card:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.66);
-      box-shadow:
-        0 16px 34px rgba(50, 70, 110, 0.12),
-        inset 0 1px 0 rgba(255,255,255,0.80);
-    }
-
-    .action-card strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 16px;
-      font-weight: 900;
-    }
-
-    .action-card span {
-      display: block;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .rank-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .rank-item {
-      display: grid;
-      grid-template-columns: 38px 1fr auto;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.48);
-      border: 1px solid rgba(255,255,255,0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
-    }
-
-    .rank-number {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      border-radius: 14px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.85), rgba(238,244,255,0.68));
-      color: var(--blue-dark);
-      font-weight: 900;
-    }
-
-    .rank-name {
-      min-width: 0;
-    }
-
-    .rank-name strong {
-      display: block;
-      font-size: 14px;
-      font-weight: 900;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .rank-name span {
-      display: block;
-      margin-top: 3px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .rank-value {
-      font-weight: 900;
-      color: var(--text);
-      white-space: nowrap;
-    }
-
-    .empty-state {
-      padding: 18px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.48);
-      border: 1px solid rgba(255,255,255,0.72);
-      color: var(--muted);
-      text-align: center;
-      font-weight: 800;
-      line-height: 1.7;
-    }
-
-    @media (max-width: 1200px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
+    @media (max-width: 1180px) {
+      .stats-grid,
       .quick-actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 900px) {
-      .content-grid {
+      .rank-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -813,12 +795,15 @@
       }
 
       .top-user-box {
+        max-width: 130px;
+      }
+
+      .user-info span {
         display: none;
       }
 
-      .language-select {
-        width: auto;
-        height: 40px;
+      .language-toggle {
+        min-width: 36px;
         font-size: 14px;
       }
 
@@ -826,27 +811,13 @@
         padding: 94px 14px 24px;
       }
 
-      .hero {
-        padding: 20px;
-        border-radius: 26px;
-      }
-
-      .hero-content {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .hero-status {
-        width: 100%;
-        min-width: 0;
+      .panel {
+        padding: 16px;
+        border-radius: 24px;
       }
 
       .page-title h1 {
         font-size: 26px;
-      }
-
-      .hero-pill {
-        width: 100%;
       }
 
       .stats-grid,
@@ -854,8 +825,12 @@
         grid-template-columns: 1fr;
       }
 
-      .panel {
-        padding: 16px;
+      .stat-card {
+        min-height: 140px;
+      }
+
+      .stat-value {
+        font-size: 30px;
       }
     }
 
@@ -874,14 +849,6 @@
 
       .page-title h1 {
         font-size: 24px;
-      }
-
-      .rank-item {
-        grid-template-columns: 34px 1fr;
-      }
-
-      .rank-value {
-        grid-column: 2 / 3;
       }
     }
   </style>
@@ -904,10 +871,7 @@
     </div>
 
     <div class="topbar-side">
-      <select id="languageSelect" class="language-select" aria-label="اللغة">
-        <option value="ar">العربية</option>
-        <option value="en">English</option>
-      </select>
+      <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
       <div class="top-user-box">
         <div class="avatar" id="userAvatar">U</div>
@@ -977,149 +941,133 @@
         <span class="nav-icon">🚪</span>
       </button>
     </nav>
-
-    <div class="sidebar-footer" data-i18n="sidebarNote">
-      القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.
-    </div>
   </aside>
 
   <main class="main">
-    <section class="hero">
-      <div class="hero-content">
-        <div class="page-title">
-          <h1 data-i18n="dashboard">لوحة التحكم</h1>
-          <p id="welcomeText">مرحبًا بك في نظام متابعة الإنتاج اليومي.</p>
-        </div>
-
-        <div class="hero-status">
-          <div class="hero-pill">
-            <span id="connectionDot">●</span>
-            <span id="connectionText">متصل ببيانات Google Sheets</span>
-          </div>
-          <div class="hero-status-small" id="systemStatusText">
-            حالة النظام: نشط
-          </div>
-        </div>
-      </div>
-    </section>
-
     <div id="loadingBox" class="loading">
       <span class="spinner"></span>
-      <span data-i18n="loadingDashboard">جاري تحميل بيانات لوحة التحكم...</span>
+      <span data-i18n="loadingDashboard">جاري تحميل لوحة التحكم...</span>
     </div>
 
     <div id="messageBox" class="message"></div>
 
-    <section class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-head">
-          <span class="stat-label" data-i18n="activeWorkers">العمال النشطون</span>
-          <span class="stat-icon">👷</span>
-        </div>
-        <div class="stat-value" id="workersCount">0</div>
-        <div class="stat-note" data-i18n="activeWorkersNote">عدد العمال المتاحين للإنتاج</div>
-      </div>
+    <section class="panel hero-panel">
+      <div class="panel-content">
+        <div class="page-title">
+          <div>
+            <h1 data-i18n="dashboard">لوحة التحكم</h1>
+            <p id="dashboardSubtitle" data-i18n="dashboardSubtitle">متابعة أداء الإنتاج والهدر والعمال خلال الأسبوع السابق.</p>
+          </div>
 
-      <div class="stat-card">
-        <div class="stat-head">
-          <span class="stat-label" data-i18n="activeProducts">المنتجات النشطة</span>
-          <span class="stat-icon">📦</span>
+          <div id="systemStatusPill" class="status-pill">
+            <span class="status-dot"></span>
+            <span id="systemStatusText" data-i18n="connectedToSheets">متصل ببيانات Google Sheets</span>
+          </div>
         </div>
-        <div class="stat-value" id="productsCount">0</div>
-        <div class="stat-note" data-i18n="activeProductsNote">عدد المنتجات المعرفة في النظام</div>
-      </div>
 
-      <div class="stat-card">
-        <div class="stat-head">
-          <span class="stat-label" data-i18n="activeMachines">المكائن النشطة</span>
-          <span class="stat-icon">⚙️</span>
+        <div class="week-label">
+          <span>📅</span>
+          <span id="weekRangeLabel">---</span>
         </div>
-        <div class="stat-value" id="machinesCount">0</div>
-        <div class="stat-note" data-i18n="activeMachinesNote">عدد المكائن المسجلة والمتاحة</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-head">
-          <span class="stat-label" data-i18n="lastWeekProduction">إجمالي إنتاج الأسبوع السابق</span>
-          <span class="stat-icon">📈</span>
-        </div>
-        <div class="stat-value" id="lastWeekQuantity">0</div>
-        <div class="stat-note" id="lastWeekRangeText">الأسبوع السابق من السبت إلى الجمعة</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-head">
-          <span class="stat-label" data-i18n="lastWeekWaste">إجمالي هدر الأسبوع السابق</span>
-          <span class="stat-icon">♻️</span>
-        </div>
-        <div class="stat-value" id="lastWeekWaste">0</div>
-        <div class="stat-note" data-i18n="kg">بالكيلوجرام</div>
       </div>
     </section>
 
-    <section class="content-grid">
-      <div class="panel">
-        <div class="panel-header">
-          <h2 data-i18n="bestWorkers">أفضل 5 عمال الأسبوع السابق</h2>
-          <span data-i18n="byProductionQty">حسب إجمالي كمية الإنتاج</span>
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-head">
+          <div class="stat-title" data-i18n="previousWeekProduction">إجمالي كمية الإنتاج للأسبوع السابق</div>
+          <div class="stat-icon">📦</div>
         </div>
+        <div class="stat-value" id="previousWeekProductionValue">0</div>
+        <div class="stat-sub" data-i18n="quantityUnit">وحدة إنتاج</div>
+      </div>
 
+      <div class="stat-card">
+        <div class="stat-head">
+          <div class="stat-title" data-i18n="previousWeekWaste">إجمالي الهدر للأسبوع السابق</div>
+          <div class="stat-icon">♻️</div>
+        </div>
+        <div class="stat-value" id="previousWeekWasteValue">0</div>
+        <div class="stat-sub" data-i18n="kgUnit">كجم</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-head">
+          <div class="stat-title" data-i18n="workersCount">عدد العمال النشطين</div>
+          <div class="stat-icon">👷</div>
+        </div>
+        <div class="stat-value" id="workersCountValue">0</div>
+        <div class="stat-sub" data-i18n="activeWorker">عامل نشط</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-head">
+          <div class="stat-title" data-i18n="productsCount">عدد المنتجات النشطة</div>
+          <div class="stat-icon">🏷️</div>
+        </div>
+        <div class="stat-value" id="productsCountValue">0</div>
+        <div class="stat-sub" data-i18n="activeProduct">منتج نشط</div>
+      </div>
+    </section>
+
+    <div style="height: 16px;"></div>
+
+    <section class="rank-grid">
+      <div class="rank-card">
+        <div class="rank-head">
+          <h2 data-i18n="bestFiveWorkers">أفضل 5 موظفين الأسبوع السابق</h2>
+          <div class="rank-badge best">🏆</div>
+        </div>
         <div class="rank-list" id="bestWorkersList"></div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header">
-          <h2 data-i18n="worstWorkers">أقل 5 عمال إنتاجًا الأسبوع السابق</h2>
-          <span data-i18n="byProductionQty">حسب إجمالي كمية الإنتاج</span>
+      <div class="rank-card">
+        <div class="rank-head">
+          <h2 data-i18n="worstFiveWorkers">أقل 5 موظفين أداءً الأسبوع السابق</h2>
+          <div class="rank-badge worst">⚠️</div>
         </div>
-
         <div class="rank-list" id="worstWorkersList"></div>
       </div>
     </section>
 
-    <section class="panel full">
-      <div class="panel-header">
-        <h2 data-i18n="quickActions">الإجراءات السريعة</h2>
-        <span data-i18n="quickActionsNote">اختصارات لأهم صفحات النظام</span>
-      </div>
+    <div style="height: 16px;"></div>
 
-      <div class="quick-actions">
-        <a class="action-card" href="production.html">
-          <strong data-i18n="newProduction">إدخال إنتاج جديد</strong>
-          <span data-i18n="newProductionNote">تسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.</span>
-        </a>
+    <section class="panel">
+      <div class="panel-content">
+        <div class="page-title">
+          <div>
+            <h1 style="font-size: 24px;" data-i18n="quickActions">اختصارات سريعة</h1>
+            <p data-i18n="quickActionsSubtitle">انتقل مباشرة إلى الصفحات الأساسية للنظام.</p>
+          </div>
+        </div>
 
-        <a class="action-card" href="evaluation.html">
-          <strong data-i18n="newEvaluation">إدخال تقييم مشرف</strong>
-          <span data-i18n="newEvaluationNote">تقييم العامل حسب الجودة والنظافة والانضباط وبقية العناصر.</span>
-        </a>
+        <div class="quick-actions">
+          <a class="quick-link" href="production.html">
+            <strong data-i18n="productionEntry">إدخال الإنتاج</strong>
+            <span>🏭</span>
+          </a>
 
-        <a class="action-card" href="history.html">
-          <strong data-i18n="viewHistory">استعراض سجل الإنتاج</strong>
-          <span data-i18n="viewHistoryNote">البحث حسب التاريخ والعامل وعرض الإنتاج المدخل.</span>
-        </a>
+          <a class="quick-link" href="history.html">
+            <strong data-i18n="productionHistory">سجل الإنتاج</strong>
+            <span>📋</span>
+          </a>
 
-        <a class="action-card" href="workers.html">
-          <strong data-i18n="manageWorkers">إدارة العمال</strong>
-          <span data-i18n="manageWorkersNote">عرض العمال النشطين وإضافة عمال جدد.</span>
-        </a>
+          <a class="quick-link" href="workers.html">
+            <strong data-i18n="workers">العمال</strong>
+            <span>👷</span>
+          </a>
 
-        <a class="action-card admin-only" href="products.html">
-          <strong data-i18n="manageProducts">إدارة المنتجات</strong>
-          <span data-i18n="manageProductsNote">إضافة المنتجات وتحديد التصنيف والمكينة والهدر القياسي.</span>
-        </a>
-
-        <a class="action-card admin-only" href="machines.html">
-          <strong data-i18n="manageMachines">إدارة المكائن</strong>
-          <span data-i18n="manageMachinesNote">إضافة المكائن وتصنيفها حسب نوع المكينة.</span>
-        </a>
+          <a class="quick-link admin-only" href="products.html">
+            <strong data-i18n="products">المنتجات</strong>
+            <span>📦</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec";
-
+    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
 
@@ -1127,12 +1075,14 @@
       ar: {
         htmlLang: "ar",
         dir: "rtl",
+        languageButton: "EN",
         pageTitle: "لوحة التحكم | ناتاك",
         factoryName: "ناتاك",
         factorySubtitle: "نظام متابعة الإنتاج اليومي",
         mainMenu: "القائمة الرئيسية",
         productionSystem: "نظام الإنتاج",
         dashboard: "لوحة التحكم",
+        dashboardSubtitle: "متابعة أداء الإنتاج والهدر والعمال خلال الأسبوع السابق.",
         productionEntry: "إدخال الإنتاج",
         supervisorEvaluation: "تقييم المشرف",
         productionHistory: "سجل الإنتاج",
@@ -1140,60 +1090,44 @@
         products: "المنتجات",
         machines: "المكائن",
         logout: "تسجيل الخروج",
-        sidebarNote: "القائمة مخفية بشكل دائم، وتظهر فقط عند الضغط على زر الثلاث خطوط من الشريط العلوي.",
-        loadingDashboard: "جاري تحميل بيانات لوحة التحكم...",
-        activeWorkers: "العمال النشطون",
-        activeWorkersNote: "عدد العمال المتاحين للإنتاج",
-        activeProducts: "المنتجات النشطة",
-        activeProductsNote: "عدد المنتجات المعرفة في النظام",
-        activeMachines: "المكائن النشطة",
-        activeMachinesNote: "عدد المكائن المسجلة والمتاحة",
-        lastWeekProduction: "إجمالي إنتاج الأسبوع السابق",
-        lastWeekWaste: "إجمالي هدر الأسبوع السابق",
-        kg: "بالكيلوجرام",
-        bestWorkers: "أفضل 5 عمال الأسبوع السابق",
-        worstWorkers: "أقل 5 عمال إنتاجًا الأسبوع السابق",
-        byProductionQty: "حسب إجمالي كمية الإنتاج",
-        quickActions: "الإجراءات السريعة",
-        quickActionsNote: "اختصارات لأهم صفحات النظام",
-        newProduction: "إدخال إنتاج جديد",
-        newProductionNote: "تسجيل إنتاج العامل حسب التاريخ والشفت والمنتجات.",
-        newEvaluation: "إدخال تقييم مشرف",
-        newEvaluationNote: "تقييم العامل حسب الجودة والنظافة والانضباط وبقية العناصر.",
-        viewHistory: "استعراض سجل الإنتاج",
-        viewHistoryNote: "البحث حسب التاريخ والعامل وعرض الإنتاج المدخل.",
-        manageWorkers: "إدارة العمال",
-        manageWorkersNote: "عرض العمال النشطين وإضافة عمال جدد.",
-        manageProducts: "إدارة المنتجات",
-        manageProductsNote: "إضافة المنتجات وتحديد التصنيف والمكينة والهدر القياسي.",
-        manageMachines: "إدارة المكائن",
-        manageMachinesNote: "إضافة المكائن وتصنيفها حسب نوع المكينة.",
-        connected: "متصل ببيانات Google Sheets",
+        loadingDashboard: "جاري تحميل لوحة التحكم...",
+        connectedToSheets: "متصل ببيانات Google Sheets",
         connectionError: "تعذر الاتصال ببيانات Google Sheets",
-        systemActive: "حالة النظام: نشط وتم تحميل البيانات بنجاح",
-        systemError: "حالة النظام: يحتاج إلى التحقق من رابط Apps Script أو الاتصال",
-        welcome: name => "مرحبًا " + name + "، هذه نظرة عامة على أداء الأسبوع السابق.",
+        previousWeekProduction: "إجمالي كمية الإنتاج للأسبوع السابق",
+        previousWeekWaste: "إجمالي الهدر للأسبوع السابق",
+        workersCount: "عدد العمال النشطين",
+        productsCount: "عدد المنتجات النشطة",
+        quantityUnit: "وحدة إنتاج",
+        kgUnit: "كجم",
+        activeWorker: "عامل نشط",
+        activeProduct: "منتج نشط",
+        bestFiveWorkers: "أفضل 5 موظفين الأسبوع السابق",
+        worstFiveWorkers: "أقل 5 موظفين أداءً الأسبوع السابق",
+        quickActions: "اختصارات سريعة",
+        quickActionsSubtitle: "انتقل مباشرة إلى الصفحات الأساسية للنظام.",
+        emptyData: "لا توجد بيانات للعرض.",
+        score: "النقاط",
+        totalQuantity: "الكمية",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
-        fromTo: (from, to) => "من " + from + " إلى " + to,
-        wasteLabel: waste => "الهدر: " + waste + " كجم",
-        noProduction: "لا توجد بيانات إنتاج للأسبوع السابق.",
-        noWorkers: "لا توجد بيانات عمال لعرضها.",
-        apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL في صفحة dashboard.html.",
-        tokenMissing: "لم يتم العثور على رمز الجلسة token. يرجى تسجيل الدخول مرة أخرى.",
-        initialLoadFailed: "تعذر تحميل البيانات الأساسية.",
-        historyLoadFailed: "تعذر تحميل إنتاج الأسبوع السابق.",
-        serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت."
+        apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL.",
+        tokenMissing: "لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.",
+        loadFailed: "تعذر تحميل بيانات لوحة التحكم.",
+        serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
+        from: "من",
+        to: "إلى"
       },
       en: {
         htmlLang: "en",
         dir: "ltr",
+        languageButton: "عربي",
         pageTitle: "Dashboard | NATAC",
         factoryName: "NATAC",
         factorySubtitle: "Daily Production Monitoring System",
         mainMenu: "Main Menu",
         productionSystem: "Production System",
         dashboard: "Dashboard",
+        dashboardSubtitle: "Monitor production, waste, and worker performance for the previous week.",
         productionEntry: "Production Entry",
         supervisorEvaluation: "Supervisor Evaluation",
         productionHistory: "Production History",
@@ -1201,56 +1135,38 @@
         products: "Products",
         machines: "Machines",
         logout: "Logout",
-        sidebarNote: "The menu stays hidden and appears only when you press the menu button in the top bar.",
-        loadingDashboard: "Loading dashboard data...",
-        activeWorkers: "Active Workers",
-        activeWorkersNote: "Workers available for production",
-        activeProducts: "Active Products",
-        activeProductsNote: "Products defined in the system",
-        activeMachines: "Active Machines",
-        activeMachinesNote: "Registered and available machines",
-        lastWeekProduction: "Previous Week Production",
-        lastWeekWaste: "Previous Week Waste",
-        kg: "in kilograms",
-        bestWorkers: "Top 5 Workers Last Week",
-        worstWorkers: "Lowest 5 Workers Last Week",
-        byProductionQty: "Based on total production quantity",
-        quickActions: "Quick Actions",
-        quickActionsNote: "Shortcuts to key system pages",
-        newProduction: "New Production Entry",
-        newProductionNote: "Record worker production by date, shift, and products.",
-        newEvaluation: "New Supervisor Evaluation",
-        newEvaluationNote: "Evaluate workers by quality, cleanliness, discipline, and other criteria.",
-        viewHistory: "View Production History",
-        viewHistoryNote: "Search by date and worker and view entered production.",
-        manageWorkers: "Manage Workers",
-        manageWorkersNote: "View active workers and add new workers.",
-        manageProducts: "Manage Products",
-        manageProductsNote: "Add products and define category, machine, and standard waste.",
-        manageMachines: "Manage Machines",
-        manageMachinesNote: "Add machines and classify them by machine type.",
-        connected: "Connected to Google Sheets data",
+        loadingDashboard: "Loading dashboard...",
+        connectedToSheets: "Connected to Google Sheets data",
         connectionError: "Unable to connect to Google Sheets data",
-        systemActive: "System status: active and data loaded successfully",
-        systemError: "System status: check Apps Script URL or connection",
-        welcome: name => "Welcome " + name + ", here is an overview of last week’s performance.",
+        previousWeekProduction: "Previous Week Total Production",
+        previousWeekWaste: "Previous Week Total Waste",
+        workersCount: "Active Workers",
+        productsCount: "Active Products",
+        quantityUnit: "Production Units",
+        kgUnit: "Kg",
+        activeWorker: "Active Worker",
+        activeProduct: "Active Product",
+        bestFiveWorkers: "Best 5 Workers Last Week",
+        worstFiveWorkers: "Lowest 5 Workers Last Week",
+        quickActions: "Quick Actions",
+        quickActionsSubtitle: "Go directly to the main system pages.",
+        emptyData: "No data to display.",
+        score: "Score",
+        totalQuantity: "Quantity",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
-        fromTo: (from, to) => "From " + from + " to " + to,
-        wasteLabel: waste => "Waste: " + waste + " kg",
-        noProduction: "No production data for the previous week.",
-        noWorkers: "No workers data to display.",
-        apiMissing: "Please set the Apps Script URL inside API_URL in dashboard.html.",
-        tokenMissing: "Session token not found. Please log in again.",
-        initialLoadFailed: "Unable to load master data.",
-        historyLoadFailed: "Unable to load previous week production.",
-        serverError: "Unable to connect to the server. Check Apps Script URL or internet connection."
+        apiMissing: "Please set the Apps Script URL inside API_URL.",
+        tokenMissing: "Session token not found. Make sure login page stores token in localStorage.",
+        loadFailed: "Unable to load dashboard data.",
+        serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
+        from: "From",
+        to: "To"
       }
     };
 
     let currentLang = localStorage.getItem(LANGUAGE_KEY) || "ar";
-    let activeWorkers = [];
-    let lastLoadedRecords = [];
+    let currentUser = null;
+    let messageTimer = null;
 
     const loadingBox = document.getElementById("loadingBox");
     const messageBox = document.getElementById("messageBox");
@@ -1261,38 +1177,49 @@
     const userName = document.getElementById("userName");
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
-    const welcomeText = document.getElementById("welcomeText");
-
-    const workersCount = document.getElementById("workersCount");
-    const productsCount = document.getElementById("productsCount");
-    const machinesCount = document.getElementById("machinesCount");
-    const lastWeekQuantity = document.getElementById("lastWeekQuantity");
-    const lastWeekWaste = document.getElementById("lastWeekWaste");
-    const lastWeekRangeText = document.getElementById("lastWeekRangeText");
-
-    const bestWorkersList = document.getElementById("bestWorkersList");
-    const worstWorkersList = document.getElementById("worstWorkersList");
-
-    const connectionText = document.getElementById("connectionText");
-    const systemStatusText = document.getElementById("systemStatusText");
 
     const logoutBtn = document.getElementById("logoutBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
-    const languageSelect = document.getElementById("languageSelect");
+    const languageToggleBtn = document.getElementById("languageToggleBtn");
+
+    const systemStatusPill = document.getElementById("systemStatusPill");
+    const systemStatusText = document.getElementById("systemStatusText");
+    const weekRangeLabel = document.getElementById("weekRangeLabel");
+
+    const previousWeekProductionValue = document.getElementById("previousWeekProductionValue");
+    const previousWeekWasteValue = document.getElementById("previousWeekWasteValue");
+    const workersCountValue = document.getElementById("workersCountValue");
+    const productsCountValue = document.getElementById("productsCountValue");
+    const bestWorkersList = document.getElementById("bestWorkersList");
+    const worstWorkersList = document.getElementById("worstWorkersList");
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
       protectPage();
       initSidebar();
       initLanguage();
-      loadDashboard();
+      setWeekRangeLabel();
+      loadDashboardData();
+      bindLogout();
     });
 
     function t(key) {
       return i18n[currentLang][key];
+    }
+
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+      return {
+        ...user,
+        ...session,
+        token: session.token || user.token || "",
+        Role: session.Role || session.role || user.Role || user.role || "",
+        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
+        Username: session.Username || session.username || user.Username || user.username || ""
+      };
     }
 
     function applyLanguage(lang) {
@@ -1305,6 +1232,7 @@
 
       factoryName.textContent = i18n[lang].factoryName;
       factorySubtitle.textContent = i18n[lang].factorySubtitle;
+      languageToggleBtn.textContent = i18n[lang].languageButton;
 
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
@@ -1313,21 +1241,14 @@
         }
       });
 
-      languageSelect.value = lang;
-
       const session = getSession();
       if (session) {
-        renderUser(session);
+        currentUser = normalizeSession(session);
+        renderUser(currentUser);
+        applyRoleUI(currentUser.Role || currentUser.role);
       }
 
-      const range = getPreviousWeekRange();
-      lastWeekRangeText.textContent = t("fromTo")(range.fromDate, range.toDate);
-
-      if (lastLoadedRecords.length || activeWorkers.length) {
-        renderWeeklyStats(lastLoadedRecords, activeWorkers);
-      }
-
-      showConnectionSuccess();
+      setWeekRangeLabel();
     }
 
     function protectPage() {
@@ -1338,189 +1259,36 @@
         return;
       }
 
-      renderUser(session);
-      applyRoleUI(session.role);
-    }
-
-    async function loadDashboard() {
-      const session = getSession();
-
-      if (!session) return;
-
-      if (!API_URL || API_URL.includes("ضع_رابط")) {
-        hideLoading();
-        showConnectionError();
-        showMessage(t("apiMissing"), "error");
-        return;
-      }
-
-      if (!session.token) {
-        hideLoading();
-        showConnectionError();
-        showMessage(t("tokenMissing"), "error");
-        return;
-      }
-
-      const range = getPreviousWeekRange();
-      lastWeekRangeText.textContent = t("fromTo")(range.fromDate, range.toDate);
-
-      try {
-        const initialResult = await apiPost({
-          action: "getInitialData",
-          token: session.token
-        });
-
-        if (!initialResult.success) {
-          hideLoading();
-          showConnectionError();
-          showMessage(initialResult.message || t("initialLoadFailed"), "error");
-          return;
-        }
-
-        activeWorkers = initialResult.workers || [];
-
-        workersCount.textContent = formatNumber(activeWorkers.length || 0);
-        productsCount.textContent = formatNumber((initialResult.products || []).length || 0);
-        machinesCount.textContent = formatNumber((initialResult.machines || []).length || 0);
-
-        const historyResult = await apiPost({
-          action: "getProductionHistory",
-          token: session.token,
-          filters: {
-            fromDate: range.fromDate,
-            toDate: range.toDate
-          }
-        });
-
-        hideLoading();
-
-        if (!historyResult.success) {
-          showConnectionError();
-          showMessage(historyResult.message || t("historyLoadFailed"), "error");
-          return;
-        }
-
-        lastLoadedRecords = historyResult.records || [];
-        renderWeeklyStats(lastLoadedRecords, activeWorkers);
-        showConnectionSuccess();
-        clearMessage();
-
-      } catch (error) {
-        console.error(error);
-        hideLoading();
-        showConnectionError();
-        showMessage(t("serverError"), "error");
-      }
-    }
-
-    function renderWeeklyStats(records, workers) {
-      const totalQty = records.reduce((sum, row) => {
-        return sum + Number(row.Quantity || 0);
-      }, 0);
-
-      const seenProductions = {};
-      let totalWaste = 0;
-
-      records.forEach(row => {
-        const productionId = String(row.ProductionID || "");
-
-        if (productionId && !seenProductions[productionId]) {
-          seenProductions[productionId] = true;
-          totalWaste += Number(row.RawWasteKg || 0);
-        }
-      });
-
-      lastWeekQuantity.textContent = formatNumber(totalQty);
-      lastWeekWaste.textContent = formatDecimal(totalWaste);
-
-      const workerMap = {};
-
-      workers.forEach(worker => {
-        const id = String(worker.WorkerID || "");
-        if (!id) return;
-
-        workerMap[id] = {
-          workerId: id,
-          workerName: worker.WorkerName || id,
-          quantity: 0,
-          waste: 0,
-          productionIds: {}
-        };
-      });
-
-      records.forEach(row => {
-        const workerId = String(row.WorkerID || "");
-        if (!workerId) return;
-
-        if (!workerMap[workerId]) {
-          workerMap[workerId] = {
-            workerId: workerId,
-            workerName: row.WorkerName || workerId,
-            quantity: 0,
-            waste: 0,
-            productionIds: {}
-          };
-        }
-
-        workerMap[workerId].quantity += Number(row.Quantity || 0);
-
-        const productionId = String(row.ProductionID || "");
-        if (productionId && !workerMap[workerId].productionIds[productionId]) {
-          workerMap[workerId].productionIds[productionId] = true;
-          workerMap[workerId].waste += Number(row.RawWasteKg || 0);
-        }
-      });
-
-      const workerStats = Object.values(workerMap);
-
-      const best = workerStats
-        .filter(worker => worker.quantity > 0)
-        .sort((a, b) => b.quantity - a.quantity)
-        .slice(0, 5);
-
-      const worst = workerStats
-        .sort((a, b) => a.quantity - b.quantity)
-        .slice(0, 5);
-
-      renderRankList(bestWorkersList, best, t("noProduction"));
-      renderRankList(worstWorkersList, worst, t("noWorkers"));
-    }
-
-    function renderRankList(container, workers, emptyText) {
-      container.innerHTML = "";
-
-      if (!workers.length) {
-        container.innerHTML = `<div class="empty-state">${emptyText}</div>`;
-        return;
-      }
-
-      workers.forEach((worker, index) => {
-        const item = document.createElement("div");
-        item.className = "rank-item";
-
-        item.innerHTML = `
-          <div class="rank-number">${index + 1}</div>
-          <div class="rank-name">
-            <strong>${escapeHtml(worker.workerName)}</strong>
-            <span>${escapeHtml(t("wasteLabel")(formatDecimal(worker.waste)))}</span>
-          </div>
-          <div class="rank-value">${formatNumber(worker.quantity)}</div>
-        `;
-
-        container.appendChild(item);
-      });
+      currentUser = normalizeSession(session);
+      renderUser(currentUser);
+      applyRoleUI(currentUser.Role || currentUser.role);
     }
 
     function renderUser(session) {
-      const name = session.fullName || session.FullName || session.username || "User";
-      const role = session.role || session.Role || "---";
+      const name =
+        session.FullName ||
+        session.fullName ||
+        session.name ||
+        session.Username ||
+        session.username ||
+        "User";
+
+      const role = session.Role || session.role || "---";
 
       userName.textContent = name;
       userRole.textContent = normalizeRoleLabel(role);
-      welcomeText.textContent = t("welcome")(name);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
+    }
+
+    function normalizeRoleLabel(role) {
+      const cleanRole = String(role || "").toLowerCase();
+
+      if (cleanRole === "admin") return t("roleAdmin");
+      if (cleanRole === "supervisor") return t("roleSupervisor");
+
+      return role || "---";
     }
 
     function applyRoleUI(role) {
@@ -1531,13 +1299,211 @@
       });
     }
 
-    function normalizeRoleLabel(role) {
-      const cleanRole = String(role || "").toLowerCase();
+    async function loadDashboardData() {
+      if (!API_URL) {
+        hideLoading();
+        setConnectionStatus(false);
+        showMessage(t("apiMissing"), "error");
+        return;
+      }
 
-      if (cleanRole === "admin") return t("roleAdmin");
-      if (cleanRole === "supervisor") return t("roleSupervisor");
+      if (!currentUser || !currentUser.token) {
+        hideLoading();
+        setConnectionStatus(false);
+        showMessage(t("tokenMissing"), "error");
+        return;
+      }
 
-      return role || "---";
+      try {
+        const range = getPreviousWeekRange();
+
+        const result = await apiPost({
+          action: "getDashboardData",
+          token: currentUser.token,
+          fromDate: toISODate(range.start),
+          toDate: toISODate(range.end)
+        });
+
+        hideLoading();
+
+        if (!result || !result.success) {
+          setConnectionStatus(false);
+          showMessage((result && result.message) || t("loadFailed"), "error");
+          renderDashboard({});
+          return;
+        }
+
+        setConnectionStatus(true);
+        renderDashboard(result.dashboard || result.data || result);
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        setConnectionStatus(false);
+        showMessage(t("serverError"), "error");
+        renderDashboard({});
+      }
+    }
+
+    function renderDashboard(data) {
+      previousWeekProductionValue.textContent = formatNumber(
+        pickNumber(data, [
+          "previousWeekProductionQty",
+          "previousWeekProduction",
+          "totalProductionQty",
+          "totalQuantity",
+          "weeklyProduction",
+          "productionQty"
+        ])
+      );
+
+      previousWeekWasteValue.textContent = formatDecimal(
+        pickNumber(data, [
+          "previousWeekWasteKg",
+          "previousWeekWaste",
+          "totalWasteKg",
+          "weeklyWaste",
+          "rawWasteKg"
+        ])
+      );
+
+      workersCountValue.textContent = formatNumber(
+        pickNumber(data, [
+          "activeWorkersCount",
+          "workersCount",
+          "totalWorkers",
+          "activeWorkers"
+        ])
+      );
+
+      productsCountValue.textContent = formatNumber(
+        pickNumber(data, [
+          "activeProductsCount",
+          "productsCount",
+          "totalProducts",
+          "activeProducts"
+        ])
+      );
+
+      renderRankList(bestWorkersList, pickArray(data, [
+        "bestWorkers",
+        "topWorkers",
+        "bestFiveWorkers",
+        "topFiveWorkers"
+      ]));
+
+      renderRankList(worstWorkersList, pickArray(data, [
+        "worstWorkers",
+        "lowestWorkers",
+        "worstFiveWorkers",
+        "bottomFiveWorkers"
+      ]));
+    }
+
+    function renderRankList(container, items) {
+      container.innerHTML = "";
+
+      if (!items.length) {
+        container.innerHTML = `<div class="empty-state">${t("emptyData")}</div>`;
+        return;
+      }
+
+      items.slice(0, 5).forEach((item, index) => {
+        const name =
+          item.WorkerName ||
+          item.workerName ||
+          item.name ||
+          item.FullName ||
+          item.fullName ||
+          item.WorkerID ||
+          item.workerId ||
+          "---";
+
+        const score =
+          item.Score ??
+          item.score ??
+          item.totalScore ??
+          item.rating ??
+          item.quantity ??
+          item.totalQuantity ??
+          "";
+
+        const row = document.createElement("div");
+        row.className = "rank-item";
+
+        row.innerHTML = `
+          <div class="rank-person">
+            <div class="rank-number">${index + 1}</div>
+            <div class="rank-name">${escapeHtml(name)}</div>
+          </div>
+          <div class="rank-score">${score !== "" ? escapeHtml(formatRankScore(score)) : ""}</div>
+        `;
+
+        container.appendChild(row);
+      });
+    }
+
+    function setConnectionStatus(isConnected) {
+      systemStatusPill.classList.toggle("error", !isConnected);
+      systemStatusText.textContent = isConnected ? t("connectedToSheets") : t("connectionError");
+    }
+
+    function setWeekRangeLabel() {
+      const range = getPreviousWeekRange();
+      weekRangeLabel.textContent = `${t("from")} ${formatDisplayDate(range.start)} ${t("to")} ${formatDisplayDate(range.end)}`;
+    }
+
+    function getPreviousWeekRange() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const day = today.getDay();
+      let daysSinceLastFriday = (day - 5 + 7) % 7;
+
+      if (daysSinceLastFriday === 0) {
+        daysSinceLastFriday = 7;
+      }
+
+      const end = new Date(today);
+      end.setDate(today.getDate() - daysSinceLastFriday);
+
+      const start = new Date(end);
+      start.setDate(end.getDate() - 6);
+
+      return { start, end };
+    }
+
+    function toISODate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatDisplayDate(date) {
+      return toISODate(date);
+    }
+
+    function pickNumber(data, keys) {
+      for (let i = 0; i < keys.length; i++) {
+        const value = data[keys[i]];
+        if (value !== undefined && value !== null && value !== "") {
+          const number = Number(String(value).replace(",", "."));
+          return isNaN(number) ? 0 : number;
+        }
+      }
+
+      return 0;
+    }
+
+    function pickArray(data, keys) {
+      for (let i = 0; i < keys.length; i++) {
+        if (Array.isArray(data[keys[i]])) {
+          return data[keys[i]];
+        }
+      }
+
+      return [];
     }
 
     async function apiPost(payload) {
@@ -1565,59 +1531,6 @@
         localStorage.removeItem(SESSION_KEY);
         return null;
       }
-    }
-
-    function getPreviousWeekRange() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const day = today.getDay();
-      const daysSinceSaturday = (day + 1) % 7;
-
-      const currentWeekSaturday = new Date(today);
-      currentWeekSaturday.setDate(today.getDate() - daysSinceSaturday);
-
-      const previousWeekSaturday = new Date(currentWeekSaturday);
-      previousWeekSaturday.setDate(currentWeekSaturday.getDate() - 7);
-
-      const previousWeekFriday = new Date(currentWeekSaturday);
-      previousWeekFriday.setDate(currentWeekSaturday.getDate() - 1);
-
-      return {
-        fromDate: toISODate(previousWeekSaturday),
-        toDate: toISODate(previousWeekFriday)
-      };
-    }
-
-    function toISODate(date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    }
-
-    function hideLoading() {
-      loadingBox.style.display = "none";
-    }
-
-    function showMessage(text, type) {
-      messageBox.textContent = text;
-      messageBox.className = "message " + type;
-    }
-
-    function clearMessage() {
-      messageBox.textContent = "";
-      messageBox.className = "message";
-    }
-
-    function showConnectionSuccess() {
-      connectionText.textContent = t("connected");
-      systemStatusText.textContent = t("systemActive");
-    }
-
-    function showConnectionError() {
-      connectionText.textContent = t("connectionError");
-      systemStatusText.textContent = t("systemError");
     }
 
     function initSidebar() {
@@ -1649,20 +1562,76 @@
     }
 
     function initLanguage() {
-      languageSelect.value = currentLang;
-
-      languageSelect.addEventListener("change", () => {
-        applyLanguage(languageSelect.value);
+      languageToggleBtn.addEventListener("click", () => {
+        const nextLang = currentLang === "ar" ? "en" : "ar";
+        applyLanguage(nextLang);
       });
     }
 
+    function bindLogout() {
+      logoutBtn.addEventListener("click", async () => {
+        const session = getSession();
+
+        try {
+          if (session && session.token && API_URL) {
+            await apiPost({
+              action: "logout",
+              token: session.token
+            });
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+
+        localStorage.removeItem(SESSION_KEY);
+        window.location.href = "index.html";
+      });
+    }
+
+    function hideLoading() {
+      loadingBox.style.display = "none";
+    }
+
+    function showMessage(text, type) {
+      clearTimeout(messageTimer);
+
+      messageBox.textContent = text;
+      messageBox.className = "message " + type;
+
+      messageTimer = setTimeout(() => {
+        clearMessage();
+      }, 3000);
+    }
+
+    function clearMessage() {
+      clearTimeout(messageTimer);
+      messageBox.textContent = "";
+      messageBox.className = "message";
+    }
+
     function formatNumber(value) {
-      return Number(value || 0).toLocaleString("en-US");
+      const number = Number(value || 0);
+      return number.toLocaleString(currentLang === "ar" ? "ar-OM" : "en-US", {
+        maximumFractionDigits: 0
+      });
     }
 
     function formatDecimal(value) {
       const number = Number(value || 0);
-      return number.toFixed(3).replace(/\.?0+$/, "");
+      return number.toLocaleString(currentLang === "ar" ? "ar-OM" : "en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3
+      });
+    }
+
+    function formatRankScore(value) {
+      const number = Number(String(value).replace(",", "."));
+      if (isNaN(number)) return value;
+
+      return number.toLocaleString(currentLang === "ar" ? "ar-OM" : "en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
     }
 
     function escapeHtml(value) {
@@ -1673,24 +1642,6 @@
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
-
-    logoutBtn.addEventListener("click", async () => {
-      const session = getSession();
-
-      try {
-        if (session && session.token && API_URL && !API_URL.includes("ضع_رابط")) {
-          await apiPost({
-            action: "logout",
-            token: session.token
-          });
-        }
-      } catch (error) {
-        console.warn(error);
-      }
-
-      localStorage.removeItem(SESSION_KEY);
-      window.location.href = "index.html";
-    });
   </script>
 </body>
 </html>
