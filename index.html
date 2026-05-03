@@ -4,29 +4,39 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>تسجيل الدخول | نظام الإنتاج اليومي</title>
+  <title>تسجيل الدخول | NATAC</title>
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #f5f1ea;
-      --card: rgba(255, 255, 255, 0.88);
-      --text: #2f241b;
-      --muted: #7b6a5c;
-      --primary: #8b5e34;
-      --primary-dark: #6f4727;
-      --border: rgba(139, 94, 52, 0.18);
-      --danger: #b42318;
-      --success: #137333;
-      --shadow: 0 22px 60px rgba(58, 35, 18, 0.16);
-      --radius: 24px;
+      --bg-1: #eaf1ff;
+      --bg-2: #f7f1ea;
+      --text: #101827;
+      --muted: #667085;
+      --line: rgba(16, 24, 39, 0.12);
+      --card: rgba(255, 255, 255, 0.90);
+      --card-strong: rgba(255, 255, 255, 0.98);
+      --input: rgba(255, 255, 255, 0.98);
+      --blue: #0066ff;
+      --blue-dark: #004ec2;
+      --purple: #6d28d9;
+      --green: #16a34a;
+      --red: #dc2626;
+      --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
+      --radius-xl: 28px;
     }
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -35,271 +45,256 @@
       font-family: "Tajawal", Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top right, rgba(139, 94, 52, 0.22), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(111, 71, 39, 0.18), transparent 35%),
-        linear-gradient(135deg, #f7f2ea 0%, #eee3d4 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .page {
-      width: 100%;
-      max-width: 1100px;
+        radial-gradient(circle at 10% 12%, rgba(0, 102, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(109, 40, 217, 0.20), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), #ffffff 52%, var(--bg-2));
+      background-attachment: fixed;
+      overflow-x: hidden;
       display: grid;
-      grid-template-columns: 1fr 430px;
-      gap: 28px;
-      align-items: center;
-    }
-
-    .intro {
-      padding: 24px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid var(--border);
-      color: var(--primary-dark);
-      font-weight: 700;
-      margin-bottom: 22px;
-    }
-
-    .intro h1 {
-      margin: 0 0 16px;
-      font-size: clamp(32px, 5vw, 56px);
-      line-height: 1.15;
-      letter-spacing: -0.5px;
-      color: #2b1d13;
-    }
-
-    .intro p {
-      max-width: 620px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 19px;
-      line-height: 1.9;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 34px;
-      max-width: 650px;
-    }
-
-    .feature {
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-      min-height: 92px;
-    }
-
-    .feature strong {
-      display: block;
-      font-size: 16px;
-      margin-bottom: 6px;
-      color: #3d2b1f;
-    }
-
-    .feature span {
-      display: block;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
+      place-items: center;
+      padding: 22px;
     }
 
     .login-card {
+      width: min(440px, 100%);
+      padding: 24px;
+      border-radius: var(--radius-xl);
       background: var(--card);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.75);
-      border-radius: var(--radius);
+      border: 1px solid rgba(16,24,39,0.10);
       box-shadow: var(--shadow);
-      padding: 30px;
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
     }
 
-    .logo {
-      width: 68px;
-      height: 68px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
+    .login-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(16,24,39,0.10);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 19px;
       display: grid;
       place-items: center;
-      font-size: 30px;
-      font-weight: 800;
-      margin-bottom: 18px;
-      box-shadow: 0 12px 28px rgba(139, 94, 52, 0.28);
+      overflow: hidden;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(16,24,39,0.08);
+      flex-shrink: 0;
     }
 
-    .login-card h2 {
-      margin: 0;
+    .logo-box img {
+      width: 86%;
+      height: 86%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-title {
+      min-width: 0;
+      text-align: start;
+    }
+
+    .brand-title strong {
+      display: block;
+      font-size: 21px;
+      font-weight: 900;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .language-toggle {
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 0;
+      min-width: 44px;
+      height: 42px;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .form-title {
+      margin: 0 0 20px;
       font-size: 28px;
-      color: #2b1d13;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.4px;
+      text-align: start;
     }
 
-    .login-card .subtitle {
-      margin: 8px 0 24px;
-      color: var(--muted);
-      line-height: 1.7;
+    .form {
+      display: grid;
+      gap: 14px;
     }
 
     .field {
-      margin-bottom: 16px;
+      display: grid;
+      gap: 8px;
     }
 
-    .field label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #3d2b1f;
-    }
-
-    .input-wrap {
-      position: relative;
+    label {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+      text-align: start;
     }
 
     input {
       width: 100%;
-      height: 52px;
-      border: 1px solid var(--border);
+      min-height: 54px;
+      border: 1px solid rgba(16,24,39,0.18);
       border-radius: 16px;
-      background: #fff;
       padding: 0 14px;
       font-family: inherit;
-      font-size: 16px;
+      font-size: 15px;
+      background: var(--input);
       color: var(--text);
       outline: none;
+      box-shadow: 0 2px 0 rgba(16,24,39,0.03);
       transition: 0.18s ease;
     }
 
+    input::placeholder {
+      color: #98a2b3;
+    }
+
     input:focus {
-      border-color: rgba(139, 94, 52, 0.65);
-      box-shadow: 0 0 0 4px rgba(139, 94, 52, 0.11);
+      border-color: rgba(0, 102, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.13);
+      background: #fff;
     }
 
-    .password-input {
-      padding-left: 52px;
+    .password-wrap {
+      position: relative;
     }
 
-    .show-pass {
+    .password-wrap input {
+      padding-inline-end: 52px;
+    }
+
+    .toggle-password {
       position: absolute;
-      left: 8px;
+      inset-inline-end: 8px;
       top: 50%;
       transform: translateY(-50%);
       width: 40px;
       height: 40px;
       border: 0;
-      background: transparent;
-      color: var(--primary-dark);
-      cursor: pointer;
-      border-radius: 12px;
+      border-radius: 13px;
+      background: rgba(0, 102, 255, 0.08);
+      color: var(--blue-dark);
       font-family: inherit;
-      font-weight: 700;
-    }
-
-    .show-pass:hover {
-      background: rgba(139, 94, 52, 0.08);
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin: 4px 0 18px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .remember {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      font-weight: 900;
       cursor: pointer;
-      user-select: none;
+      display: grid;
+      place-items: center;
     }
 
-    .remember input {
-      width: 17px;
-      height: 17px;
-      accent-color: var(--primary);
-    }
-
-    .login-btn {
+    .btn {
       width: 100%;
-      height: 54px;
+      min-height: 54px;
       border: 0;
-      border-radius: 17px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
+      border-radius: 16px;
+      padding: 0 22px;
       font-family: inherit;
-      font-weight: 800;
-      font-size: 17px;
+      font-size: 16px;
+      font-weight: 900;
       cursor: pointer;
       transition: 0.18s ease;
-      box-shadow: 0 14px 28px rgba(111, 71, 39, 0.24);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      margin-top: 6px;
     }
 
-    .login-btn:hover {
+    .btn-primary {
+      background: linear-gradient(145deg, #0066ff, #5b21b6);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(0, 102, 255, 0.22);
+    }
+
+    .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 18px 34px rgba(111, 71, 39, 0.30);
+      box-shadow: 0 18px 36px rgba(0, 102, 255, 0.27);
     }
 
-    .login-btn:disabled {
-      opacity: 0.65;
+    .btn:disabled {
+      opacity: 0.68;
       cursor: not-allowed;
       transform: none;
     }
 
+    .mini-spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255,255,255,0.45);
+      border-top-color: #fff;
+      border-radius: 50%;
+      display: inline-block;
+      animation: spin 0.75s linear infinite;
+    }
+
     .message {
       display: none;
-      margin-top: 16px;
-      padding: 13px 14px;
-      border-radius: 14px;
+      position: fixed;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      min-width: min(520px, calc(100vw - 28px));
+      max-width: calc(100vw - 28px);
+      padding: 14px 18px;
+      border-radius: 18px;
       font-size: 15px;
-      line-height: 1.6;
+      font-weight: 900;
+      line-height: 1.7;
+      border: 1px solid transparent;
+      box-shadow: 0 18px 48px rgba(16, 24, 39, 0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      text-align: center;
     }
 
     .message.error {
       display: block;
-      color: var(--danger);
-      background: rgba(180, 35, 24, 0.08);
-      border: 1px solid rgba(180, 35, 24, 0.16);
+      color: #991b1b;
+      background: rgba(254, 242, 242, 0.96);
+      border-color: #fecaca;
     }
 
     .message.success {
       display: block;
-      color: var(--success);
-      background: rgba(19, 115, 51, 0.08);
-      border: 1px solid rgba(19, 115, 51, 0.16);
+      color: #166534;
+      background: rgba(240, 253, 244, 0.96);
+      border-color: #bbf7d0;
     }
 
-    .footer-note {
-      margin-top: 20px;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    .loader {
-      width: 18px;
-      height: 18px;
-      border: 3px solid rgba(255, 255, 255, 0.45);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 8px;
+    .message.warning {
+      display: block;
+      color: #9a3412;
+      background: rgba(255, 247, 237, 0.96);
+      border-color: #fed7aa;
     }
 
     @keyframes spin {
@@ -308,295 +303,291 @@
       }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 520px) {
       body {
-        align-items: flex-start;
-      }
-
-      .page {
-        grid-template-columns: 1fr;
-        max-width: 520px;
-      }
-
-      .intro {
-        padding: 10px 4px 0;
-      }
-
-      .intro h1 {
-        font-size: 34px;
-      }
-
-      .intro p {
-        font-size: 16px;
-      }
-
-      .features {
-        grid-template-columns: 1fr;
-        margin-top: 20px;
+        padding: 14px;
       }
 
       .login-card {
-        padding: 24px;
+        padding: 18px;
+        border-radius: 24px;
+      }
+
+      .logo-box {
+        width: 50px;
+        height: 50px;
+      }
+
+      .brand-title strong {
+        font-size: 19px;
+      }
+
+      .form-title {
+        font-size: 25px;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page">
-    <section class="intro">
-      <div class="badge">نظام إدارة الإنتاج اليومي</div>
+  <div id="messageBox" class="message"></div>
 
-      <h1>متابعة إنتاج العمال وتقييم الأداء بسهولة</h1>
-
-      <p>
-        منصة داخلية لإدخال الإنتاج اليومي، توثيق الهدر والخلل، تقييم العمال،
-        ومتابعة الأداء حسب الشفت والعامل والمكينة والمنتج.
-      </p>
-
-      <div class="features">
-        <div class="feature">
-          <strong>إنتاج يومي</strong>
-          <span>تسجيل الإنتاج حسب العامل والشفت والمكينة.</span>
+  <main class="login-card">
+    <div class="login-head">
+      <div class="brand">
+        <div class="logo-box">
+          <img src="assets/img/logo.png" alt="NATAC Logo">
         </div>
-
-        <div class="feature">
-          <strong>تقييم المشرف</strong>
-          <span>تقييم من 1 إلى 10 حسب عناصر الأداء.</span>
-        </div>
-
-        <div class="feature">
-          <strong>صلاحيات منفصلة</strong>
-          <span>مدير النظام والمشرف بصلاحيات مختلفة.</span>
+        <div class="brand-title">
+          <strong id="factoryName">ناتاك</strong>
         </div>
       </div>
-    </section>
 
-    <section class="login-card">
-      <div class="logo">P</div>
+      <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
+    </div>
 
-      <h2>تسجيل الدخول</h2>
-      <p class="subtitle">
-        أدخل بيانات الدخول للوصول إلى نظام الإنتاج.
-      </p>
+    <h1 class="form-title" id="loginTitle">تسجيل الدخول</h1>
 
-      <form id="loginForm" autocomplete="on">
-        <div class="field">
-          <label for="username">اسم المستخدم</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="مثال: supervisor1"
-            autocomplete="username"
-            required
-          />
-        </div>
-
-        <div class="field">
-          <label for="password">كلمة المرور</label>
-          <div class="input-wrap">
-            <input
-              id="password"
-              name="password"
-              class="password-input"
-              type="password"
-              placeholder="أدخل كلمة المرور"
-              autocomplete="current-password"
-              required
-            />
-            <button type="button" class="show-pass" id="showPassBtn">عرض</button>
-          </div>
-        </div>
-
-        <div class="row">
-          <label class="remember">
-            <input id="rememberMe" type="checkbox" />
-            <span>تذكرني</span>
-          </label>
-        </div>
-
-        <button id="loginBtn" class="login-btn" type="submit">
-          دخول
-        </button>
-
-        <div id="messageBox" class="message"></div>
-      </form>
-
-      <div class="footer-note">
-        يتم التحقق من الصلاحيات من خلال Google Apps Script و Google Sheets.
+    <form class="form" id="loginForm" novalidate>
+      <div class="field">
+        <label for="username" id="usernameLabel">اسم المستخدم</label>
+        <input id="username" name="username" type="text" autocomplete="username" />
       </div>
-    </section>
+
+      <div class="field">
+        <label for="password" id="passwordLabel">كلمة المرور</label>
+        <div class="password-wrap">
+          <input id="password" name="password" type="password" autocomplete="current-password" />
+          <button id="togglePasswordBtn" class="toggle-password" type="button">👁</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" type="submit" id="loginBtn">دخول</button>
+    </form>
   </main>
 
   <script>
-    /*
-      ضع هنا رابط تطبيق Apps Script بعد النشر كـ Web App.
-      مثال:
-      const API_URL = "https://script.google.com/macros/s/XXXXXXXXXXXX/exec";
-    */
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
+    const SESSION_KEY = "factoryUserSession";
+    const LANGUAGE_KEY = "factoryLanguage";
 
+    const i18n = {
+      ar: {
+        htmlLang: "ar",
+        dir: "rtl",
+        pageTitle: "تسجيل الدخول | ناتاك",
+        languageButton: "EN",
+        factoryName: "ناتاك",
+        loginTitle: "تسجيل الدخول",
+        username: "اسم المستخدم",
+        password: "كلمة المرور",
+        login: "دخول",
+        loggingIn: "جاري الدخول...",
+        missingFields: "يرجى إدخال اسم المستخدم وكلمة المرور",
+        loginSuccess: "تم تسجيل الدخول بنجاح",
+        serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
+        sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى"
+      },
+      en: {
+        htmlLang: "en",
+        dir: "ltr",
+        pageTitle: "Login | NATAC",
+        languageButton: "عربي",
+        factoryName: "NATAC",
+        loginTitle: "Login",
+        username: "Username",
+        password: "Password",
+        login: "Login",
+        loggingIn: "Signing in...",
+        missingFields: "Please enter username and password",
+        loginSuccess: "Signed in successfully",
+        serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
+        sessionExpired: "Session expired. Please sign in again"
+      }
+    };
+
+    let currentLang = localStorage.getItem(LANGUAGE_KEY) || "ar";
+    let messageTimer = null;
+
+    const messageBox = document.getElementById("messageBox");
     const loginForm = document.getElementById("loginForm");
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
-    const rememberMe = document.getElementById("rememberMe");
     const loginBtn = document.getElementById("loginBtn");
-    const messageBox = document.getElementById("messageBox");
-    const showPassBtn = document.getElementById("showPassBtn");
+    const languageToggleBtn = document.getElementById("languageToggleBtn");
+    const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+
+    const factoryName = document.getElementById("factoryName");
+    const loginTitle = document.getElementById("loginTitle");
+    const usernameLabel = document.getElementById("usernameLabel");
+    const passwordLabel = document.getElementById("passwordLabel");
 
     document.addEventListener("DOMContentLoaded", () => {
-      const savedUsername = localStorage.getItem("savedUsername");
-      const session = localStorage.getItem("factoryUserSession");
+      applyLanguage(currentLang);
+      checkExistingSession();
+      bindEvents();
+    });
 
-      if (savedUsername) {
-        usernameInput.value = savedUsername;
-        rememberMe.checked = true;
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem(LANGUAGE_KEY, lang);
+
+      document.documentElement.lang = i18n[lang].htmlLang;
+      document.documentElement.dir = i18n[lang].dir;
+      document.title = i18n[lang].pageTitle;
+
+      factoryName.textContent = i18n[lang].factoryName;
+      loginTitle.textContent = i18n[lang].loginTitle;
+      usernameLabel.textContent = i18n[lang].username;
+      passwordLabel.textContent = i18n[lang].password;
+      loginBtn.textContent = i18n[lang].login;
+      languageToggleBtn.textContent = i18n[lang].languageButton;
+    }
+
+    function bindEvents() {
+      languageToggleBtn.addEventListener("click", () => {
+        const nextLang = currentLang === "ar" ? "en" : "ar";
+        applyLanguage(nextLang);
+      });
+
+      togglePasswordBtn.addEventListener("click", () => {
+        passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+      });
+
+      loginForm.addEventListener("submit", handleLogin);
+    }
+
+    async function checkExistingSession() {
+      const session = getSession();
+
+      if (!session || !session.token) {
+        return;
       }
 
-      if (session) {
-        try {
-          const user = JSON.parse(session);
-          if (user && user.role) {
-            redirectByRole(user.role);
-          }
-        } catch (error) {
-          localStorage.removeItem("factoryUserSession");
+      try {
+        const result = await apiPost({
+          action: "checkSession",
+          token: session.token
+        });
+
+        if (result && result.success) {
+          const user = result.user || session.user || {};
+          saveSession(session.token, user);
+          window.location.href = "dashboard.html";
+        } else {
+          localStorage.removeItem(SESSION_KEY);
         }
+
+      } catch (error) {
+        console.warn(error);
       }
-    });
+    }
 
-    showPassBtn.addEventListener("click", () => {
-      const isPassword = passwordInput.type === "password";
-      passwordInput.type = isPassword ? "text" : "password";
-      showPassBtn.textContent = isPassword ? "إخفاء" : "عرض";
-    });
-
-    loginForm.addEventListener("submit", async (event) => {
+    async function handleLogin(event) {
       event.preventDefault();
+      clearMessage();
 
       const username = usernameInput.value.trim();
       const password = passwordInput.value.trim();
 
       if (!username || !password) {
-        showMessage("يرجى إدخال اسم المستخدم وكلمة المرور.", "error");
-        return;
-      }
-
-      if (!API_URL || API_URL.includes("ضع_رابط")) {
-        showMessage("يرجى وضع رابط Apps Script داخل متغير API_URL أولاً.", "error");
+        showMessage(i18n[currentLang].missingFields, "error");
         return;
       }
 
       setLoading(true);
-      clearMessage();
 
       try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify({
-            action: "login",
-            username: username,
-            password: password
-          })
+        const result = await apiPost({
+          action: "login",
+          username: username,
+          password: password
         });
 
-        if (!response.ok) {
-          throw new Error("HTTP " + response.status);
-        }
-
-        const result = await response.json();
-
-        if (!result.success) {
-          showMessage(result.message || "بيانات الدخول غير صحيحة.", "error");
+        if (!result || !result.success) {
           setLoading(false);
+          showMessage((result && result.message) || i18n[currentLang].serverError, "error");
           return;
         }
 
-        const user = normalizeUser(result.user);
-
-        if (!user.userId || !user.role) {
-          showMessage("تم تسجيل الدخول ولكن بيانات المستخدم غير مكتملة.", "error");
-          setLoading(false);
-          return;
-        }
-
-        const sessionData = {
-          userId: user.userId,
-          fullName: user.fullName,
-          username: user.username,
-          role: user.role,
-          token: result.token,
-          loginAt: new Date().toISOString()
-        };
-
-        localStorage.setItem("factoryUserSession", JSON.stringify(sessionData));
-
-        if (rememberMe.checked) {
-          localStorage.setItem("savedUsername", username);
-        } else {
-          localStorage.removeItem("savedUsername");
-        }
-
-        showMessage("تم تسجيل الدخول بنجاح، جاري تحويلك...", "success");
+        saveSession(result.token, result.user || {});
+        showMessage(result.message || i18n[currentLang].loginSuccess, "success");
 
         setTimeout(() => {
-          redirectByRole(user.role);
-        }, 500);
+          window.location.href = "dashboard.html";
+        }, 450);
 
       } catch (error) {
         console.error(error);
-        showMessage("تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.", "error");
         setLoading(false);
+        showMessage(i18n[currentLang].serverError, "error");
       }
-    });
-
-    function normalizeUser(user) {
-      user = user || {};
-
-      return {
-        userId: user.UserID || user.userId || user.id || "",
-        fullName: user.FullName || user.fullName || user.name || "",
-        username: user.Username || user.username || "",
-        role: user.Role || user.role || ""
-      };
     }
 
-    function redirectByRole(role) {
-      const cleanRole = String(role).toLowerCase();
+    async function apiPost(payload) {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
 
-      if (cleanRole === "admin") {
-        window.location.href = "dashboard.html";
-        return;
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
       }
 
-      if (cleanRole === "supervisor") {
-        window.location.href = "production.html";
-        return;
-      }
+      return await response.json();
+    }
 
-      window.location.href = "dashboard.html";
+    function saveSession(token, user) {
+      const session = {
+        token: token,
+        user: user,
+        UserID: user.UserID || "",
+        FullName: user.FullName || "",
+        Username: user.Username || "",
+        Role: user.Role || "",
+        Status: user.Status || ""
+      };
+
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    }
+
+    function getSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (error) {
+        localStorage.removeItem(SESSION_KEY);
+        return null;
+      }
     }
 
     function setLoading(isLoading) {
       loginBtn.disabled = isLoading;
 
       if (isLoading) {
-        loginBtn.innerHTML = '<span class="loader"></span> جاري التحقق...';
+        loginBtn.innerHTML = '<span class="mini-spinner"></span>' + i18n[currentLang].loggingIn;
       } else {
-        loginBtn.textContent = "دخول";
+        loginBtn.textContent = i18n[currentLang].login;
       }
     }
 
     function showMessage(text, type) {
+      clearTimeout(messageTimer);
+
       messageBox.textContent = text;
       messageBox.className = "message " + type;
+
+      messageTimer = setTimeout(() => {
+        clearMessage();
+      }, 3000);
     }
 
     function clearMessage() {
+      clearTimeout(messageTimer);
       messageBox.textContent = "";
       messageBox.className = "message";
     }
