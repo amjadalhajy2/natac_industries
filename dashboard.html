@@ -20,13 +20,11 @@
       --line: rgba(16, 24, 39, 0.12);
       --card: rgba(255, 255, 255, 0.88);
       --card-strong: rgba(255, 255, 255, 0.98);
-      --input: rgba(255, 255, 255, 0.98);
       --blue: #0066ff;
       --blue-dark: #004ec2;
       --purple: #6d28d9;
       --green: #16a34a;
       --red: #dc2626;
-      --orange: #ea580c;
       --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
       --topbar-height: 78px;
       --sidebar-width: 310px;
@@ -53,11 +51,6 @@
         linear-gradient(135deg, var(--bg-1), #ffffff 52%, var(--bg-2));
       background-attachment: fixed;
       overflow-x: hidden;
-      direction: inherit;
-    }
-
-    html[dir="ltr"] body {
-      direction: ltr;
     }
 
     .floating-topbar {
@@ -149,7 +142,9 @@
       display: block;
     }
 
-    .factory-info {
+    .factory-info,
+    .user-info,
+    .sidebar-title {
       min-width: 0;
       text-align: start;
     }
@@ -192,11 +187,6 @@
       font-weight: 900;
       flex-shrink: 0;
       box-shadow: 0 8px 18px rgba(0,102,255,0.20);
-    }
-
-    .user-info {
-      min-width: 0;
-      text-align: start;
     }
 
     .user-info strong,
@@ -280,8 +270,6 @@
       display: flex;
       align-items: center;
       gap: 11px;
-      min-width: 0;
-      text-align: start;
     }
 
     .sidebar-title strong {
@@ -346,14 +334,8 @@
     }
 
     .nav-icon {
-      width: auto;
-      height: auto;
-      display: inline-grid;
-      place-items: center;
-      background: transparent;
-      box-shadow: none;
-      flex-shrink: 0;
       font-size: 20px;
+      flex-shrink: 0;
     }
 
     .main {
@@ -381,12 +363,6 @@
       z-index: 1;
     }
 
-    .hero-panel {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.94), rgba(255,255,255,0.78)),
-        radial-gradient(circle at 90% 10%, rgba(0,102,255,0.20), transparent 35%);
-    }
-
     .page-title {
       margin-bottom: 20px;
       padding-bottom: 16px;
@@ -396,6 +372,7 @@
       justify-content: space-between;
       gap: 14px;
       flex-wrap: wrap;
+      text-align: start;
     }
 
     .page-title h1 {
@@ -459,6 +436,7 @@
       border: 1px solid rgba(16,24,39,0.10);
       padding: 10px 13px;
       border-radius: 999px;
+      text-align: start;
     }
 
     .stats-grid {
@@ -479,6 +457,7 @@
       gap: 14px;
       overflow: hidden;
       position: relative;
+      text-align: start;
     }
 
     .stat-card::after {
@@ -551,6 +530,7 @@
       background: var(--card-strong);
       border: 1px solid rgba(16,24,39,0.10);
       box-shadow: 0 14px 34px rgba(16,24,39,0.08);
+      text-align: start;
     }
 
     .rank-head {
@@ -671,6 +651,7 @@
       justify-content: space-between;
       gap: 12px;
       transition: 0.18s ease;
+      text-align: start;
     }
 
     .quick-link:hover {
@@ -951,12 +932,12 @@
 
     <div id="messageBox" class="message"></div>
 
-    <section class="panel hero-panel">
+    <section class="panel">
       <div class="panel-content">
         <div class="page-title">
           <div>
             <h1 data-i18n="dashboard">لوحة التحكم</h1>
-            <p id="dashboardSubtitle" data-i18n="dashboardSubtitle">متابعة أداء الإنتاج والهدر والعمال خلال الأسبوع السابق.</p>
+            <p data-i18n="dashboardSubtitle">متابعة أداء الإنتاج والهدر والعمال خلال الأسبوع السابق.</p>
           </div>
 
           <div id="systemStatusPill" class="status-pill">
@@ -1067,7 +1048,7 @@
   </main>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
 
@@ -1106,16 +1087,15 @@
         quickActions: "اختصارات سريعة",
         quickActionsSubtitle: "انتقل مباشرة إلى الصفحات الأساسية للنظام.",
         emptyData: "لا توجد بيانات للعرض.",
-        score: "النقاط",
-        totalQuantity: "الكمية",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         apiMissing: "يرجى وضع رابط Apps Script داخل متغير API_URL.",
-        tokenMissing: "لم يتم العثور على رمز الجلسة token. تأكد أن صفحة تسجيل الدخول تحفظ token داخل localStorage.",
+        tokenMissing: "لم يتم العثور على رمز الجلسة token.",
         loadFailed: "تعذر تحميل بيانات لوحة التحكم.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         from: "من",
-        to: "إلى"
+        to: "إلى",
+        qty: "الكمية"
       },
       en: {
         htmlLang: "en",
@@ -1151,16 +1131,15 @@
         quickActions: "Quick Actions",
         quickActionsSubtitle: "Go directly to the main system pages.",
         emptyData: "No data to display.",
-        score: "Score",
-        totalQuantity: "Quantity",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         apiMissing: "Please set the Apps Script URL inside API_URL.",
-        tokenMissing: "Session token not found. Make sure login page stores token in localStorage.",
+        tokenMissing: "Session token not found.",
         loadFailed: "Unable to load dashboard data.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         from: "From",
-        to: "To"
+        to: "To",
+        qty: "Qty"
       }
     };
 
@@ -1202,7 +1181,7 @@
       initSidebar();
       initLanguage();
       setWeekRangeLabel();
-      loadDashboardData();
+      loadDashboard();
       bindLogout();
     });
 
@@ -1299,7 +1278,7 @@
       });
     }
 
-    async function loadDashboardData() {
+    async function loadDashboard() {
       if (!API_URL) {
         hideLoading();
         setConnectionStatus(false);
@@ -1315,89 +1294,99 @@
       }
 
       try {
-        const range = getPreviousWeekRange();
-
-        const result = await apiPost({
-          action: "getDashboardData",
-          token: currentUser.token,
-          fromDate: toISODate(range.start),
-          toDate: toISODate(range.end)
+        const statsResult = await apiPost({
+          action: "getDashboardStats",
+          token: currentUser.token
         });
 
-        hideLoading();
-
-        if (!result || !result.success) {
+        if (!statsResult || !statsResult.success) {
           setConnectionStatus(false);
-          showMessage((result && result.message) || t("loadFailed"), "error");
-          renderDashboard({});
+          hideLoading();
+          showMessage((statsResult && statsResult.message) || t("loadFailed"), "error");
           return;
         }
 
+        const range = getPreviousWeekRange();
+
+        const historyResult = await apiPost({
+          action: "getProductionHistory",
+          token: currentUser.token,
+          filters: {
+            fromDate: toISODate(range.start),
+            toDate: toISODate(range.end)
+          }
+        });
+
+        hideLoading();
         setConnectionStatus(true);
-        renderDashboard(result.dashboard || result.data || result);
+
+        renderStats(statsResult.stats || {});
+        renderWeeklyFromHistory(historyResult && historyResult.success ? historyResult.records || [] : []);
 
       } catch (error) {
         console.error(error);
         hideLoading();
         setConnectionStatus(false);
         showMessage(t("serverError"), "error");
-        renderDashboard({});
+        renderStats({});
+        renderWeeklyFromHistory([]);
       }
     }
 
-    function renderDashboard(data) {
-      previousWeekProductionValue.textContent = formatNumber(
-        pickNumber(data, [
-          "previousWeekProductionQty",
-          "previousWeekProduction",
-          "totalProductionQty",
-          "totalQuantity",
-          "weeklyProduction",
-          "productionQty"
-        ])
-      );
+    function renderStats(stats) {
+      workersCountValue.textContent = formatNumber(stats.workersCount || 0);
+      productsCountValue.textContent = formatNumber(stats.productsCount || 0);
+    }
 
-      previousWeekWasteValue.textContent = formatDecimal(
-        pickNumber(data, [
-          "previousWeekWasteKg",
-          "previousWeekWaste",
-          "totalWasteKg",
-          "weeklyWaste",
-          "rawWasteKg"
-        ])
-      );
+    function renderWeeklyFromHistory(records) {
+      let totalQty = 0;
+      let totalWaste = 0;
 
-      workersCountValue.textContent = formatNumber(
-        pickNumber(data, [
-          "activeWorkersCount",
-          "workersCount",
-          "totalWorkers",
-          "activeWorkers"
-        ])
-      );
+      const productionWasteMap = {};
+      const workerTotals = {};
 
-      productsCountValue.textContent = formatNumber(
-        pickNumber(data, [
-          "activeProductsCount",
-          "productsCount",
-          "totalProducts",
-          "activeProducts"
-        ])
-      );
+      records.forEach(row => {
+        const productionId = String(row.ProductionID || "");
+        const qty = Number(row.Quantity || 0);
+        const waste = Number(row.RawWasteKg || 0);
+        const workerId = String(row.WorkerID || "");
+        const workerName = String(row.WorkerName || workerId || "---");
 
-      renderRankList(bestWorkersList, pickArray(data, [
-        "bestWorkers",
-        "topWorkers",
-        "bestFiveWorkers",
-        "topFiveWorkers"
-      ]));
+        totalQty += qty;
 
-      renderRankList(worstWorkersList, pickArray(data, [
-        "worstWorkers",
-        "lowestWorkers",
-        "worstFiveWorkers",
-        "bottomFiveWorkers"
-      ]));
+        if (productionId && !productionWasteMap[productionId]) {
+          productionWasteMap[productionId] = true;
+          totalWaste += waste;
+        }
+
+        const key = workerId || workerName;
+
+        if (!workerTotals[key]) {
+          workerTotals[key] = {
+            WorkerID: workerId,
+            WorkerName: workerName,
+            totalQuantity: 0
+          };
+        }
+
+        workerTotals[key].totalQuantity += qty;
+      });
+
+      previousWeekProductionValue.textContent = formatNumber(totalQty);
+      previousWeekWasteValue.textContent = formatDecimal(totalWaste);
+
+      const rankedWorkers = Object.values(workerTotals)
+        .filter(item => item.totalQuantity > 0)
+        .sort((a, b) => b.totalQuantity - a.totalQuantity);
+
+      renderRankList(bestWorkersList, rankedWorkers.slice(0, 5));
+
+      const worst = rankedWorkers
+        .slice()
+        .reverse()
+        .slice(0, 5);
+
+      renderRankList(worstWorkersList, worst);
     }
 
     function renderRankList(container, items) {
@@ -1408,35 +1397,16 @@
         return;
       }
 
-      items.slice(0, 5).forEach((item, index) => {
-        const name =
-          item.WorkerName ||
-          item.workerName ||
-          item.name ||
-          item.FullName ||
-          item.fullName ||
-          item.WorkerID ||
-          item.workerId ||
-          "---";
-
-        const score =
-          item.Score ??
-          item.score ??
-          item.totalScore ??
-          item.rating ??
-          item.quantity ??
-          item.totalQuantity ??
-          "";
-
+      items.forEach((item, index) => {
         const row = document.createElement("div");
         row.className = "rank-item";
 
         row.innerHTML = `
           <div class="rank-person">
             <div class="rank-number">${index + 1}</div>
-            <div class="rank-name">${escapeHtml(name)}</div>
+            <div class="rank-name">${escapeHtml(item.WorkerName || "---")}</div>
           </div>
-          <div class="rank-score">${score !== "" ? escapeHtml(formatRankScore(score)) : ""}</div>
+          <div class="rank-score">${t("qty")}: ${formatNumber(item.totalQuantity || 0)}</div>
         `;
 
         container.appendChild(row);
@@ -1482,28 +1452,6 @@
 
     function formatDisplayDate(date) {
       return toISODate(date);
-    }
-
-    function pickNumber(data, keys) {
-      for (let i = 0; i < keys.length; i++) {
-        const value = data[keys[i]];
-        if (value !== undefined && value !== null && value !== "") {
-          const number = Number(String(value).replace(",", "."));
-          return isNaN(number) ? 0 : number;
-        }
-      }
-
-      return 0;
-    }
-
-    function pickArray(data, keys) {
-      for (let i = 0; i < keys.length; i++) {
-        if (Array.isArray(data[keys[i]])) {
-          return data[keys[i]];
-        }
-      }
-
-      return [];
     }
 
     async function apiPost(payload) {
@@ -1565,6 +1513,7 @@
       languageToggleBtn.addEventListener("click", () => {
         const nextLang = currentLang === "ar" ? "en" : "ar";
         applyLanguage(nextLang);
+        loadDashboard();
       });
     }
 
@@ -1621,16 +1570,6 @@
       return number.toLocaleString(currentLang === "ar" ? "ar-OM" : "en-US", {
         minimumFractionDigits: 0,
         maximumFractionDigits: 3
-      });
-    }
-
-    function formatRankScore(value) {
-      const number = Number(String(value).replace(",", "."));
-      if (isNaN(number)) return value;
-
-      return number.toLocaleString(currentLang === "ar" ? "ar-OM" : "en-US", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
       });
     }
 
