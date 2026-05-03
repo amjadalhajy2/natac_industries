@@ -364,9 +364,9 @@
     }
 
     .page-title {
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(16,24,39,0.10);
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -381,14 +381,6 @@
       font-weight: 900;
       letter-spacing: -0.5px;
       color: var(--text);
-    }
-
-    .page-title p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.7;
-      font-weight: 700;
     }
 
     .status-pill {
@@ -425,20 +417,6 @@
       box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.10);
     }
 
-    .week-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-weight: 900;
-      font-size: 14px;
-      background: rgba(255,255,255,0.80);
-      border: 1px solid rgba(16,24,39,0.10);
-      padding: 10px 13px;
-      border-radius: 999px;
-      text-align: start;
-    }
-
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -458,17 +436,6 @@
       overflow: hidden;
       position: relative;
       text-align: start;
-    }
-
-    .stat-card::after {
-      content: "";
-      position: absolute;
-      width: 110px;
-      height: 110px;
-      border-radius: 999px;
-      inset-inline-end: -42px;
-      top: -42px;
-      background: rgba(0,102,255,0.09);
     }
 
     .stat-head {
@@ -937,18 +904,12 @@
         <div class="page-title">
           <div>
             <h1 data-i18n="dashboard">لوحة التحكم</h1>
-            <p data-i18n="dashboardSubtitle">متابعة أداء الإنتاج والهدر والعمال خلال الأسبوع السابق.</p>
           </div>
 
           <div id="systemStatusPill" class="status-pill">
             <span class="status-dot"></span>
             <span id="systemStatusText" data-i18n="connectedToSheets">متصل ببيانات Google Sheets</span>
           </div>
-        </div>
-
-        <div class="week-label">
-          <span>📅</span>
-          <span id="weekRangeLabel">---</span>
         </div>
       </div>
     </section>
@@ -1015,10 +976,9 @@
 
     <section class="panel">
       <div class="panel-content">
-        <div class="page-title">
+        <div class="page-title" style="margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid rgba(16,24,39,0.10);">
           <div>
             <h1 style="font-size: 24px;" data-i18n="quickActions">اختصارات سريعة</h1>
-            <p data-i18n="quickActionsSubtitle">انتقل مباشرة إلى الصفحات الأساسية للنظام.</p>
           </div>
         </div>
 
@@ -1063,7 +1023,6 @@
         mainMenu: "القائمة الرئيسية",
         productionSystem: "نظام الإنتاج",
         dashboard: "لوحة التحكم",
-        dashboardSubtitle: "متابعة أداء الإنتاج والهدر والعمال خلال الأسبوع السابق.",
         productionEntry: "إدخال الإنتاج",
         supervisorEvaluation: "تقييم المشرف",
         productionHistory: "سجل الإنتاج",
@@ -1085,7 +1044,6 @@
         bestFiveWorkers: "أفضل 5 موظفين الأسبوع السابق",
         worstFiveWorkers: "أقل 5 موظفين أداءً الأسبوع السابق",
         quickActions: "اختصارات سريعة",
-        quickActionsSubtitle: "انتقل مباشرة إلى الصفحات الأساسية للنظام.",
         emptyData: "لا توجد بيانات للعرض.",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
@@ -1093,8 +1051,6 @@
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
         loadFailed: "تعذر تحميل بيانات لوحة التحكم.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
-        from: "من",
-        to: "إلى",
         qty: "الكمية"
       },
       en: {
@@ -1107,7 +1063,6 @@
         mainMenu: "Main Menu",
         productionSystem: "Production System",
         dashboard: "Dashboard",
-        dashboardSubtitle: "Monitor production, waste, and worker performance for the previous week.",
         productionEntry: "Production Entry",
         supervisorEvaluation: "Supervisor Evaluation",
         productionHistory: "Production History",
@@ -1129,7 +1084,6 @@
         bestFiveWorkers: "Best 5 Workers Last Week",
         worstFiveWorkers: "Lowest 5 Workers Last Week",
         quickActions: "Quick Actions",
-        quickActionsSubtitle: "Go directly to the main system pages.",
         emptyData: "No data to display.",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
@@ -1137,8 +1091,6 @@
         tokenMissing: "Session token not found.",
         loadFailed: "Unable to load dashboard data.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
-        from: "From",
-        to: "To",
         qty: "Qty"
       }
     };
@@ -1166,7 +1118,6 @@
 
     const systemStatusPill = document.getElementById("systemStatusPill");
     const systemStatusText = document.getElementById("systemStatusText");
-    const weekRangeLabel = document.getElementById("weekRangeLabel");
 
     const previousWeekProductionValue = document.getElementById("previousWeekProductionValue");
     const previousWeekWasteValue = document.getElementById("previousWeekWasteValue");
@@ -1180,7 +1131,6 @@
       protectPage();
       initSidebar();
       initLanguage();
-      setWeekRangeLabel();
       loadDashboard();
       bindLogout();
     });
@@ -1226,8 +1176,6 @@
         renderUser(currentUser);
         applyRoleUI(currentUser.Role || currentUser.role);
       }
-
-      setWeekRangeLabel();
     }
 
     function protectPage() {
@@ -1418,11 +1366,6 @@
       systemStatusText.textContent = isConnected ? t("connectedToSheets") : t("connectionError");
     }
 
-    function setWeekRangeLabel() {
-      const range = getPreviousWeekRange();
-      weekRangeLabel.textContent = `${t("from")} ${formatDisplayDate(range.start)} ${t("to")} ${formatDisplayDate(range.end)}`;
-    }
-
     function getPreviousWeekRange() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -1448,10 +1391,6 @@
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
-    }
-
-    function formatDisplayDate(date) {
-      return toISODate(date);
     }
 
     async function apiPost(payload) {
@@ -1560,14 +1499,16 @@
 
     function formatNumber(value) {
       const number = Number(value || 0);
-      return number.toLocaleString(currentLang === "ar" ? "ar-OM" : "en-US", {
+
+      return number.toLocaleString("en-US", {
         maximumFractionDigits: 0
       });
     }
 
     function formatDecimal(value) {
       const number = Number(value || 0);
-      return number.toLocaleString(currentLang === "ar" ? "ar-OM" : "en-US", {
+
+      return number.toLocaleString("en-US", {
         minimumFractionDigits: 0,
         maximumFractionDigits: 3
       });
