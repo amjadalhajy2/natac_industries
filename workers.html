@@ -428,12 +428,6 @@
       box-shadow: 0 8px 20px rgba(16,24,39,0.06);
     }
 
-    .btn-danger {
-      background: rgba(220, 38, 38, 0.10);
-      color: var(--red);
-      border: 1px solid rgba(220, 38, 38, 0.22);
-    }
-
     .btn-small {
       min-height: 38px;
       border-radius: 12px;
@@ -447,11 +441,12 @@
       transform: none;
     }
 
-    .search-row {
+    .filters-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) 240px;
       gap: 12px;
       margin-bottom: 16px;
+      align-items: end;
     }
 
     .search-box {
@@ -522,7 +517,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 760px;
+      min-width: 720px;
       background: #fff;
     }
 
@@ -784,6 +779,10 @@
         font-size: 26px;
       }
 
+      .filters-row {
+        grid-template-columns: 1fr;
+      }
+
       .actions,
       .table-actions {
         display: grid;
@@ -927,10 +926,18 @@
           </div>
         </div>
 
-        <div class="search-row">
+        <div class="filters-row">
           <div class="search-box">
             <span class="search-icon">🔎</span>
             <input type="search" id="workersSearchInput" autocomplete="off" placeholder="بحث في قائمة العمال">
+          </div>
+
+          <div class="field">
+            <select id="statusFilterInput">
+              <option value="all" data-i18n="allStatuses">كل الحالات</option>
+              <option value="Active" data-i18n="active">نشط</option>
+              <option value="Inactive" data-i18n="inactive">غير نشط</option>
+            </select>
           </div>
         </div>
 
@@ -1039,6 +1046,7 @@
         workerId: "رقم العامل",
         workerName: "اسم العامل",
         status: "الحالة",
+        allStatuses: "كل الحالات",
         active: "نشط",
         inactive: "غير نشط",
         actions: "الإجراء",
@@ -1047,8 +1055,6 @@
         edit: "تعديل",
         editWorker: "تعديل عامل",
         saveChanges: "حفظ التعديل",
-        activate: "تفعيل",
-        deactivate: "إيقاف",
         emptyData: "لا توجد بيانات للعرض.",
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
@@ -1056,10 +1062,10 @@
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل بيانات العمال.",
         nameRequired: "يرجى إدخال اسم العامل.",
+        duplicateWorkerName: "لا يمكن إضافة عامل بنفس الاسم. هذا العامل موجود مسبقًا.",
+        duplicateWorkerNameEdit: "لا يمكن حفظ التعديل لأن اسم العامل مستخدم مسبقًا لعامل آخر.",
         addSuccess: "تمت إضافة العامل بنجاح.",
         updateSuccess: "تم تحديث بيانات العامل بنجاح.",
-        confirmDeactivate: "هل تريد إيقاف هذا العامل؟",
-        confirmActivate: "هل تريد تفعيل هذا العامل؟",
         saving: "جاري الحفظ...",
         searchPlaceholder: "بحث في قائمة العمال"
       },
@@ -1085,6 +1091,7 @@
         workerId: "Worker ID",
         workerName: "Worker Name",
         status: "Status",
+        allStatuses: "All Statuses",
         active: "Active",
         inactive: "Inactive",
         actions: "Action",
@@ -1093,8 +1100,6 @@
         edit: "Edit",
         editWorker: "Edit Worker",
         saveChanges: "Save Changes",
-        activate: "Activate",
-        deactivate: "Deactivate",
         emptyData: "No data to display.",
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
@@ -1102,10 +1107,10 @@
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         loadFailed: "Unable to load workers data.",
         nameRequired: "Please enter worker name.",
+        duplicateWorkerName: "A worker with the same name already exists.",
+        duplicateWorkerNameEdit: "Cannot save changes because this name is already used by another worker.",
         addSuccess: "Worker added successfully.",
         updateSuccess: "Worker updated successfully.",
-        confirmDeactivate: "Do you want to deactivate this worker?",
-        confirmActivate: "Do you want to activate this worker?",
         saving: "Saving...",
         searchPlaceholder: "Search workers list"
       }
@@ -1143,6 +1148,7 @@
     const cancelWorkerBtn = document.getElementById("cancelWorkerBtn");
 
     const workersSearchInput = document.getElementById("workersSearchInput");
+    const statusFilterInput = document.getElementById("statusFilterInput");
     const workersTableBody = document.getElementById("workersTableBody");
 
     const editModal = document.getElementById("editModal");
@@ -1296,17 +1302,42 @@
       }
     }
 
+    function normalizeWorkerName(name) {
+      return String(name || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+    }
+
+    function workerNameExists(name, excludeWorkerId = "") {
+      const cleanName = normalizeWorkerName(name);
+
+      return workers.some(worker => {
+        const sameName = normalizeWorkerName(worker.WorkerName) === cleanName;
+        const sameId = String(worker.WorkerID || "") === String(excludeWorkerId || "");
+
+        return sameName && !sameId;
+      });
+    }
+
     function getFilteredWorkers() {
       const keyword = String(workersSearchInput.value || "").trim().toLowerCase();
-
-      if (!keyword) {
-        return workers;
-      }
+      const selectedStatus = statusFilterInput.value || "all";
 
       return workers.filter(worker => {
+        const workerStatus = normalizeStatus(worker.Status || "Active");
+
+        if (selectedStatus !== "all" && workerStatus !== selectedStatus) {
+          return false;
+        }
+
+        if (!keyword) {
+          return true;
+        }
+
         const workerId = String(worker.WorkerID || "").toLowerCase();
         const workerName = String(worker.WorkerName || "").toLowerCase();
-        const statusText = normalizeStatus(worker.Status || "Active") === "Active" ? t("active") : t("inactive");
+        const statusText = workerStatus === "Active" ? t("active") : t("inactive");
 
         return workerId.includes(keyword) ||
           workerName.includes(keyword) ||
@@ -1355,9 +1386,6 @@
                     <button class="btn btn-secondary btn-small edit-worker-btn" type="button" data-id="${escapeHtml(workerId)}">
                       ${t("edit")}
                     </button>
-                    <button class="btn ${active ? "btn-danger" : "btn-secondary"} btn-small toggle-worker-btn" type="button" data-id="${escapeHtml(workerId)}">
-                      ${active ? t("deactivate") : t("activate")}
-                    </button>
                   </div>
                 </td>
               `
@@ -1383,23 +1411,19 @@
       workerForm.addEventListener("submit", handleAddWorker);
 
       workersSearchInput.addEventListener("input", renderWorkersTable);
+      statusFilterInput.addEventListener("change", renderWorkersTable);
 
       workersTableBody.addEventListener("click", event => {
         const editBtn = event.target.closest(".edit-worker-btn");
-        const toggleBtn = event.target.closest(".toggle-worker-btn");
 
         if (editBtn) {
           openEditWorker(editBtn.dataset.id);
-          return;
-        }
-
-        if (toggleBtn) {
-          toggleWorkerStatus(toggleBtn.dataset.id);
         }
       });
 
       closeEditModalBtn.addEventListener("click", closeEditModal);
       cancelEditWorkerBtn.addEventListener("click", closeEditModal);
+
       editModal.addEventListener("click", event => {
         if (event.target === editModal) {
           closeEditModal();
@@ -1449,6 +1473,11 @@
 
       if (!workerName) {
         showMessage(t("nameRequired"), "error");
+        return;
+      }
+
+      if (workerNameExists(workerName)) {
+        showMessage(t("duplicateWorkerName"), "error");
         return;
       }
 
@@ -1515,6 +1544,11 @@
         return;
       }
 
+      if (workerNameExists(workerName, workerId)) {
+        showMessage(t("duplicateWorkerNameEdit"), "error");
+        return;
+      }
+
       setButtonLoading(updateWorkerBtn, true, t("saving"));
 
       try {
@@ -1542,44 +1576,6 @@
       } catch (error) {
         console.error(error);
         setButtonLoading(updateWorkerBtn, false, t("saveChanges"));
-        showMessage(t("serverError"), "error");
-      }
-    }
-
-    async function toggleWorkerStatus(workerId) {
-      const worker = workers.find(item => String(item.WorkerID) === String(workerId));
-
-      if (!worker) return;
-
-      const currentStatus = normalizeStatus(worker.Status || "Active");
-      const nextStatus = currentStatus === "Active" ? "Inactive" : "Active";
-      const confirmText = nextStatus === "Inactive" ? t("confirmDeactivate") : t("confirmActivate");
-
-      if (!confirm(confirmText)) {
-        return;
-      }
-
-      try {
-        const result = await apiPost({
-          action: "updateWorker",
-          token: currentUser.token,
-          worker: {
-            workerId: worker.WorkerID,
-            workerName: worker.WorkerName,
-            status: nextStatus
-          }
-        });
-
-        if (!result || !result.success) {
-          showMessage((result && result.message) || t("serverError"), "error");
-          return;
-        }
-
-        showMessage(result.message || t("updateSuccess"), "success");
-        await loadWorkers();
-
-      } catch (error) {
-        console.error(error);
         showMessage(t("serverError"), "error");
       }
     }
