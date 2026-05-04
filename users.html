@@ -1291,9 +1291,11 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwlclv2NBEPfG6Xa2ABpRHbSDYx2zGiCC7dd1ZVeZvpFyo9wvNGCSpbwwiUDAckkGkt/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzCaNtDgfhelEOmgDdX3lQr_wtPbTnyoWKaArFA1WWyB60RUBCBQi4N43S053cqk7li/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const USERS_CACHE_PREFIX = "users_page_cache_v2";
+    const USERS_CACHE_MAX_AGE_MS = 300000;
 
     const ALL_PERMISSION_KEYS = [
       "productionEntry",
@@ -1678,28 +1680,43 @@
         return;
       }
 
+      const cacheKey = getUsersCacheKey_();
+      const cached = getLocalCache_(cacheKey, USERS_CACHE_MAX_AGE_MS);
+
+      if (cached && cached.users) {
+        users = cached.users || [];
+        renderUsersTable();
+        hideLoading();
+      }
+
       try {
         const result = await apiPost({
           action: "getUsers",
           token: session.token
         });
 
-        hideLoading();
-
         if (!result || !result.success) {
-          showMessage((result && result.message) || t("loadFailed"), "error");
-          users = [];
-          renderUsersTable();
+          if (!cached) {
+            hideLoading();
+            showMessage((result && result.message) || t("loadFailed"), "error");
+            users = [];
+            renderUsersTable();
+          }
           return;
         }
 
         users = result.users || [];
+        setLocalCache_(cacheKey, result);
         renderUsersTable();
+        hideLoading();
 
       } catch (error) {
         console.error(error);
-        hideLoading();
-        showMessage(t("serverError"), "error");
+
+        if (!cached) {
+          hideLoading();
+          showMessage(t("serverError"), "error");
+        }
       }
     }
 
@@ -1944,6 +1961,7 @@
         }
 
         closeUserModal();
+        clearUsersRelatedCaches_();
         showMessage(result.message || (editingUserId ? t("updateSuccess") : t("addSuccess")), "success");
 
         await loadUsers();
@@ -2046,6 +2064,67 @@
           if (child) child.checked = false;
         });
       }
+    }
+
+
+    function getUsersCacheKey_() {
+      const userId = currentUser && currentUser.UserID ? currentUser.UserID : "guest";
+      return USERS_CACHE_PREFIX + "_" + userId;
+    }
+
+    function getLocalCache_(key, maxAgeMs) {
+      try {
+        const raw = localStorage.getItem(key);
+
+        if (!raw) return null;
+
+        const cached = JSON.parse(raw);
+
+        if (!cached || !cached.savedAt || !cached.data) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        const age = Date.now() - cached.savedAt;
+
+        if (age > maxAgeMs) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return cached.data;
+
+      } catch (error) {
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+
+    function setLocalCache_(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          savedAt: Date.now(),
+          data: data
+        }));
+      } catch (error) {
+        console.warn("Local cache failed:", error);
+      }
+    }
+
+    function clearPageLocalCache_(prefix) {
+      Object.keys(localStorage).forEach(function(key) {
+        if (key.indexOf(prefix) === 0) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    function clearUsersRelatedCaches_() {
+      clearPageLocalCache_("users_page_cache");
+      clearPageLocalCache_("dashboard_cache");
+      clearPageLocalCache_("profile_cache");
+      clearPageLocalCache_("production_initial_data");
+      clearPageLocalCache_("performance_workers_cache");
     }
 
     async function apiPost(payload) {
@@ -2157,6 +2236,7 @@
       }
 
       localStorage.removeItem(SESSION_KEY);
+      clearUsersRelatedCaches_();
       redirectToLogin();
     }
 
