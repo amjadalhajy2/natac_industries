@@ -23,7 +23,9 @@
       --blue: #0066ff;
       --blue-dark: #004ec2;
       --purple: #6d28d9;
+      --green: #16a34a;
       --red: #dc2626;
+      --orange: #f97316;
       --shadow: 0 22px 60px rgba(16, 24, 39, 0.14);
       --topbar-height: 78px;
       --sidebar-width: 310px;
@@ -33,6 +35,10 @@
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -148,6 +154,7 @@
       display: block;
       font-size: 19px;
       font-weight: 900;
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -163,11 +170,21 @@
       text-overflow: ellipsis;
     }
 
+    .user-menu-wrapper {
+      position: relative;
+    }
+
     .top-user-box {
+      border: 0;
+      background: transparent;
       display: flex;
       align-items: center;
       gap: 9px;
       min-width: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      color: var(--text);
     }
 
     .avatar {
@@ -194,12 +211,63 @@
     .user-info strong {
       font-size: 14px;
       font-weight: 900;
+      color: var(--text);
     }
 
     .user-info span {
       margin-top: 1px;
       font-size: 12px;
       color: var(--muted);
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      inset-inline-end: 0;
+      width: 235px;
+      z-index: 500;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 18px 48px rgba(16,24,39,0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .user-dropdown.show {
+      display: grid;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: start;
+      padding: 0 4px;
+    }
+
+    .user-dropdown a:last-child,
+    .user-dropdown button:last-child {
+      border-bottom: 0;
+    }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      color: var(--blue-dark);
     }
 
     .overlay {
@@ -287,14 +355,14 @@
       color: var(--red);
       font-size: 24px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .nav {
       display: grid;
     }
 
-    .nav a,
-    .logout-btn {
+    .nav a {
       width: 100%;
       min-height: 54px;
       display: flex;
@@ -304,7 +372,6 @@
       text-decoration: none;
       color: var(--text);
       padding: 13px 4px;
-      border: 0;
       border-bottom: 1px solid rgba(16,24,39,0.10);
       background: transparent;
       font-family: inherit;
@@ -316,7 +383,6 @@
     }
 
     .nav a:hover,
-    .logout-btn:hover,
     .nav a.active {
       color: var(--blue-dark);
       padding-inline-start: 10px;
@@ -364,6 +430,7 @@
       font-size: 34px;
       font-weight: 900;
       letter-spacing: -0.5px;
+      color: var(--text);
     }
 
     .actions {
@@ -469,6 +536,12 @@
       outline: none;
       box-shadow: 0 2px 0 rgba(16,24,39,0.03);
       transition: 0.18s ease;
+    }
+
+    input:disabled {
+      background: rgba(243, 244, 246, 0.95);
+      color: #6b7280;
+      cursor: not-allowed;
     }
 
     input:focus,
@@ -610,7 +683,7 @@
       top: 92px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 1200;
+      z-index: 1600;
       min-width: min(520px, calc(100vw - 28px));
       max-width: calc(100vw - 28px);
       padding: 14px 18px;
@@ -650,7 +723,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 600;
+      z-index: 700;
       background: rgba(16, 24, 39, 0.35);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -663,7 +736,7 @@
     }
 
     .modal-card {
-      width: min(620px, 100%);
+      width: min(780px, 100%);
       max-height: calc(100vh - 32px);
       overflow-y: auto;
       border-radius: 28px;
@@ -705,11 +778,73 @@
       gap: 14px;
     }
 
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
     .hint {
       color: var(--muted);
       font-size: 13px;
       font-weight: 800;
       line-height: 1.6;
+    }
+
+    .permissions-box {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(0,102,255,0.06);
+      border: 1px solid rgba(0,102,255,0.14);
+    }
+
+    .permissions-box h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .permissions-section {
+      display: grid;
+      gap: 8px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
+    }
+
+    .permissions-section:last-child {
+      border-bottom: 0;
+    }
+
+    .perm-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+      line-height: 1.6;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .perm-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      min-height: auto;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .perm-label input[type="checkbox"]:disabled {
+      cursor: not-allowed;
+    }
+
+    .sub-permissions {
+      display: grid;
+      gap: 8px;
+      margin-inline-start: 26px;
+      padding-inline-start: 14px;
+      border-inline-start: 2px solid rgba(0,102,255,0.22);
     }
 
     @keyframes spin {
@@ -720,6 +855,10 @@
 
     @media (max-width: 920px) {
       .filters-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -783,6 +922,29 @@
       .message {
         top: 82px;
       }
+
+      .modal-card {
+        padding: 16px;
+        border-radius: 24px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .factory-info span {
+        display: none;
+      }
+
+      .topbar-side {
+        gap: 9px;
+      }
+
+      .factory-brand {
+        gap: 9px;
+      }
+
+      .user-dropdown {
+        width: 220px;
+      }
     }
   </style>
 </head>
@@ -806,11 +968,30 @@
     <div class="topbar-side">
       <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
-      <div class="top-user-box">
-        <div class="avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <strong id="userName">مستخدم</strong>
-          <span id="userRole">---</span>
+      <div class="user-menu-wrapper">
+        <button class="top-user-box" id="topUserMenuBtn" type="button">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <strong id="userName">مستخدم</strong>
+            <span id="userRole">---</span>
+          </div>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <a href="profile.html">
+            <span>👤</span>
+            <span data-i18n="profile">الملف الشخصي</span>
+          </a>
+
+          <a href="users.html" class="active" data-permission="usersPage">
+            <span>👥</span>
+            <span data-i18n="usersManagement">إدارة المستخدمين</span>
+          </a>
+
+          <button type="button" id="logoutDropdownBtn">
+            <span>🚪</span>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </button>
         </div>
       </div>
     </div>
@@ -839,50 +1020,40 @@
         <span class="nav-icon">📊</span>
       </a>
 
-      <a href="production.html">
+      <a href="production.html" data-permission="productionEntry">
         <span data-i18n="productionEntry">إدخال الإنتاج</span>
         <span class="nav-icon">🏭</span>
       </a>
 
-      <a href="evaluation.html">
+      <a href="evaluation.html" data-permission="supervisorEvaluation">
         <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
         <span class="nav-icon">⭐</span>
       </a>
 
-      <a href="history.html">
+      <a href="history.html" data-permission="productionHistory">
         <span data-i18n="productionHistory">سجل الإنتاج</span>
         <span class="nav-icon">📋</span>
       </a>
 
-      <a href="performance.html">
+      <a href="performance.html" data-permission="workerPerformance">
         <span data-i18n="workerPerformance">متابعة أداء العمال</span>
         <span class="nav-icon">📈</span>
       </a>
 
-      <a href="workers.html">
+      <a href="workers.html" data-permission="workersPage">
         <span data-i18n="workers">العمال</span>
         <span class="nav-icon">👷</span>
       </a>
 
-      <a href="products.html" class="admin-only">
+      <a href="products.html" data-permission="productsPage">
         <span data-i18n="products">المنتجات</span>
         <span class="nav-icon">📦</span>
       </a>
 
-      <a href="machines.html" class="admin-only">
+      <a href="machines.html" data-permission="machinesPage">
         <span data-i18n="machines">المكائن</span>
         <span class="nav-icon">⚙️</span>
       </a>
-
-      <a href="users.html" class="active admin-only">
-        <span data-i18n="usersManagement">إدارة المستخدمين</span>
-        <span class="nav-icon">👥</span>
-      </a>
-
-      <button class="logout-btn" type="button" id="logoutBtn">
-        <span data-i18n="logout">تسجيل الخروج</span>
-        <span class="nav-icon">🚪</span>
-      </button>
     </nav>
   </aside>
 
@@ -959,38 +1130,156 @@
       <form id="userForm" class="modal-form" novalidate>
         <input type="hidden" id="userIdInput">
 
-        <div class="field">
-          <label for="fullNameInput" data-i18n="fullName">الاسم الكامل</label>
-          <input type="text" id="fullNameInput" autocomplete="off">
-        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="fullNameInput" data-i18n="fullName">الاسم الكامل</label>
+            <input type="text" id="fullNameInput" autocomplete="off">
+          </div>
 
-        <div class="field">
-          <label for="usernameInput" data-i18n="username">اسم المستخدم</label>
-          <input type="text" id="usernameInput" autocomplete="off">
-        </div>
+          <div class="field">
+            <label for="usernameInput" data-i18n="username">اسم المستخدم</label>
+            <input type="text" id="usernameInput" autocomplete="off">
+            <div class="hint" id="usernameHint" data-i18n="usernameLockedHint">
+              لا يمكن تغيير اسم المستخدم بعد الإنشاء.
+            </div>
+          </div>
 
-        <div class="field">
-          <label for="passwordInput" data-i18n="password">كلمة المرور</label>
-          <input type="password" id="passwordInput" autocomplete="new-password">
-          <div class="hint" id="passwordHint" data-i18n="passwordHint">
-            عند التعديل، اترك كلمة المرور فارغة إذا كنت لا تريد تغييرها.
+          <div class="field">
+            <label for="passwordInput" data-i18n="password">كلمة المرور</label>
+            <input type="password" id="passwordInput" autocomplete="new-password">
+            <div class="hint" id="passwordHint" data-i18n="passwordHint">
+              عند التعديل، اترك كلمة المرور فارغة إذا كنت لا تريد تغييرها.
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="roleInput" data-i18n="role">الصلاحية</label>
+            <select id="roleInput">
+              <option value="Admin" data-i18n="roleAdmin">مدير النظام</option>
+              <option value="Supervisor" data-i18n="roleSupervisor">مشرف</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="statusInput" data-i18n="status">الحالة</label>
+            <select id="statusInput">
+              <option value="Active" data-i18n="active">نشط</option>
+              <option value="Inactive" data-i18n="inactive">غير نشط</option>
+            </select>
           </div>
         </div>
 
-        <div class="field">
-          <label for="roleInput" data-i18n="role">الصلاحية</label>
-          <select id="roleInput">
-            <option value="Admin" data-i18n="roleAdmin">مدير النظام</option>
-            <option value="Supervisor" data-i18n="roleSupervisor">مشرف</option>
-          </select>
-        </div>
+        <div class="permissions-box">
+          <h3 data-i18n="permissions">الصلاحيات</h3>
 
-        <div class="field">
-          <label for="statusInput" data-i18n="status">الحالة</label>
-          <select id="statusInput">
-            <option value="Active" data-i18n="active">نشط</option>
-            <option value="Inactive" data-i18n="inactive">غير نشط</option>
-          </select>
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="productionEntry">
+              <span data-i18n="permProductionEntry">صلاحية دخول صفحة إدخال الإنتاج</span>
+            </label>
+          </div>
+
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="supervisorEvaluation">
+              <span data-i18n="permSupervisorEvaluation">صلاحية دخول صفحة تقييم المشرف</span>
+            </label>
+          </div>
+
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="productionHistory">
+              <span data-i18n="permProductionHistory">صلاحية دخول سجل الإنتاج</span>
+            </label>
+
+            <div class="sub-permissions">
+              <label class="perm-label">
+                <input type="checkbox" data-perm="editProduction">
+                <span data-i18n="permEditProduction">صلاحية تعديل الإنتاج</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="workersPage">
+              <span data-i18n="permWorkersPage">صلاحية دخول صفحة العمال</span>
+            </label>
+
+            <div class="sub-permissions">
+              <label class="perm-label">
+                <input type="checkbox" data-perm="addWorker">
+                <span data-i18n="permAddWorker">صلاحية إضافة عامل جديد</span>
+              </label>
+
+              <label class="perm-label">
+                <input type="checkbox" data-perm="editWorker">
+                <span data-i18n="permEditWorker">صلاحية تعديل بيانات عامل</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="productsPage">
+              <span data-i18n="permProductsPage">صلاحية دخول صفحة المنتجات</span>
+            </label>
+
+            <div class="sub-permissions">
+              <label class="perm-label">
+                <input type="checkbox" data-perm="addProductCategory">
+                <span data-i18n="permAddProductCategory">صلاحية إضافة صنف جديد</span>
+              </label>
+
+              <label class="perm-label">
+                <input type="checkbox" data-perm="addProduct">
+                <span data-i18n="permAddProduct">صلاحية إضافة منتج جديد</span>
+              </label>
+
+              <label class="perm-label">
+                <input type="checkbox" data-perm="editProduct">
+                <span data-i18n="permEditProduct">صلاحية تعديل بيانات المنتج</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="machinesPage">
+              <span data-i18n="permMachinesPage">صلاحية دخول صفحة المكائن</span>
+            </label>
+
+            <div class="sub-permissions">
+              <label class="perm-label">
+                <input type="checkbox" data-perm="addMachineCategory">
+                <span data-i18n="permAddMachineCategory">صلاحية إضافة صنف جديد</span>
+              </label>
+
+              <label class="perm-label">
+                <input type="checkbox" data-perm="addMachine">
+                <span data-i18n="permAddMachine">صلاحية إضافة مكينة جديدة</span>
+              </label>
+
+              <label class="perm-label">
+                <input type="checkbox" data-perm="editMachine">
+                <span data-i18n="permEditMachine">صلاحية تعديل بيانات المكينة</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="workerPerformance">
+              <span data-i18n="permWorkerPerformance">صلاحية دخول صفحة متابعة أداء العمال</span>
+            </label>
+          </div>
+
+          <div class="permissions-section">
+            <label class="perm-label">
+              <input type="checkbox" data-perm="usersPage">
+              <span data-i18n="permUsersPage">صلاحية دخول صفحة المستخدمين</span>
+            </label>
+          </div>
         </div>
 
         <div class="actions">
@@ -1002,9 +1291,29 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx2Zj5LEgUy9fttDWRplGgRg6NGeY0-gQlM2Yuh3_XZ1wEiU8MeQP9y4VpREoyVvQqw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwlclv2NBEPfG6Xa2ABpRHbSDYx2zGiCC7dd1ZVeZvpFyo9wvNGCSpbwwiUDAckkGkt/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+
+    const ALL_PERMISSION_KEYS = [
+      "productionEntry",
+      "supervisorEvaluation",
+      "productionHistory",
+      "editProduction",
+      "workersPage",
+      "addWorker",
+      "editWorker",
+      "productsPage",
+      "addProductCategory",
+      "addProduct",
+      "editProduct",
+      "machinesPage",
+      "addMachineCategory",
+      "addMachine",
+      "editMachine",
+      "workerPerformance",
+      "usersPage"
+    ];
 
     const i18n = {
       ar: {
@@ -1025,6 +1334,7 @@
         products: "المنتجات",
         machines: "المكائن",
         usersManagement: "إدارة المستخدمين",
+        profile: "الملف الشخصي",
         logout: "تسجيل الخروج",
         loadingUsers: "جاري تحميل المستخدمين...",
         addUser: "إضافة مستخدم",
@@ -1034,6 +1344,7 @@
         username: "اسم المستخدم",
         password: "كلمة المرور",
         passwordHint: "عند التعديل، اترك كلمة المرور فارغة إذا كنت لا تريد تغييرها.",
+        usernameLockedHint: "لا يمكن تغيير اسم المستخدم بعد الإنشاء.",
         role: "الصلاحية",
         status: "الحالة",
         actions: "الإجراء",
@@ -1046,10 +1357,12 @@
         save: "حفظ",
         cancel: "إلغاء",
         edit: "تعديل",
+        permissions: "الصلاحيات",
         emptyData: "لا توجد بيانات للعرض.",
         searchPlaceholder: "بحث في المستخدمين",
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
-        notAdmin: "هذه الصفحة متاحة لمدير النظام فقط.",
+        notAllowed: "ليس لديك صلاحية لدخول صفحة إدارة المستخدمين.",
+        sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل بيانات المستخدمين.",
         fullNameRequired: "يرجى إدخال الاسم الكامل.",
@@ -1058,7 +1371,24 @@
         duplicateUsername: "اسم المستخدم موجود مسبقًا.",
         addSuccess: "تمت إضافة المستخدم بنجاح.",
         updateSuccess: "تم تحديث بيانات المستخدم بنجاح.",
-        saving: "جاري الحفظ..."
+        saving: "جاري الحفظ...",
+        permProductionEntry: "صلاحية دخول صفحة إدخال الإنتاج",
+        permSupervisorEvaluation: "صلاحية دخول صفحة تقييم المشرف",
+        permProductionHistory: "صلاحية دخول سجل الإنتاج",
+        permEditProduction: "صلاحية تعديل الإنتاج",
+        permWorkersPage: "صلاحية دخول صفحة العمال",
+        permAddWorker: "صلاحية إضافة عامل جديد",
+        permEditWorker: "صلاحية تعديل بيانات عامل",
+        permProductsPage: "صلاحية دخول صفحة المنتجات",
+        permAddProductCategory: "صلاحية إضافة صنف جديد",
+        permAddProduct: "صلاحية إضافة منتج جديد",
+        permEditProduct: "صلاحية تعديل بيانات المنتج",
+        permMachinesPage: "صلاحية دخول صفحة المكائن",
+        permAddMachineCategory: "صلاحية إضافة صنف جديد",
+        permAddMachine: "صلاحية إضافة مكينة جديدة",
+        permEditMachine: "صلاحية تعديل بيانات المكينة",
+        permWorkerPerformance: "صلاحية دخول صفحة متابعة أداء العمال",
+        permUsersPage: "صلاحية دخول صفحة المستخدمين"
       },
       en: {
         htmlLang: "en",
@@ -1078,6 +1408,7 @@
         products: "Products",
         machines: "Machines",
         usersManagement: "Users Management",
+        profile: "Profile",
         logout: "Logout",
         loadingUsers: "Loading users...",
         addUser: "Add User",
@@ -1087,6 +1418,7 @@
         username: "Username",
         password: "Password",
         passwordHint: "When editing, leave password empty if you do not want to change it.",
+        usernameLockedHint: "Username cannot be changed after creation.",
         role: "Role",
         status: "Status",
         actions: "Action",
@@ -1099,10 +1431,12 @@
         save: "Save",
         cancel: "Cancel",
         edit: "Edit",
+        permissions: "Permissions",
         emptyData: "No data to display.",
         searchPlaceholder: "Search users",
         tokenMissing: "Session token not found.",
-        notAdmin: "This page is available for system admin only.",
+        notAllowed: "You do not have permission to access Users Management.",
+        sessionExpired: "Session expired. Please login again.",
         serverError: "Unable to connect to the server.",
         loadFailed: "Unable to load users data.",
         fullNameRequired: "Please enter full name.",
@@ -1111,7 +1445,24 @@
         duplicateUsername: "Username already exists.",
         addSuccess: "User added successfully.",
         updateSuccess: "User updated successfully.",
-        saving: "Saving..."
+        saving: "Saving...",
+        permProductionEntry: "Access Production Entry page",
+        permSupervisorEvaluation: "Access Supervisor Evaluation page",
+        permProductionHistory: "Access Production History",
+        permEditProduction: "Edit production",
+        permWorkersPage: "Access Workers page",
+        permAddWorker: "Add new worker",
+        permEditWorker: "Edit worker data",
+        permProductsPage: "Access Products page",
+        permAddProductCategory: "Add new category",
+        permAddProduct: "Add new product",
+        permEditProduct: "Edit product data",
+        permMachinesPage: "Access Machines page",
+        permAddMachineCategory: "Add new category",
+        permAddMachine: "Add new machine",
+        permEditMachine: "Edit machine data",
+        permWorkerPerformance: "Access Worker Performance page",
+        permUsersPage: "Access Users page"
       }
     };
 
@@ -1130,12 +1481,15 @@
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
 
-    const logoutBtn = document.getElementById("logoutBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
     const languageToggleBtn = document.getElementById("languageToggleBtn");
+
+    const topUserMenuBtn = document.getElementById("topUserMenuBtn");
+    const userDropdown = document.getElementById("userDropdown");
+    const logoutDropdownBtn = document.getElementById("logoutDropdownBtn");
 
     const searchInput = document.getElementById("searchInput");
     const roleFilterInput = document.getElementById("roleFilterInput");
@@ -1156,31 +1510,19 @@
     const statusInput = document.getElementById("statusInput");
     const saveUserBtn = document.getElementById("saveUserBtn");
     const passwordHint = document.getElementById("passwordHint");
+    const usernameHint = document.getElementById("usernameHint");
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
-      protectPage();
       initSidebar();
       initLanguage();
+      initUserDropdown();
       bindEvents();
-      loadUsers();
+      protectPageAndLoadUsers();
     });
 
     function t(key) {
-      return i18n[currentLang][key];
-    }
-
-    function normalizeSession(session) {
-      const user = session.user || session.User || {};
-
-      return {
-        ...user,
-        ...session,
-        token: session.token || user.token || "",
-        Role: session.Role || session.role || user.Role || user.role || "",
-        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
-        Username: session.Username || session.username || user.Username || user.username || ""
-      };
+      return i18n[currentLang][key] || key;
     }
 
     function applyLanguage(lang) {
@@ -1203,52 +1545,99 @@
         }
       });
 
-      const session = getSession();
-
-      if (session) {
-        currentUser = normalizeSession(session);
+      if (currentUser) {
         renderUser(currentUser);
-        applyRoleUI(currentUser.Role || currentUser.role);
+        applyPermissionsUI();
       }
 
       renderUsersTable();
       updateModalTitle();
     }
 
-    function protectPage() {
+    async function protectPageAndLoadUsers() {
       const session = getSession();
 
-      if (!session) {
-        window.location.href = "index.html";
+      if (!session || !session.token) {
+        redirectToLogin();
         return;
       }
 
-      currentUser = normalizeSession(session);
-      renderUser(currentUser);
-      applyRoleUI(currentUser.Role || currentUser.role);
+      try {
+        const sessionResult = await apiPost({
+          action: "checkSession",
+          token: session.token
+        });
 
-      if (!isAdmin()) {
+        if (!sessionResult || !sessionResult.success) {
+          localStorage.removeItem(SESSION_KEY);
+          showMessage((sessionResult && sessionResult.message) || t("sessionExpired"), "error");
+
+          setTimeout(() => {
+            redirectToLogin();
+          }, 800);
+
+          return;
+        }
+
+        currentUser = normalizeSession({
+          ...session,
+          user: sessionResult.user
+        });
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: session.token,
+          user: currentUser
+        }));
+
+        renderUser(currentUser);
+        applyPermissionsUI();
+
+        if (!hasClientPermission("usersPage")) {
+          hideLoading();
+          showMessage(t("notAllowed"), "error");
+
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+
+          return;
+        }
+
+        await loadUsers();
+
+      } catch (error) {
+        console.error(error);
         hideLoading();
-        showMessage(t("notAdmin"), "error");
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 1200);
+        showMessage(t("serverError"), "error");
       }
     }
 
-    function renderUser(session) {
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+
+      return {
+        ...user,
+        token: session.token || user.token || "",
+        UserID: user.UserID || session.UserID || "",
+        FullName: user.FullName || user.fullName || session.FullName || session.fullName || user.name || session.name || user.Username || user.username || "",
+        Username: user.Username || user.username || session.Username || session.username || "",
+        Role: user.Role || user.role || session.Role || session.role || "",
+        Status: user.Status || user.status || session.Status || session.status || "",
+        Permissions: user.Permissions || user.permissions || session.Permissions || session.permissions || {}
+      };
+    }
+
+    function renderUser(user) {
       const name =
-        session.FullName ||
-        session.fullName ||
-        session.name ||
-        session.Username ||
-        session.username ||
+        user.FullName ||
+        user.fullName ||
+        user.name ||
+        user.Username ||
+        user.username ||
         "User";
 
-      const role = session.Role || session.role || "---";
-
       userName.textContent = name;
-      userRole.textContent = normalizeRoleLabel(role);
+      userRole.textContent = normalizeRoleLabel(user.Role || user.role);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
@@ -1263,22 +1652,27 @@
       return role || "---";
     }
 
-    function isAdmin() {
-      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
+    function hasClientPermission(permissionKey) {
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
+
+      if (role === "admin") return true;
+
+      const permissions = currentUser?.Permissions || currentUser?.permissions || {};
+
+      return permissions[permissionKey] === true;
     }
 
-    function applyRoleUI(role) {
-      const cleanRole = String(role || "").toLowerCase();
-
-      document.querySelectorAll(".admin-only").forEach(el => {
-        el.style.display = cleanRole === "admin" ? "" : "none";
+    function applyPermissionsUI() {
+      document.querySelectorAll("[data-permission]").forEach(element => {
+        const permissionKey = element.getAttribute("data-permission");
+        element.style.display = hasClientPermission(permissionKey) ? "" : "none";
       });
     }
 
     async function loadUsers() {
-      if (!isAdmin()) return;
+      const session = getSession();
 
-      if (!currentUser || !currentUser.token) {
+      if (!session || !session.token) {
         hideLoading();
         showMessage(t("tokenMissing"), "error");
         return;
@@ -1287,7 +1681,7 @@
       try {
         const result = await apiPost({
           action: "getUsers",
-          token: currentUser.token
+          token: session.token
         });
 
         hideLoading();
@@ -1332,6 +1726,8 @@
     }
 
     function renderUsersTable() {
+      if (!usersTableBody) return;
+
       usersTableBody.innerHTML = "";
 
       const filteredUsers = getFilteredUsers();
@@ -1402,37 +1798,34 @@
       roleFilterInput.addEventListener("change", renderUsersTable);
       statusFilterInput.addEventListener("change", renderUsersTable);
 
-      logoutBtn.addEventListener("click", async () => {
-        const session = getSession();
+      roleInput.addEventListener("change", handleRoleChange);
 
-        try {
-          if (session && session.token && API_URL) {
-            await apiPost({
-              action: "logout",
-              token: session.token
-            });
-          }
-        } catch (error) {
-          console.warn(error);
-        }
-
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = "index.html";
+      document.querySelectorAll("[data-perm]").forEach(input => {
+        input.addEventListener("change", handlePermissionDependency);
       });
     }
 
     function openAddUserModal() {
       editingUserId = "";
       userForm.reset();
+
       userIdInput.value = "";
       roleInput.value = "Supervisor";
       statusInput.value = "Active";
+
+      usernameInput.disabled = false;
       passwordInput.required = true;
       passwordHint.style.display = "none";
+      usernameHint.style.display = "";
+
+      clearPermissions();
+      setPermissionsDisabled(false);
+
       updateModalTitle();
 
       userModal.classList.add("show");
       document.body.style.overflow = "hidden";
+
       setTimeout(() => fullNameInput.focus(), 50);
     }
 
@@ -1447,24 +1840,38 @@
       usernameInput.value = user.Username || "";
       passwordInput.value = "";
       passwordInput.required = false;
-      passwordHint.style.display = "";
       roleInput.value = normalizeRole(user.Role || "Supervisor");
       statusInput.value = normalizeStatus(user.Status || "Active");
+
+      usernameInput.disabled = true;
+      passwordHint.style.display = "";
+      usernameHint.style.display = "";
+
+      fillPermissions(user.Permissions || user.permissions || {});
+      handleRoleChange();
 
       updateModalTitle();
 
       userModal.classList.add("show");
       document.body.style.overflow = "hidden";
+
       setTimeout(() => fullNameInput.focus(), 50);
     }
 
     function closeUserModal() {
       userModal.classList.remove("show");
       document.body.style.overflow = "";
+
       editingUserId = "";
       userForm.reset();
+
+      usernameInput.disabled = false;
       passwordInput.required = false;
       passwordHint.style.display = "";
+      usernameHint.style.display = "";
+
+      clearPermissions();
+      setPermissionsDisabled(false);
       updateModalTitle();
     }
 
@@ -1487,7 +1894,7 @@
         return;
       }
 
-      if (!username) {
+      if (!editingUserId && !username) {
         showMessage(t("usernameRequired"), "error");
         return;
       }
@@ -1497,7 +1904,7 @@
         return;
       }
 
-      if (usernameExists(username, editingUserId)) {
+      if (!editingUserId && usernameExists(username)) {
         showMessage(t("duplicateUsername"), "error");
         return;
       }
@@ -1505,21 +1912,27 @@
       const payloadUser = {
         userId: editingUserId,
         fullName,
-        username,
         role,
-        status
+        status,
+        permissions: collectPermissions()
       };
+
+      if (!editingUserId) {
+        payloadUser.username = username;
+      }
 
       if (password) {
         payloadUser.password = password;
       }
+
+      const session = getSession();
 
       setButtonLoading(saveUserBtn, true, t("saving"));
 
       try {
         const result = await apiPost({
           action: editingUserId ? "updateUser" : "addUser",
-          token: currentUser.token,
+          token: session.token,
           user: payloadUser
         });
 
@@ -1532,6 +1945,7 @@
 
         closeUserModal();
         showMessage(result.message || (editingUserId ? t("updateSuccess") : t("addSuccess")), "success");
+
         await loadUsers();
 
       } catch (error) {
@@ -1541,15 +1955,97 @@
       }
     }
 
-    function usernameExists(username, excludeUserId = "") {
+    function usernameExists(username) {
       const cleanUsername = String(username || "").trim().toLowerCase();
 
       return users.some(user => {
-        const sameUsername = String(user.Username || "").trim().toLowerCase() === cleanUsername;
-        const sameId = String(user.UserID || "") === String(excludeUserId || "");
-
-        return sameUsername && !sameId;
+        return String(user.Username || "").trim().toLowerCase() === cleanUsername;
       });
+    }
+
+    function collectPermissions() {
+      const permissions = {};
+
+      ALL_PERMISSION_KEYS.forEach(key => {
+        permissions[key] = false;
+      });
+
+      document.querySelectorAll("[data-perm]").forEach(input => {
+        permissions[input.dataset.perm] = input.checked === true;
+      });
+
+      return permissions;
+    }
+
+    function fillPermissions(permissions) {
+      const source = permissions || {};
+
+      document.querySelectorAll("[data-perm]").forEach(input => {
+        input.checked = source[input.dataset.perm] === true;
+      });
+    }
+
+    function clearPermissions() {
+      document.querySelectorAll("[data-perm]").forEach(input => {
+        input.checked = false;
+      });
+    }
+
+    function setPermissionsDisabled(disabled) {
+      document.querySelectorAll("[data-perm]").forEach(input => {
+        input.disabled = disabled;
+      });
+    }
+
+    function checkAllPermissions() {
+      document.querySelectorAll("[data-perm]").forEach(input => {
+        input.checked = true;
+      });
+    }
+
+    function handleRoleChange() {
+      if (roleInput.value === "Admin") {
+        checkAllPermissions();
+        setPermissionsDisabled(true);
+      } else {
+        setPermissionsDisabled(false);
+      }
+    }
+
+    function handlePermissionDependency(event) {
+      const perm = event.target.dataset.perm;
+      const checked = event.target.checked;
+
+      const dependencies = {
+        editProduction: "productionHistory",
+        addWorker: "workersPage",
+        editWorker: "workersPage",
+        addProductCategory: "productsPage",
+        addProduct: "productsPage",
+        editProduct: "productsPage",
+        addMachineCategory: "machinesPage",
+        addMachine: "machinesPage",
+        editMachine: "machinesPage"
+      };
+
+      if (checked && dependencies[perm]) {
+        const parent = document.querySelector(`[data-perm="${dependencies[perm]}"]`);
+        if (parent) parent.checked = true;
+      }
+
+      const children = {
+        productionHistory: ["editProduction"],
+        workersPage: ["addWorker", "editWorker"],
+        productsPage: ["addProductCategory", "addProduct", "editProduct"],
+        machinesPage: ["addMachineCategory", "addMachine", "editMachine"]
+      };
+
+      if (!checked && children[perm]) {
+        children[perm].forEach(childKey => {
+          const child = document.querySelector(`[data-perm="${childKey}"]`);
+          if (child) child.checked = false;
+        });
+      }
     }
 
     async function apiPost(payload) {
@@ -1579,6 +2075,10 @@
       }
     }
 
+    function redirectToLogin() {
+      window.location.href = "index.html";
+    }
+
     function initSidebar() {
       menuBtn.addEventListener("click", openSidebar);
       closeSidebarBtn.addEventListener("click", closeSidebar);
@@ -1587,6 +2087,7 @@
       document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
           closeSidebar();
+          closeUserDropdown();
           closeUserModal();
         }
       });
@@ -1616,6 +2117,47 @@
         const nextLang = currentLang === "ar" ? "en" : "ar";
         applyLanguage(nextLang);
       });
+    }
+
+    function initUserDropdown() {
+      topUserMenuBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        userDropdown.classList.toggle("show");
+      });
+
+      userDropdown.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", event => {
+        if (!event.target.closest(".user-menu-wrapper")) {
+          closeUserDropdown();
+        }
+      });
+
+      logoutDropdownBtn.addEventListener("click", logoutUser);
+    }
+
+    function closeUserDropdown() {
+      userDropdown.classList.remove("show");
+    }
+
+    async function logoutUser() {
+      const session = getSession();
+
+      try {
+        if (session && session.token && API_URL) {
+          await apiPost({
+            action: "logout",
+            token: session.token
+          });
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+
+      localStorage.removeItem(SESSION_KEY);
+      redirectToLogin();
     }
 
     function normalizeStatus(status) {
