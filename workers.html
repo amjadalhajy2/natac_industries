@@ -208,6 +208,74 @@
       color: var(--muted);
     }
 
+
+    .user-menu-wrapper {
+      position: relative;
+    }
+
+    .top-user-box {
+      border: 0;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      inset-inline-end: 0;
+      width: 235px;
+      z-index: 500;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 18px 48px rgba(16,24,39,0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .user-dropdown.show {
+      display: grid;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: start;
+      padding: 0 4px;
+    }
+
+    .user-dropdown a:last-child,
+    .user-dropdown button:last-child {
+      border-bottom: 0;
+    }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      color: var(--blue-dark);
+    }
+
     .overlay {
       display: none;
       position: fixed;
@@ -835,11 +903,30 @@
     <div class="topbar-side">
       <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
-      <div class="top-user-box">
-        <div class="avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <strong id="userName">مستخدم</strong>
-          <span id="userRole">---</span>
+      <div class="user-menu-wrapper">
+        <button class="top-user-box" id="topUserMenuBtn" type="button">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <strong id="userName">مستخدم</strong>
+            <span id="userRole">---</span>
+          </div>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <a href="profile.html">
+            <span>👤</span>
+            <span data-i18n="profile">الملف الشخصي</span>
+          </a>
+
+          <a href="users.html" data-permission="usersPage">
+            <span>👥</span>
+            <span data-i18n="usersManagement">إدارة المستخدمين</span>
+          </a>
+
+          <button type="button" id="logoutDropdownBtn">
+            <span>🚪</span>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </button>
         </div>
       </div>
     </div>
@@ -868,40 +955,40 @@
         <span class="nav-icon">📊</span>
       </a>
 
-      <a href="production.html">
+      <a href="production.html" data-permission="productionEntry">
         <span data-i18n="productionEntry">إدخال الإنتاج</span>
         <span class="nav-icon">🏭</span>
       </a>
 
-      <a href="evaluation.html">
+      <a href="evaluation.html" data-permission="supervisorEvaluation">
         <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
         <span class="nav-icon">⭐</span>
       </a>
 
-      <a href="history.html">
+      <a href="history.html" data-permission="productionHistory">
         <span data-i18n="productionHistory">سجل الإنتاج</span>
         <span class="nav-icon">📋</span>
       </a>
 
-      <a href="workers.html" class="active">
+      <a href="performance.html" data-permission="workerPerformance">
+        <span data-i18n="workerPerformance">متابعة أداء العمال</span>
+        <span class="nav-icon">📈</span>
+      </a>
+
+      <a href="workers.html" class="active" data-permission="workersPage">
         <span data-i18n="workers">العمال</span>
         <span class="nav-icon">👷</span>
       </a>
 
-      <a href="products.html" class="admin-only">
+      <a href="products.html" data-permission="productsPage">
         <span data-i18n="products">المنتجات</span>
         <span class="nav-icon">📦</span>
       </a>
 
-      <a href="machines.html" class="admin-only">
+      <a href="machines.html" data-permission="machinesPage">
         <span data-i18n="machines">المكائن</span>
         <span class="nav-icon">⚙️</span>
       </a>
-
-      <button class="logout-btn" type="button" id="logoutBtn">
-        <span data-i18n="logout">تسجيل الخروج</span>
-        <span class="nav-icon">🚪</span>
-      </button>
     </nav>
   </aside>
 
@@ -920,7 +1007,7 @@
             <h1 data-i18n="workers">العمال</h1>
           </div>
 
-          <div class="actions admin-only">
+          <div class="actions" data-permission="addWorker">
             <button class="btn btn-primary" type="button" id="openAddWorkerBtn">
               <span>＋</span>
               <span data-i18n="addWorker">إضافة عامل</span>
@@ -950,7 +1037,7 @@
                 <th data-i18n="workerId">رقم العامل</th>
                 <th data-i18n="workerName">اسم العامل</th>
                 <th data-i18n="status">الحالة</th>
-                <th class="admin-only" data-i18n="actions">الإجراء</th>
+                <th data-permission="editWorker" data-i18n="actions">الإجراء</th>
               </tr>
             </thead>
             <tbody id="workersTableBody"></tbody>
@@ -1021,9 +1108,11 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzCaNtDgfhelEOmgDdX3lQr_wtPbTnyoWKaArFA1WWyB60RUBCBQi4N43S053cqk7li/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const WORKERS_CACHE_PREFIX = "workers_page_cache_v3";
+    const WORKERS_CACHE_MAX_AGE_MS = 300000;
 
     const i18n = {
       ar: {
@@ -1039,9 +1128,12 @@
         productionEntry: "إدخال الإنتاج",
         supervisorEvaluation: "تقييم المشرف",
         productionHistory: "سجل الإنتاج",
+        workerPerformance: "متابعة أداء العمال",
         workers: "العمال",
         products: "المنتجات",
         machines: "المكائن",
+        usersManagement: "إدارة المستخدمين",
+        profile: "الملف الشخصي",
         logout: "تسجيل الخروج",
         loadingWorkers: "جاري تحميل العمال...",
         addWorker: "إضافة عامل",
@@ -1061,9 +1153,13 @@
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
+        notAllowed: "ليس لديك صلاحية لدخول صفحة العمال.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
+        sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى.",
         loadFailed: "تعذر تحميل بيانات العمال.",
         nameRequired: "يرجى إدخال اسم العامل.",
+        addNotAllowed: "ليس لديك صلاحية لإضافة عامل جديد.",
+        editNotAllowed: "ليس لديك صلاحية لتعديل بيانات العامل.",
         duplicateWorkerName: "لا يمكن إضافة عامل بنفس الاسم. هذا العامل موجود مسبقًا.",
         duplicateWorkerNameEdit: "لا يمكن حفظ التعديل لأن اسم العامل مستخدم مسبقًا لعامل آخر.",
         addSuccess: "تمت إضافة العامل بنجاح.",
@@ -1084,9 +1180,12 @@
         productionEntry: "Production Entry",
         supervisorEvaluation: "Supervisor Evaluation",
         productionHistory: "Production History",
+        workerPerformance: "Worker Performance",
         workers: "Workers",
         products: "Products",
         machines: "Machines",
+        usersManagement: "Users Management",
+        profile: "Profile",
         logout: "Logout",
         loadingWorkers: "Loading workers...",
         addWorker: "Add Worker",
@@ -1106,9 +1205,13 @@
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         tokenMissing: "Session token not found.",
+        notAllowed: "You do not have permission to access Workers page.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
+        sessionExpired: "Session expired. Please login again.",
         loadFailed: "Unable to load workers data.",
         nameRequired: "Please enter worker name.",
+        addNotAllowed: "You do not have permission to add a new worker.",
+        editNotAllowed: "You do not have permission to edit worker data.",
         duplicateWorkerName: "A worker with the same name already exists.",
         duplicateWorkerNameEdit: "Cannot save changes because this name is already used by another worker.",
         addSuccess: "Worker added successfully.",
@@ -1133,12 +1236,15 @@
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
 
-    const logoutBtn = document.getElementById("logoutBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
     const languageToggleBtn = document.getElementById("languageToggleBtn");
+
+    const topUserMenuBtn = document.getElementById("topUserMenuBtn");
+    const userDropdown = document.getElementById("userDropdown");
+    const logoutDropdownBtn = document.getElementById("logoutDropdownBtn");
 
     const openAddWorkerBtn = document.getElementById("openAddWorkerBtn");
     const addWorkerModal = document.getElementById("addWorkerModal");
@@ -1164,27 +1270,15 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
-      protectPage();
       initSidebar();
       initLanguage();
+      initUserDropdown();
       bindEvents();
-      loadWorkers();
+      protectPageAndLoadWorkers();
     });
 
     function t(key) {
-      return i18n[currentLang][key];
-    }
-
-    function normalizeSession(session) {
-      const user = session.user || session.User || {};
-      return {
-        ...user,
-        ...session,
-        token: session.token || user.token || "",
-        Role: session.Role || session.role || user.Role || user.role || "",
-        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
-        Username: session.Username || session.username || user.Username || user.username || ""
-      };
+      return i18n[currentLang][key] || key;
     }
 
     function applyLanguage(lang) {
@@ -1207,43 +1301,98 @@
         }
       });
 
-      const session = getSession();
-
-      if (session) {
-        currentUser = normalizeSession(session);
+      if (currentUser) {
         renderUser(currentUser);
-        applyRoleUI(currentUser.Role || currentUser.role);
+        applyPermissionsUI();
       }
 
       renderWorkersTable();
     }
 
-    function protectPage() {
+    async function protectPageAndLoadWorkers() {
       const session = getSession();
 
-      if (!session) {
-        window.location.href = "index.html";
+      if (!session || !session.token) {
+        redirectToLogin();
         return;
       }
 
-      currentUser = normalizeSession(session);
-      renderUser(currentUser);
-      applyRoleUI(currentUser.Role || currentUser.role);
+      try {
+        const sessionResult = await apiPost({
+          action: "checkSession",
+          token: session.token
+        });
+
+        if (!sessionResult || !sessionResult.success) {
+          localStorage.removeItem(SESSION_KEY);
+          showMessage((sessionResult && sessionResult.message) || t("sessionExpired"), "error");
+
+          setTimeout(() => {
+            redirectToLogin();
+          }, 800);
+
+          return;
+        }
+
+        currentUser = normalizeSession({
+          ...session,
+          user: sessionResult.user
+        });
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: session.token,
+          user: currentUser
+        }));
+
+        renderUser(currentUser);
+        applyPermissionsUI();
+
+        if (!hasClientPermission("workersPage")) {
+          hideLoading();
+          showMessage(t("notAllowed"), "error");
+
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+
+          return;
+        }
+
+        await loadWorkers();
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        showMessage(t("serverError"), "error");
+      }
     }
 
-    function renderUser(session) {
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+
+      return {
+        ...user,
+        token: session.token || user.token || "",
+        UserID: user.UserID || session.UserID || "",
+        FullName: user.FullName || user.fullName || session.FullName || session.fullName || user.name || session.name || user.Username || user.username || "",
+        Username: user.Username || user.username || session.Username || session.username || "",
+        Role: user.Role || user.role || session.Role || session.role || "",
+        Status: user.Status || user.status || session.Status || session.status || "",
+        Permissions: user.Permissions || user.permissions || session.Permissions || session.permissions || {}
+      };
+    }
+
+    function renderUser(user) {
       const name =
-        session.FullName ||
-        session.fullName ||
-        session.name ||
-        session.Username ||
-        session.username ||
+        user.FullName ||
+        user.fullName ||
+        user.name ||
+        user.Username ||
+        user.username ||
         "User";
 
-      const role = session.Role || session.role || "---";
-
       userName.textContent = name;
-      userRole.textContent = normalizeRoleLabel(role);
+      userRole.textContent = normalizeRoleLabel(user.Role || user.role);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
@@ -1258,50 +1407,72 @@
       return role || "---";
     }
 
-    function isAdmin() {
-      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
+    function hasClientPermission(permissionKey) {
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
+
+      if (role === "admin") return true;
+
+      const permissions = currentUser?.Permissions || currentUser?.permissions || {};
+
+      return permissions[permissionKey] === true;
     }
 
-    function applyRoleUI(role) {
-      const cleanRole = String(role || "").toLowerCase();
-
-      document.querySelectorAll(".admin-only").forEach(el => {
-        el.style.display = cleanRole === "admin" ? "" : "none";
+    function applyPermissionsUI() {
+      document.querySelectorAll("[data-permission]").forEach(element => {
+        const permissionKey = element.getAttribute("data-permission");
+        element.style.display = hasClientPermission(permissionKey) ? "" : "none";
       });
     }
 
     async function loadWorkers() {
-      if (!currentUser || !currentUser.token) {
+      const session = getSession();
+
+      if (!session || !session.token) {
         hideLoading();
         showMessage(t("tokenMissing"), "error");
         return;
       }
 
+      const cacheKey = getWorkersCacheKey_();
+      const cached = getLocalCache_(cacheKey, WORKERS_CACHE_MAX_AGE_MS);
+
+      if (cached && cached.workers) {
+        workers = cached.workers || [];
+        renderWorkersTable();
+        hideLoading();
+      }
+
       try {
         const result = await apiPost({
           action: "getWorkers",
-          token: currentUser.token,
+          token: session.token,
           activeOnly: false
         });
 
-        hideLoading();
-
         if (!result || !result.success) {
-          showMessage((result && result.message) || t("loadFailed"), "error");
-          workers = [];
-          renderWorkersTable();
+          if (!cached) {
+            hideLoading();
+            showMessage((result && result.message) || t("loadFailed"), "error");
+            workers = [];
+            renderWorkersTable();
+          }
           return;
         }
 
         workers = result.workers || [];
+        setLocalCache_(cacheKey, result);
         renderWorkersTable();
+        hideLoading();
 
       } catch (error) {
         console.error(error);
-        hideLoading();
-        showMessage(t("serverError"), "error");
-        workers = [];
-        renderWorkersTable();
+
+        if (!cached) {
+          hideLoading();
+          showMessage(t("serverError"), "error");
+          workers = [];
+          renderWorkersTable();
+        }
       }
     }
 
@@ -1349,12 +1520,15 @@
     }
 
     function renderWorkersTable() {
+      if (!workersTableBody) return;
+
       workersTableBody.innerHTML = "";
 
       const filteredWorkers = getFilteredWorkers();
+      const canEdit = hasClientPermission("editWorker");
 
       if (!filteredWorkers.length) {
-        const colspan = isAdmin() ? 4 : 3;
+        const colspan = canEdit ? 4 : 3;
         workersTableBody.innerHTML = `
           <tr>
             <td colspan="${colspan}">
@@ -1382,7 +1556,7 @@
             </span>
           </td>
           ${
-            isAdmin()
+            canEdit
               ? `
                 <td>
                   <div class="table-actions">
@@ -1434,27 +1608,14 @@
       });
 
       editWorkerForm.addEventListener("submit", handleUpdateWorker);
-
-      logoutBtn.addEventListener("click", async () => {
-        const session = getSession();
-
-        try {
-          if (session && session.token && API_URL) {
-            await apiPost({
-              action: "logout",
-              token: session.token
-            });
-          }
-        } catch (error) {
-          console.warn(error);
-        }
-
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = "index.html";
-      });
     }
 
     function openAddWorkerModal() {
+      if (!hasClientPermission("addWorker")) {
+        showMessage(t("addNotAllowed"), "error");
+        return;
+      }
+
       resetAddForm();
       addWorkerModal.classList.add("show");
       document.body.style.overflow = "hidden";
@@ -1471,6 +1632,11 @@
       event.preventDefault();
       clearMessage();
 
+      if (!hasClientPermission("addWorker")) {
+        showMessage(t("addNotAllowed"), "error");
+        return;
+      }
+
       const workerName = workerNameInput.value.trim();
       const status = workerStatusInput.value || "Active";
 
@@ -1484,12 +1650,14 @@
         return;
       }
 
+      const session = getSession();
+
       setButtonLoading(saveWorkerBtn, true, t("saving"));
 
       try {
         const result = await apiPost({
           action: "addWorker",
-          token: currentUser.token,
+          token: session.token,
           worker: {
             workerName: workerName,
             status: status
@@ -1504,6 +1672,7 @@
         }
 
         closeAddWorkerModal();
+        clearWorkersRelatedCaches_();
         showMessage(result.message || t("addSuccess"), "success");
         await loadWorkers();
 
@@ -1515,6 +1684,11 @@
     }
 
     function openEditWorker(workerId) {
+      if (!hasClientPermission("editWorker")) {
+        showMessage(t("editNotAllowed"), "error");
+        return;
+      }
+
       const worker = workers.find(item => String(item.WorkerID) === String(workerId));
 
       if (!worker) return;
@@ -1538,6 +1712,11 @@
       event.preventDefault();
       clearMessage();
 
+      if (!hasClientPermission("editWorker")) {
+        showMessage(t("editNotAllowed"), "error");
+        return;
+      }
+
       const workerId = editWorkerId.value.trim();
       const workerName = editWorkerName.value.trim();
       const status = editWorkerStatus.value || "Active";
@@ -1552,12 +1731,14 @@
         return;
       }
 
+      const session = getSession();
+
       setButtonLoading(updateWorkerBtn, true, t("saving"));
 
       try {
         const result = await apiPost({
           action: "updateWorker",
-          token: currentUser.token,
+          token: session.token,
           worker: {
             workerId: workerId,
             workerName: workerName,
@@ -1573,6 +1754,7 @@
         }
 
         closeEditModal();
+        clearWorkersRelatedCaches_();
         showMessage(result.message || t("updateSuccess"), "success");
         await loadWorkers();
 
@@ -1586,6 +1768,67 @@
     function resetAddForm() {
       workerForm.reset();
       workerStatusInput.value = "Active";
+    }
+
+    function getWorkersCacheKey_() {
+      const userId = currentUser && currentUser.UserID ? currentUser.UserID : "guest";
+      return WORKERS_CACHE_PREFIX + "_" + userId;
+    }
+
+    function getLocalCache_(key, maxAgeMs) {
+      try {
+        const raw = localStorage.getItem(key);
+
+        if (!raw) return null;
+
+        const cached = JSON.parse(raw);
+
+        if (!cached || !cached.savedAt || !cached.data) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        const age = Date.now() - cached.savedAt;
+
+        if (age > maxAgeMs) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return cached.data;
+
+      } catch (error) {
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+
+    function setLocalCache_(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          savedAt: Date.now(),
+          data: data
+        }));
+      } catch (error) {
+        console.warn("Local cache failed:", error);
+      }
+    }
+
+    function clearPageLocalCache_(prefix) {
+      Object.keys(localStorage).forEach(function(key) {
+        if (key.indexOf(prefix) === 0) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    function clearWorkersRelatedCaches_() {
+      clearPageLocalCache_("workers_page_cache");
+      clearPageLocalCache_("production_initial_data");
+      clearPageLocalCache_("dashboard_cache");
+      clearPageLocalCache_("history_cache");
+      clearPageLocalCache_("performance_workers_cache");
+      clearPageLocalCache_("worker_performance_cache");
     }
 
     async function apiPost(payload) {
@@ -1615,6 +1858,10 @@
       }
     }
 
+    function redirectToLogin() {
+      window.location.href = "index.html";
+    }
+
     function initSidebar() {
       menuBtn.addEventListener("click", openSidebar);
       closeSidebarBtn.addEventListener("click", closeSidebar);
@@ -1623,6 +1870,7 @@
       document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
           closeSidebar();
+          closeUserDropdown();
           closeAddWorkerModal();
           closeEditModal();
         }
@@ -1653,6 +1901,48 @@
         const nextLang = currentLang === "ar" ? "en" : "ar";
         applyLanguage(nextLang);
       });
+    }
+
+    function initUserDropdown() {
+      topUserMenuBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        userDropdown.classList.toggle("show");
+      });
+
+      userDropdown.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", event => {
+        if (!event.target.closest(".user-menu-wrapper")) {
+          closeUserDropdown();
+        }
+      });
+
+      logoutDropdownBtn.addEventListener("click", logoutUser);
+    }
+
+    function closeUserDropdown() {
+      userDropdown.classList.remove("show");
+    }
+
+    async function logoutUser() {
+      const session = getSession();
+
+      try {
+        if (session && session.token && API_URL) {
+          await apiPost({
+            action: "logout",
+            token: session.token
+          });
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+
+      localStorage.removeItem(SESSION_KEY);
+      clearWorkersRelatedCaches_();
+      redirectToLogin();
     }
 
     function normalizeStatus(status) {
@@ -1710,5 +2000,6 @@
         .replace(/'/g, "&#039;");
     }
   </script>
+
 </body>
 </html>
