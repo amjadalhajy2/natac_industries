@@ -382,13 +382,10 @@
       transition: 0.18s ease;
     }
 
-    .nav a:hover {
-      color: var(--blue-dark);
-      padding-inline-start: 10px;
-    }
-
+    .nav a:hover,
     .nav a.active {
       color: var(--blue-dark);
+      padding-inline-start: 10px;
     }
 
     .nav-icon {
@@ -429,14 +426,6 @@
       height: 20px;
       border: 3px solid rgba(0, 102, 255, 0.14);
       border-top-color: var(--blue);
-    }
-
-    .mini-spinner {
-      width: 18px;
-      height: 18px;
-      border: 3px solid rgba(255,255,255,0.45);
-      border-top-color: #fff;
-      display: inline-block;
     }
 
     .message {
@@ -871,7 +860,7 @@
             <span data-i18n="profile">الملف الشخصي</span>
           </a>
 
-          <a href="users.html" id="usersManagementDropdownLink" data-permission="usersPage">
+          <a href="users.html" data-permission="usersPage">
             <span>👥</span>
             <span data-i18n="usersManagement">إدارة المستخدمين</span>
           </a>
@@ -1294,6 +1283,7 @@
 
         renderUser(currentUser);
         applyPermissionsUI();
+
         await loadDashboard();
 
       } catch (error) {
