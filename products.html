@@ -168,11 +168,72 @@
       text-overflow: ellipsis;
     }
 
+
+    .user-menu-wrapper {
+      position: relative;
+    }
+
     .top-user-box {
+      border: 0;
+      background: transparent;
       display: flex;
       align-items: center;
       gap: 9px;
       min-width: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      inset-inline-end: 0;
+      width: 235px;
+      z-index: 500;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 18px 48px rgba(16,24,39,0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .user-dropdown.show {
+      display: grid;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: start;
+      padding: 0 4px;
+    }
+
+    .user-dropdown a:last-child,
+    .user-dropdown button:last-child {
+      border-bottom: 0;
+    }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      color: var(--blue-dark);
     }
 
     .avatar {
@@ -859,6 +920,10 @@
       .page-title h1 {
         font-size: 24px;
       }
+
+      .user-dropdown {
+        width: 220px;
+      }
     }
   </style>
 </head>
@@ -882,11 +947,30 @@
     <div class="topbar-side">
       <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
-      <div class="top-user-box">
-        <div class="avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <strong id="userName">مستخدم</strong>
-          <span id="userRole">---</span>
+      <div class="user-menu-wrapper">
+        <button class="top-user-box" id="topUserMenuBtn" type="button">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <strong id="userName">مستخدم</strong>
+            <span id="userRole">---</span>
+          </div>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <a href="profile.html">
+            <span>👤</span>
+            <span data-i18n="profile">الملف الشخصي</span>
+          </a>
+
+          <a href="users.html" data-permission="usersPage">
+            <span>👥</span>
+            <span data-i18n="usersManagement">إدارة المستخدمين</span>
+          </a>
+
+          <button type="button" id="logoutDropdownBtn">
+            <span>🚪</span>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </button>
         </div>
       </div>
     </div>
@@ -915,40 +999,40 @@
         <span class="nav-icon">📊</span>
       </a>
 
-      <a href="production.html">
+      <a href="production.html" data-permission="productionEntry">
         <span data-i18n="productionEntry">إدخال الإنتاج</span>
         <span class="nav-icon">🏭</span>
       </a>
 
-      <a href="evaluation.html">
+      <a href="evaluation.html" data-permission="supervisorEvaluation">
         <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
         <span class="nav-icon">⭐</span>
       </a>
 
-      <a href="history.html">
+      <a href="history.html" data-permission="productionHistory">
         <span data-i18n="productionHistory">سجل الإنتاج</span>
         <span class="nav-icon">📋</span>
       </a>
 
-      <a href="workers.html">
+      <a href="performance.html" data-permission="workerPerformance">
+        <span data-i18n="workerPerformance">متابعة أداء العمال</span>
+        <span class="nav-icon">📈</span>
+      </a>
+
+      <a href="workers.html" data-permission="workersPage">
         <span data-i18n="workers">العمال</span>
         <span class="nav-icon">👷</span>
       </a>
 
-      <a href="products.html" class="active admin-only">
+      <a href="products.html" class="active" data-permission="productsPage">
         <span data-i18n="products">المنتجات</span>
         <span class="nav-icon">📦</span>
       </a>
 
-      <a href="machines.html" class="admin-only">
+      <a href="machines.html" data-permission="machinesPage">
         <span data-i18n="machines">المكائن</span>
         <span class="nav-icon">⚙️</span>
       </a>
-
-      <button class="logout-btn" type="button" id="logoutBtn">
-        <span data-i18n="logout">تسجيل الخروج</span>
-        <span class="nav-icon">🚪</span>
-      </button>
     </nav>
   </aside>
 
@@ -967,13 +1051,13 @@
             <h1 data-i18n="products">المنتجات</h1>
           </div>
 
-          <div class="actions admin-only">
-            <button class="btn btn-secondary" type="button" id="openCategoryModalBtn">
+          <div class="actions">
+            <button class="btn btn-secondary" type="button" id="openCategoryModalBtn" data-permission="addProductCategory">
               <span>＋</span>
               <span data-i18n="addCategory">إضافة صنف</span>
             </button>
 
-            <button class="btn btn-primary" type="button" id="openAddProductBtn">
+            <button class="btn btn-primary" type="button" id="openAddProductBtn" data-permission="addProduct">
               <span>＋</span>
               <span data-i18n="addProduct">إضافة منتج</span>
             </button>
@@ -1012,7 +1096,7 @@
                 <th data-i18n="timePerUnit">وقت الإنتاج</th>
                 <th data-i18n="wastePerUnit">هدر الخام</th>
                 <th data-i18n="status">الحالة</th>
-                <th class="admin-only" data-i18n="actions">الإجراء</th>
+                <th data-permission="editProduct" data-i18n="actions">الإجراء</th>
               </tr>
             </thead>
             <tbody id="productsTableBody"></tbody>
@@ -1102,9 +1186,10 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzCaNtDgfhelEOmgDdX3lQr_wtPbTnyoWKaArFA1WWyB60RUBCBQi4N43S053cqk7li/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const PRODUCTS_CACHE_KEY = "products_page_data_v2";
 
     const i18n = {
       ar: {
@@ -1120,9 +1205,12 @@
         productionEntry: "إدخال الإنتاج",
         supervisorEvaluation: "تقييم المشرف",
         productionHistory: "سجل الإنتاج",
+        workerPerformance: "متابعة أداء العمال",
         workers: "العمال",
         products: "المنتجات",
         machines: "المكائن",
+        usersManagement: "إدارة المستخدمين",
+        profile: "الملف الشخصي",
         logout: "تسجيل الخروج",
         loadingProducts: "جاري تحميل المنتجات...",
         addProduct: "إضافة منتج",
@@ -1153,6 +1241,8 @@
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
+        sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى.",
+        notAllowed: "ليس لديك صلاحية لدخول صفحة المنتجات.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل بيانات المنتجات.",
         categoryRequired: "يرجى اختيار صنف المنتج.",
@@ -1182,9 +1272,12 @@
         productionEntry: "Production Entry",
         supervisorEvaluation: "Supervisor Evaluation",
         productionHistory: "Production History",
+        workerPerformance: "Worker Performance",
         workers: "Workers",
         products: "Products",
         machines: "Machines",
+        usersManagement: "Users Management",
+        profile: "Profile",
         logout: "Logout",
         loadingProducts: "Loading products...",
         addProduct: "Add Product",
@@ -1215,6 +1308,8 @@
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         tokenMissing: "Session token not found.",
+        sessionExpired: "Session expired. Please login again.",
+        notAllowed: "You do not have permission to access Products page.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         loadFailed: "Unable to load products data.",
         categoryRequired: "Please choose product category.",
@@ -1251,7 +1346,9 @@
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
 
-    const logoutBtn = document.getElementById("logoutBtn");
+    const topUserMenuBtn = document.getElementById("topUserMenuBtn");
+    const userDropdown = document.getElementById("userDropdown");
+    const logoutDropdownBtn = document.getElementById("logoutDropdownBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
@@ -1290,11 +1387,11 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
-      protectPage();
       initSidebar();
       initLanguage();
+      initUserDropdown();
       bindEvents();
-      loadData();
+      protectPageAndLoadData();
     });
 
     function t(key) {
@@ -1303,13 +1400,16 @@
 
     function normalizeSession(session) {
       const user = session.user || session.User || {};
+
       return {
         ...user,
-        ...session,
         token: session.token || user.token || "",
-        Role: session.Role || session.role || user.Role || user.role || "",
-        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
-        Username: session.Username || session.username || user.Username || user.username || ""
+        UserID: user.UserID || session.UserID || "",
+        FullName: user.FullName || user.fullName || session.FullName || session.fullName || user.name || session.name || user.Username || user.username || "",
+        Username: user.Username || user.username || session.Username || session.username || "",
+        Role: user.Role || user.role || session.Role || session.role || "",
+        Status: user.Status || user.status || session.Status || session.status || "",
+        Permissions: user.Permissions || user.permissions || session.Permissions || session.permissions || {}
       };
     }
 
@@ -1333,12 +1433,9 @@
         }
       });
 
-      const session = getSession();
-
-      if (session) {
-        currentUser = normalizeSession(session);
+      if (currentUser) {
         renderUser(currentUser);
-        applyRoleUI(currentUser.Role || currentUser.role);
+        applyPermissionsUI();
       }
 
       renderCategoryFilters();
@@ -1349,32 +1446,69 @@
       updateProductModalTitle();
     }
 
-    function protectPage() {
+    async function protectPageAndLoadData() {
       const session = getSession();
 
-      if (!session) {
-        window.location.href = "index.html";
+      if (!session || !session.token) {
+        redirectToLogin();
         return;
       }
 
-      currentUser = normalizeSession(session);
-      renderUser(currentUser);
-      applyRoleUI(currentUser.Role || currentUser.role);
+      try {
+        const sessionResult = await apiPost({
+          action: "checkSession",
+          token: session.token
+        });
+
+        if (!sessionResult || !sessionResult.success) {
+          localStorage.removeItem(SESSION_KEY);
+          showMessage((sessionResult && sessionResult.message) || t("sessionExpired"), "error");
+          setTimeout(redirectToLogin, 800);
+          return;
+        }
+
+        currentUser = normalizeSession({
+          ...session,
+          user: sessionResult.user
+        });
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: session.token,
+          user: currentUser
+        }));
+
+        renderUser(currentUser);
+        applyPermissionsUI();
+
+        if (!hasClientPermission("productsPage")) {
+          hideLoading();
+          showMessage(t("notAllowed"), "error");
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+          return;
+        }
+
+        await loadData();
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        showMessage(t("serverError"), "error");
+      }
     }
 
-    function renderUser(session) {
+    function renderUser(user) {
       const name =
-        session.FullName ||
-        session.fullName ||
-        session.name ||
-        session.Username ||
-        session.username ||
+        user.FullName ||
+        user.fullName ||
+        user.name ||
+        user.Username ||
+        user.username ||
         "User";
 
-      const role = session.Role || session.role || "---";
-
       userName.textContent = name;
-      userRole.textContent = normalizeRoleLabel(role);
+      userRole.textContent = normalizeRoleLabel(user.Role || user.role);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
@@ -1389,16 +1523,29 @@
       return role || "---";
     }
 
-    function isAdmin() {
-      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
+    function hasClientPermission(permissionKey) {
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
+
+      if (role === "admin") return true;
+
+      const permissions = currentUser?.Permissions || currentUser?.permissions || {};
+
+      return permissions[permissionKey] === true;
     }
 
-    function applyRoleUI(role) {
-      const cleanRole = String(role || "").toLowerCase();
-
-      document.querySelectorAll(".admin-only").forEach(el => {
-        el.style.display = cleanRole === "admin" ? "" : "none";
+    function applyPermissionsUI() {
+      document.querySelectorAll("[data-permission]").forEach(element => {
+        const permissionKey = element.getAttribute("data-permission");
+        element.style.display = hasClientPermission(permissionKey) ? "" : "none";
       });
+    }
+
+    function canEditProduct() {
+      return hasClientPermission("editProduct");
+    }
+
+    function isAdmin() {
+      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
     }
 
     async function loadData() {
@@ -1406,6 +1553,21 @@
         hideLoading();
         showMessage(t("tokenMissing"), "error");
         return;
+      }
+
+      const cached = getLocalCache_(PRODUCTS_CACHE_KEY, 300000);
+
+      if (cached) {
+        products = cached.products || [];
+        machines = cached.machines || [];
+        categories = cached.categories || [];
+
+        renderCategoryFilters();
+        renderProductFormCategories();
+        renderMachinesForSelectedCategory();
+        renderProductsTable();
+        renderCategoriesList();
+        hideLoading();
       }
 
       try {
@@ -1427,10 +1589,11 @@
           })
         ]);
 
-        hideLoading();
-
         if (!productsResult || !productsResult.success) {
-          showMessage((productsResult && productsResult.message) || t("loadFailed"), "error");
+          if (!cached) {
+            hideLoading();
+            showMessage((productsResult && productsResult.message) || t("loadFailed"), "error");
+          }
           return;
         }
 
@@ -1438,16 +1601,26 @@
         machines = machinesResult && machinesResult.success ? machinesResult.machines || [] : [];
         categories = categoriesResult && categoriesResult.success ? categoriesResult.categories || [] : [];
 
+        setLocalCache_(PRODUCTS_CACHE_KEY, {
+          products,
+          machines,
+          categories
+        });
+
         renderCategoryFilters();
         renderProductFormCategories();
         renderMachinesForSelectedCategory();
         renderProductsTable();
         renderCategoriesList();
+        hideLoading();
 
       } catch (error) {
         console.error(error);
-        hideLoading();
-        showMessage(t("serverError"), "error");
+
+        if (!cached) {
+          hideLoading();
+          showMessage(t("serverError"), "error");
+        }
       }
     }
 
@@ -1488,24 +1661,6 @@
         if (event.target === categoryModal) {
           closeCategoryModal();
         }
-      });
-
-      logoutBtn.addEventListener("click", async () => {
-        const session = getSession();
-
-        try {
-          if (session && session.token && API_URL) {
-            await apiPost({
-              action: "logout",
-              token: session.token
-            });
-          }
-        } catch (error) {
-          console.warn(error);
-        }
-
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = "index.html";
       });
     }
 
@@ -1652,7 +1807,7 @@
       const filteredProducts = getFilteredProducts();
 
       if (!filteredProducts.length) {
-        const colspan = isAdmin() ? 8 : 7;
+        const colspan = canEditProduct() ? 8 : 7;
         productsTableBody.innerHTML = `
           <tr>
             <td colspan="${colspan}">
@@ -1682,7 +1837,7 @@
             </span>
           </td>
           ${
-            isAdmin()
+            canEditProduct()
               ? `
                 <td>
                   <div class="table-actions">
@@ -1813,6 +1968,7 @@
         }
 
         closeProductModal();
+        clearRelatedLocalCaches_();
         showMessage(result.message || (editingProductId ? t("updateSuccess") : t("addSuccess")), "success");
         await loadData();
 
@@ -1888,6 +2044,7 @@
         }
 
         categoryNameInput.value = "";
+        clearRelatedLocalCaches_();
         showMessage(result.message || t("categoryAddSuccess"), "success");
         await loadData();
         renderCategoriesList();
@@ -1904,6 +2061,62 @@
 
       return categories.some(category => {
         return normalizeText(category.CategoryName) === cleanName;
+      });
+    }
+
+
+    function getLocalCache_(key, maxAgeMs) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+
+        const cached = JSON.parse(raw);
+
+        if (!cached || !cached.savedAt || !cached.data) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        if (Date.now() - cached.savedAt > maxAgeMs) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return cached.data;
+
+      } catch (error) {
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+
+    function setLocalCache_(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          savedAt: Date.now(),
+          data: data
+        }));
+      } catch (error) {
+        console.warn("Local cache failed:", error);
+      }
+    }
+
+    function clearRelatedLocalCaches_() {
+      [
+        "dashboard_cache",
+        "production_initial_data",
+        "products_page_data",
+        "machines_page_data",
+        "workers_page_data",
+        "history_cache",
+        "performance_cache",
+        PRODUCTS_CACHE_KEY
+      ].forEach(prefix => {
+        Object.keys(localStorage).forEach(key => {
+          if (key.indexOf(prefix) === 0 || key === prefix) {
+            localStorage.removeItem(key);
+          }
+        });
       });
     }
 
@@ -1934,6 +2147,10 @@
       }
     }
 
+    function redirectToLogin() {
+      window.location.href = "index.html";
+    }
+
     function initSidebar() {
       menuBtn.addEventListener("click", openSidebar);
       closeSidebarBtn.addEventListener("click", closeSidebar);
@@ -1944,6 +2161,7 @@
           closeSidebar();
           closeProductModal();
           closeCategoryModal();
+          closeUserDropdown();
         }
       });
 
@@ -1972,6 +2190,49 @@
         const nextLang = currentLang === "ar" ? "en" : "ar";
         applyLanguage(nextLang);
       });
+    }
+
+
+    function initUserDropdown() {
+      topUserMenuBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        userDropdown.classList.toggle("show");
+      });
+
+      userDropdown.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", event => {
+        if (!event.target.closest(".user-menu-wrapper")) {
+          closeUserDropdown();
+        }
+      });
+
+      logoutDropdownBtn.addEventListener("click", logoutUser);
+    }
+
+    function closeUserDropdown() {
+      userDropdown.classList.remove("show");
+    }
+
+    async function logoutUser() {
+      const session = getSession();
+
+      try {
+        if (session && session.token && API_URL) {
+          await apiPost({
+            action: "logout",
+            token: session.token
+          });
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+
+      localStorage.removeItem(SESSION_KEY);
+      clearRelatedLocalCaches_();
+      redirectToLogin();
     }
 
     function normalizeStatus(status) {
