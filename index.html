@@ -9,6 +9,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
@@ -367,9 +369,12 @@
   </main>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzCaNtDgfhelEOmgDdX3lQr_wtPbTnyoWKaArFA1WWyB60RUBCBQi4N43S053cqk7li/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const SESSION_VALIDATION_MAX_AGE_MS = 300000;
+    const API_TIMEOUT_MS = 18000;
+    const REMEMBERED_USERNAME_KEY = "factoryRememberedUsername";
 
     const i18n = {
       ar: {
@@ -383,6 +388,7 @@
         password: "كلمة المرور",
         login: "دخول",
         loggingIn: "جاري الدخول...",
+        checkingSession: "جاري التحقق...",
         missingFields: "يرجى إدخال اسم المستخدم وكلمة المرور",
         loginSuccess: "تم تسجيل الدخول بنجاح",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
@@ -399,6 +405,7 @@
         password: "Password",
         login: "Login",
         loggingIn: "Signing in...",
+        checkingSession: "Checking...",
         missingFields: "Please enter username and password",
         loginSuccess: "Signed in successfully",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
@@ -424,8 +431,9 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
-      checkExistingSession();
       bindEvents();
+      restoreRememberedUsername();
+      checkExistingSessionFast();
     });
 
     function applyLanguage(lang) {
@@ -457,12 +465,30 @@
       loginForm.addEventListener("submit", handleLogin);
     }
 
-    async function checkExistingSession() {
+    function restoreRememberedUsername() {
+      const rememberedUsername = localStorage.getItem(REMEMBERED_USERNAME_KEY) || "";
+
+      if (rememberedUsername && !usernameInput.value) {
+        usernameInput.value = rememberedUsername;
+        passwordInput.focus();
+      } else {
+        usernameInput.focus();
+      }
+    }
+
+    async function checkExistingSessionFast() {
       const session = getSession();
 
       if (!session || !session.token) {
         return;
       }
+
+      if (isSessionRecentlyValidated(session)) {
+        redirectToDashboard();
+        return;
+      }
+
+      setLoading(true, i18n[currentLang].checkingSession);
 
       try {
         const result = await apiPost({
@@ -473,14 +499,25 @@
         if (result && result.success) {
           const user = result.user || session.user || {};
           saveSession(session.token, user);
-          window.location.href = "dashboard.html";
-        } else {
-          localStorage.removeItem(SESSION_KEY);
+          redirectToDashboard();
+          return;
         }
+
+        localStorage.removeItem(SESSION_KEY);
+        setLoading(false);
 
       } catch (error) {
         console.warn(error);
+        setLoading(false);
       }
+    }
+
+    function isSessionRecentlyValidated(session) {
+      const validatedAt = Number(session.validatedAt || 0);
+
+      if (!validatedAt) return false;
+
+      return Date.now() - validatedAt <= SESSION_VALIDATION_MAX_AGE_MS;
     }
 
     async function handleLogin(event) {
@@ -495,7 +532,7 @@
         return;
       }
 
-      setLoading(true);
+      setLoading(true, i18n[currentLang].loggingIn);
 
       try {
         const result = await apiPost({
@@ -510,12 +547,14 @@
           return;
         }
 
+        localStorage.setItem(REMEMBERED_USERNAME_KEY, username);
+        clearDataCachesAfterLogin_();
         saveSession(result.token, result.user || {});
         showMessage(result.message || i18n[currentLang].loginSuccess, "success");
 
         setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 450);
+          redirectToDashboard();
+        }, 250);
 
       } catch (error) {
         console.error(error);
@@ -525,22 +564,34 @@
     }
 
     async function apiPost(payload) {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(payload)
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
-      if (!response.ok) {
-        throw new Error("HTTP " + response.status);
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        return await response.json();
+
+      } finally {
+        clearTimeout(timeoutId);
       }
-
-      return await response.json();
     }
 
     function saveSession(token, user) {
+      const permissions = user.Permissions || user.permissions || {};
+
       const session = {
         token: token,
         user: user,
@@ -548,7 +599,9 @@
         FullName: user.FullName || "",
         Username: user.Username || "",
         Role: user.Role || "",
-        Status: user.Status || ""
+        Status: user.Status || "",
+        Permissions: permissions,
+        validatedAt: Date.now()
       };
 
       localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -565,11 +618,37 @@
       }
     }
 
-    function setLoading(isLoading) {
+    function clearDataCachesAfterLogin_() {
+      const prefixes = [
+        "dashboard_cache",
+        "production_initial_data",
+        "history_cache",
+        "products_page_data",
+        "machines_page_data",
+        "workers_page_data",
+        "workers_cache",
+        "users_page_cache",
+        "profile_cache",
+        "performance_workers_cache",
+        "performance_results_cache"
+      ];
+
+      Object.keys(localStorage).forEach(function(key) {
+        if (prefixes.some(function(prefix) { return key.indexOf(prefix) === 0; })) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    function redirectToDashboard() {
+      window.location.replace("dashboard.html");
+    }
+
+    function setLoading(isLoading, text) {
       loginBtn.disabled = isLoading;
 
       if (isLoading) {
-        loginBtn.innerHTML = '<span class="mini-spinner"></span>' + i18n[currentLang].loggingIn;
+        loginBtn.innerHTML = '<span class="mini-spinner"></span>' + (text || i18n[currentLang].loggingIn);
       } else {
         loginBtn.textContent = i18n[currentLang].login;
       }
