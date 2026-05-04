@@ -169,11 +169,21 @@
       text-overflow: ellipsis;
     }
 
+    .user-menu-wrapper {
+      position: relative;
+    }
+
     .top-user-box {
+      border: 0;
+      background: transparent;
       display: flex;
       align-items: center;
       gap: 9px;
       min-width: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      color: var(--text);
     }
 
     .avatar {
@@ -207,6 +217,56 @@
       margin-top: 1px;
       font-size: 12px;
       color: var(--muted);
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      inset-inline-end: 0;
+      width: 235px;
+      z-index: 500;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 18px 48px rgba(16,24,39,0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .user-dropdown.show {
+      display: grid;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: start;
+      padding: 0 4px;
+    }
+
+    .user-dropdown a:last-child,
+    .user-dropdown button:last-child {
+      border-bottom: 0;
+    }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      color: var(--blue-dark);
     }
 
     .overlay {
@@ -907,6 +967,10 @@
       .page-title h1 {
         font-size: 24px;
       }
+
+      .user-dropdown {
+        width: 220px;
+      }
     }
   </style>
 </head>
@@ -930,11 +994,30 @@
     <div class="topbar-side">
       <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
-      <div class="top-user-box">
-        <div class="avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <strong id="userName">مستخدم</strong>
-          <span id="userRole">---</span>
+      <div class="user-menu-wrapper">
+        <button class="top-user-box" id="topUserMenuBtn" type="button">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <strong id="userName">مستخدم</strong>
+            <span id="userRole">---</span>
+          </div>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <a href="profile.html">
+            <span>👤</span>
+            <span data-i18n="profile">الملف الشخصي</span>
+          </a>
+
+          <a href="users.html" data-permission="usersPage">
+            <span>👥</span>
+            <span data-i18n="usersManagement">إدارة المستخدمين</span>
+          </a>
+
+          <button type="button" id="logoutDropdownBtn">
+            <span>🚪</span>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </button>
         </div>
       </div>
     </div>
@@ -963,40 +1046,40 @@
         <span class="nav-icon">📊</span>
       </a>
 
-      <a href="production.html">
+      <a href="production.html" data-permission="productionEntry">
         <span data-i18n="productionEntry">إدخال الإنتاج</span>
         <span class="nav-icon">🏭</span>
       </a>
 
-      <a href="evaluation.html">
+      <a href="evaluation.html" data-permission="supervisorEvaluation">
         <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
         <span class="nav-icon">⭐</span>
       </a>
 
-      <a href="history.html" class="active">
+      <a href="history.html" class="active" data-permission="productionHistory">
         <span data-i18n="productionHistory">سجل الإنتاج</span>
         <span class="nav-icon">📋</span>
       </a>
 
-      <a href="workers.html">
+      <a href="performance.html" data-permission="workerPerformance">
+        <span data-i18n="workerPerformance">متابعة أداء العمال</span>
+        <span class="nav-icon">📈</span>
+      </a>
+
+      <a href="workers.html" data-permission="workersPage">
         <span data-i18n="workers">العمال</span>
         <span class="nav-icon">👷</span>
       </a>
 
-      <a href="products.html" class="admin-only">
+      <a href="products.html" data-permission="productsPage">
         <span data-i18n="products">المنتجات</span>
         <span class="nav-icon">📦</span>
       </a>
 
-      <a href="machines.html" class="admin-only">
+      <a href="machines.html" data-permission="machinesPage">
         <span data-i18n="machines">المكائن</span>
         <span class="nav-icon">⚙️</span>
       </a>
-
-      <button class="logout-btn" type="button" id="logoutBtn">
-        <span data-i18n="logout">تسجيل الخروج</span>
-        <span class="nav-icon">🚪</span>
-      </button>
     </nav>
   </aside>
 
@@ -1186,6 +1269,8 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbwcshM_6mzlh5V8GrL9zdZ8S3yIxG2mJXVX9rAIxXrQ30SWoQKG27e1rMogpwL5PBo-/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const INITIAL_CACHE_KEY = "history_initial_data_v2";
+    const HISTORY_CACHE_PREFIX = "history_records_cache_v2_";
     const STANDARD_WORK_MINUTES = 600;
 
     const i18n = {
@@ -1202,9 +1287,12 @@
         productionEntry: "إدخال الإنتاج",
         supervisorEvaluation: "تقييم المشرف",
         productionHistory: "سجل الإنتاج",
+        workerPerformance: "متابعة أداء العمال",
         workers: "العمال",
         products: "المنتجات",
         machines: "المكائن",
+        usersManagement: "إدارة المستخدمين",
+        profile: "الملف الشخصي",
         logout: "تسجيل الخروج",
         loadingHistory: "جاري تحميل سجل الإنتاج...",
         refresh: "تحديث",
@@ -1251,6 +1339,8 @@
         chooseMachine: "اختر المكينة",
         chooseProduct: "اختر المنتج",
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
+        sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى.",
+        notAllowed: "ليس لديك صلاحية لدخول سجل الإنتاج.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل سجل الإنتاج.",
         saveFailed: "تعذر حفظ التعديل.",
@@ -1275,9 +1365,12 @@
         productionEntry: "Production Entry",
         supervisorEvaluation: "Supervisor Evaluation",
         productionHistory: "Production History",
+        workerPerformance: "Worker Performance",
         workers: "Workers",
         products: "Products",
         machines: "Machines",
+        usersManagement: "Users Management",
+        profile: "Profile",
         logout: "Logout",
         loadingHistory: "Loading production history...",
         refresh: "Refresh",
@@ -1324,6 +1417,8 @@
         chooseMachine: "Choose Machine",
         chooseProduct: "Choose Product",
         tokenMissing: "Session token not found.",
+        sessionExpired: "Session expired. Please login again.",
+        notAllowed: "You do not have permission to access Production History.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         loadFailed: "Unable to load production history.",
         saveFailed: "Unable to save changes.",
@@ -1358,7 +1453,9 @@
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
 
-    const logoutBtn = document.getElementById("logoutBtn");
+    const topUserMenuBtn = document.getElementById("topUserMenuBtn");
+    const userDropdown = document.getElementById("userDropdown");
+    const logoutDropdownBtn = document.getElementById("logoutDropdownBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
@@ -1403,12 +1500,12 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
-      protectPage();
       initSidebar();
       initLanguage();
+      initUserDropdown();
       bindEvents();
       setTodayDate();
-      loadMasterDataAndHistory();
+      protectPageAndLoadData();
     });
 
     function t(key) {
@@ -1451,7 +1548,7 @@
       if (session) {
         currentUser = normalizeSession(session);
         renderUser(currentUser);
-        applyRoleUI(currentUser.Role || currentUser.role);
+        applyPermissionsUI();
       }
 
       renderWorkersOptions();
@@ -1461,17 +1558,62 @@
       renderHistoryTable();
     }
 
-    function protectPage() {
+    async function protectPageAndLoadData() {
       const session = getSession();
 
-      if (!session) {
-        window.location.href = "index.html";
+      if (!session || !session.token) {
+        redirectToLogin();
         return;
       }
 
-      currentUser = normalizeSession(session);
-      renderUser(currentUser);
-      applyRoleUI(currentUser.Role || currentUser.role);
+      try {
+        const sessionResult = await apiPost({
+          action: "checkSession",
+          token: session.token
+        });
+
+        if (!sessionResult || !sessionResult.success) {
+          localStorage.removeItem(SESSION_KEY);
+          showMessage((sessionResult && sessionResult.message) || t("sessionExpired"), "error");
+
+          setTimeout(() => {
+            redirectToLogin();
+          }, 800);
+
+          return;
+        }
+
+        currentUser = normalizeSession({
+          ...session,
+          user: sessionResult.user
+        });
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: session.token,
+          user: currentUser
+        }));
+
+        renderUser(currentUser);
+        applyPermissionsUI();
+
+        if (!hasClientPermission("productionHistory")) {
+          hideLoading();
+          showMessage(t("notAllowed"), "error");
+
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+
+          return;
+        }
+
+        await loadMasterDataAndHistory();
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        showMessage(t("serverError"), "error");
+      }
     }
 
     function renderUser(session) {
@@ -1501,19 +1643,41 @@
       return role || "---";
     }
 
-    function isAdmin() {
-      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
+    function hasClientPermission(permissionKey) {
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
+
+      if (role === "admin") return true;
+
+      const permissions = currentUser?.Permissions || currentUser?.permissions || {};
+
+      return permissions[permissionKey] === true;
     }
 
-    function applyRoleUI(role) {
-      const cleanRole = String(role || "").toLowerCase();
+    function canEditProduction() {
+      return hasClientPermission("editProduction");
+    }
 
-      document.querySelectorAll(".admin-only").forEach(el => {
-        el.style.display = cleanRole === "admin" ? "" : "none";
+    function isAdmin() {
+      return canEditProduction();
+    }
+
+    function applyPermissionsUI() {
+      document.querySelectorAll("[data-permission]").forEach(element => {
+        const permissionKey = element.getAttribute("data-permission");
+        element.style.display = hasClientPermission(permissionKey) ? "" : "none";
       });
 
-      readonlyNote.style.display = cleanRole === "admin" ? "none" : "block";
-      editActions.style.display = cleanRole === "admin" ? "flex" : "none";
+      const canEdit = canEditProduction();
+
+      document.querySelectorAll(".admin-only").forEach(el => {
+        el.style.display = canEdit ? "" : "none";
+      });
+
+      if (readonlyNote) readonlyNote.style.display = canEdit ? "none" : "block";
+      if (editActions) editActions.style.display = canEdit ? "flex" : "none";
+
+      const imageUploadBox = document.getElementById("imageUploadBox");
+      if (imageUploadBox) imageUploadBox.style.display = canEdit ? "" : "none";
     }
 
     function setTodayDate() {
@@ -1527,28 +1691,43 @@
         return;
       }
 
-      try {
-        const [workersResult, productsResult, machinesResult] = await Promise.all([
-          apiPost({
-            action: "getWorkers",
-            token: currentUser.token,
-            activeOnly: false
-          }),
-          apiPost({
-            action: "getProducts",
-            token: currentUser.token,
-            activeOnly: false
-          }),
-          apiPost({
-            action: "getMachines",
-            token: currentUser.token,
-            activeOnly: false
-          })
-        ]);
+      const cached = getLocalCache_(INITIAL_CACHE_KEY, 300000);
 
-        workers = workersResult && workersResult.success ? workersResult.workers || [] : [];
-        products = productsResult && productsResult.success ? productsResult.products || [] : [];
-        machines = machinesResult && machinesResult.success ? machinesResult.machines || [] : [];
+      if (cached) {
+        workers = cached.workers || [];
+        products = cached.products || [];
+        machines = cached.machines || [];
+
+        renderWorkersOptions();
+        renderProductsOptions();
+        renderMachinesOptions();
+
+        await loadHistory();
+      }
+
+      try {
+        const result = await apiPost({
+          action: "getInitialData",
+          token: currentUser.token
+        });
+
+        if (!result || !result.success) {
+          if (!cached) {
+            hideLoading();
+            showMessage((result && result.message) || t("serverError"), "error");
+          }
+          return;
+        }
+
+        workers = result.workers || [];
+        products = result.products || [];
+        machines = result.machines || [];
+
+        setLocalCache_(INITIAL_CACHE_KEY, {
+          workers: workers,
+          products: products,
+          machines: machines
+        });
 
         renderWorkersOptions();
         renderProductsOptions();
@@ -1558,43 +1737,61 @@
 
       } catch (error) {
         console.error(error);
-        hideLoading();
-        showMessage(t("serverError"), "error");
+
+        if (!cached) {
+          hideLoading();
+          showMessage(t("serverError"), "error");
+        }
       }
     }
 
-    async function loadHistory() {
+    async function loadHistory(forceFresh = false) {
       clearMessage();
 
       const selectedDate = dateInput.value || toISODate(new Date());
+      const filters = {
+        fromDate: selectedDate,
+        toDate: selectedDate,
+        workerId: workerFilterInput.value || "",
+        productId: productFilterInput.value || "",
+        machineId: machineFilterInput.value || ""
+      };
+
+      const cacheKey = getHistoryCacheKey_(filters);
+      const cached = !forceFresh ? getLocalCache_(cacheKey, 60000) : null;
 
       setButtonLoading(refreshBtn, true, t("loadingHistory"));
+
+      if (cached) {
+        historyRecords = cached.records || [];
+        renderSummary();
+        renderHistoryTable();
+        hideLoading();
+        setButtonLoading(refreshBtn, false, t("refresh"));
+      }
 
       try {
         const result = await apiPost({
           action: "getProductionHistory",
           token: currentUser.token,
-          filters: {
-            fromDate: selectedDate,
-            toDate: selectedDate,
-            workerId: workerFilterInput.value || "",
-            productId: productFilterInput.value || "",
-            machineId: machineFilterInput.value || ""
-          }
+          filters: filters
         });
 
         hideLoading();
         setButtonLoading(refreshBtn, false, t("refresh"));
 
         if (!result || !result.success) {
-          showMessage((result && result.message) || t("loadFailed"), "error");
-          historyRecords = [];
-          renderSummary();
-          renderHistoryTable();
+          if (!cached) {
+            showMessage((result && result.message) || t("loadFailed"), "error");
+            historyRecords = [];
+            renderSummary();
+            renderHistoryTable();
+          }
           return;
         }
 
         historyRecords = result.records || [];
+        setLocalCache_(cacheKey, { records: historyRecords });
         renderSummary();
         renderHistoryTable();
 
@@ -1602,8 +1799,15 @@
         console.error(error);
         hideLoading();
         setButtonLoading(refreshBtn, false, t("refresh"));
-        showMessage(t("serverError"), "error");
+
+        if (!cached) {
+          showMessage(t("serverError"), "error");
+        }
       }
+    }
+
+    function getHistoryCacheKey_(filters) {
+      return HISTORY_CACHE_PREFIX + btoa(unescape(encodeURIComponent(JSON.stringify(filters))));
     }
 
     function renderWorkersOptions() {
@@ -2031,8 +2235,10 @@
         }
 
         closeDetailsModal();
+        clearPageLocalCache_(HISTORY_CACHE_PREFIX);
+        clearPageLocalCache_("dashboard_cache");
         showMessage(result.message || t("updateSuccess"), "success");
-        await loadHistory();
+        await loadHistory(true);
 
       } catch (error) {
         console.error(error);
@@ -2112,24 +2318,6 @@
           closeIndicatorModal();
         }
       });
-
-      logoutBtn.addEventListener("click", async () => {
-        const session = getSession();
-
-        try {
-          if (session && session.token && API_URL) {
-            await apiPost({
-              action: "logout",
-              token: session.token
-            });
-          }
-        } catch (error) {
-          console.warn(error);
-        }
-
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = "index.html";
-      });
     }
 
     function closeDetailsModal() {
@@ -2182,6 +2370,59 @@
       }
     }
 
+
+
+    function getLocalCache_(key, maxAgeMs) {
+      try {
+        const raw = localStorage.getItem(key);
+
+        if (!raw) return null;
+
+        const cached = JSON.parse(raw);
+
+        if (!cached || !cached.savedAt || !cached.data) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        const age = Date.now() - cached.savedAt;
+
+        if (age > maxAgeMs) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return cached.data;
+
+      } catch (error) {
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+
+    function setLocalCache_(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          savedAt: Date.now(),
+          data: data
+        }));
+      } catch (error) {
+        console.warn("Local cache failed:", error);
+      }
+    }
+
+    function clearPageLocalCache_(prefix) {
+      Object.keys(localStorage).forEach(function(key) {
+        if (key.indexOf(prefix) === 0) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    function redirectToLogin() {
+      window.location.href = "index.html";
+    }
+
     function initSidebar() {
       menuBtn.addEventListener("click", openSidebar);
       closeSidebarBtn.addEventListener("click", closeSidebar);
@@ -2190,6 +2431,7 @@
       document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
           closeSidebar();
+          closeUserDropdown();
           closeDetailsModal();
           closeIndicatorModal();
         }
@@ -2221,6 +2463,50 @@
         applyLanguage(nextLang);
       });
     }
+
+    function initUserDropdown() {
+      topUserMenuBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        userDropdown.classList.toggle("show");
+      });
+
+      userDropdown.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", event => {
+        if (!event.target.closest(".user-menu-wrapper")) {
+          closeUserDropdown();
+        }
+      });
+
+      logoutDropdownBtn.addEventListener("click", logoutUser);
+    }
+
+    function closeUserDropdown() {
+      userDropdown.classList.remove("show");
+    }
+
+    async function logoutUser() {
+      const session = getSession();
+
+      try {
+        if (session && session.token && API_URL) {
+          await apiPost({
+            action: "logout",
+            token: session.token
+          });
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(INITIAL_CACHE_KEY);
+      clearPageLocalCache_(HISTORY_CACHE_PREFIX);
+      redirectToLogin();
+    }
+
 
     function hideLoading() {
       loadingBox.style.display = "none";
