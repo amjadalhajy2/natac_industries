@@ -170,11 +170,21 @@
       text-overflow: ellipsis;
     }
 
+    .user-menu-wrapper {
+      position: relative;
+    }
+
     .top-user-box {
+      border: 0;
+      background: transparent;
       display: flex;
       align-items: center;
       gap: 9px;
       min-width: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      color: var(--text);
     }
 
     .avatar {
@@ -208,6 +218,56 @@
       margin-top: 1px;
       font-size: 12px;
       color: var(--muted);
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      inset-inline-end: 0;
+      width: 235px;
+      z-index: 500;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 18px 48px rgba(16,24,39,0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .user-dropdown.show {
+      display: grid;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: start;
+      padding: 0 4px;
+    }
+
+    .user-dropdown a:last-child,
+    .user-dropdown button:last-child {
+      border-bottom: 0;
+    }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      color: var(--blue-dark);
     }
 
     .overlay {
@@ -302,8 +362,7 @@
       display: grid;
     }
 
-    .nav a,
-    .logout-btn {
+    .nav a {
       width: 100%;
       min-height: 54px;
       display: flex;
@@ -324,8 +383,7 @@
       transition: 0.18s ease;
     }
 
-    .nav a:hover,
-    .logout-btn:hover {
+    .nav a:hover {
       color: var(--blue-dark);
       padding-inline-start: 10px;
     }
@@ -743,6 +801,10 @@
       .page-title h1 {
         font-size: 24px;
       }
+
+      .user-dropdown {
+        width: 220px;
+      }
     }
   </style>
 </head>
@@ -766,11 +828,30 @@
     <div class="topbar-side">
       <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
-      <div class="top-user-box">
-        <div class="avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <strong id="userName">مستخدم</strong>
-          <span id="userRole">---</span>
+      <div class="user-menu-wrapper">
+        <button class="top-user-box" id="topUserMenuBtn" type="button">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <strong id="userName">مستخدم</strong>
+            <span id="userRole">---</span>
+          </div>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <a href="profile.html">
+            <span>👤</span>
+            <span data-i18n="profile">الملف الشخصي</span>
+          </a>
+
+          <a href="users.html" data-permission="usersPage">
+            <span>👥</span>
+            <span data-i18n="usersManagement">إدارة المستخدمين</span>
+          </a>
+
+          <button type="button" id="logoutDropdownBtn">
+            <span>🚪</span>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </button>
         </div>
       </div>
     </div>
@@ -799,40 +880,40 @@
         <span class="nav-icon">📊</span>
       </a>
 
-      <a href="production.html">
+      <a href="production.html" data-permission="productionEntry">
         <span data-i18n="productionEntry">إدخال الإنتاج</span>
         <span class="nav-icon">🏭</span>
       </a>
 
-      <a href="evaluation.html" class="active">
+      <a href="evaluation.html" class="active" data-permission="supervisorEvaluation">
         <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
         <span class="nav-icon">⭐</span>
       </a>
 
-      <a href="history.html">
+      <a href="history.html" data-permission="productionHistory">
         <span data-i18n="productionHistory">سجل الإنتاج</span>
         <span class="nav-icon">📋</span>
       </a>
 
-      <a href="workers.html">
+      <a href="performance.html" data-permission="workerPerformance">
+        <span data-i18n="workerPerformance">متابعة أداء العمال</span>
+        <span class="nav-icon">📈</span>
+      </a>
+
+      <a href="workers.html" data-permission="workersPage">
         <span data-i18n="workers">العمال</span>
         <span class="nav-icon">👷</span>
       </a>
 
-      <a href="products.html" class="admin-only">
+      <a href="products.html" data-permission="productsPage">
         <span data-i18n="products">المنتجات</span>
         <span class="nav-icon">📦</span>
       </a>
 
-      <a href="machines.html" class="admin-only">
+      <a href="machines.html" data-permission="machinesPage">
         <span data-i18n="machines">المكائن</span>
         <span class="nav-icon">⚙️</span>
       </a>
-
-      <button class="logout-btn" type="button" id="logoutBtn">
-        <span data-i18n="logout">تسجيل الخروج</span>
-        <span class="nav-icon">🚪</span>
-      </button>
     </nav>
   </aside>
 
@@ -929,6 +1010,7 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const INITIAL_CACHE_KEY = "evaluation_initial_data_v2";
 
     const i18n = {
       ar: {
@@ -944,9 +1026,12 @@
         productionEntry: "إدخال الإنتاج",
         supervisorEvaluation: "تقييم المشرف",
         productionHistory: "سجل الإنتاج",
+        workerPerformance: "متابعة أداء العمال",
         workers: "العمال",
         products: "المنتجات",
         machines: "المكائن",
+        usersManagement: "إدارة المستخدمين",
+        profile: "الملف الشخصي",
         logout: "تسجيل الخروج",
         loadingWorkers: "جاري تحميل العمال...",
         date: "التاريخ",
@@ -971,6 +1056,8 @@
         roleAdmin: "مدير النظام",
         roleSupervisor: "مشرف",
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
+        sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى.",
+        notAllowed: "ليس لديك صلاحية لدخول صفحة تقييم المشرف.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل قائمة العمال.",
         dateRequired: "يرجى اختيار التاريخ.",
@@ -993,9 +1080,12 @@
         productionEntry: "Production Entry",
         supervisorEvaluation: "Supervisor Evaluation",
         productionHistory: "Production History",
+        workerPerformance: "Worker Performance",
         workers: "Workers",
         products: "Products",
         machines: "Machines",
+        usersManagement: "Users Management",
+        profile: "Profile",
         logout: "Logout",
         loadingWorkers: "Loading workers...",
         date: "Date",
@@ -1020,6 +1110,8 @@
         roleAdmin: "System Admin",
         roleSupervisor: "Supervisor",
         tokenMissing: "Session token not found.",
+        sessionExpired: "Session expired. Please login again.",
+        notAllowed: "You do not have permission to access Supervisor Evaluation.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         loadFailed: "Unable to load workers list.",
         dateRequired: "Please choose date.",
@@ -1046,7 +1138,9 @@
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
 
-    const logoutBtn = document.getElementById("logoutBtn");
+    const topUserMenuBtn = document.getElementById("topUserMenuBtn");
+    const userDropdown = document.getElementById("userDropdown");
+    const logoutDropdownBtn = document.getElementById("logoutDropdownBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
@@ -1082,13 +1176,13 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
-      protectPage();
       initSidebar();
       initLanguage();
+      initUserDropdown();
       initScores();
       bindEvents();
       setTodayDate();
-      loadWorkers();
+      protectPageAndLoadData();
     });
 
     function t(key) {
@@ -1100,11 +1194,13 @@
 
       return {
         ...user,
-        ...session,
         token: session.token || user.token || "",
-        Role: session.Role || session.role || user.Role || user.role || "",
-        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
-        Username: session.Username || session.username || user.Username || user.username || ""
+        UserID: user.UserID || session.UserID || "",
+        FullName: user.FullName || user.fullName || session.FullName || session.fullName || user.name || session.name || user.Username || user.username || "",
+        Username: user.Username || user.username || session.Username || session.username || "",
+        Role: user.Role || user.role || session.Role || session.role || "",
+        Status: user.Status || user.status || session.Status || session.status || "",
+        Permissions: user.Permissions || user.permissions || session.Permissions || session.permissions || {}
       };
     }
 
@@ -1132,7 +1228,7 @@
       if (session) {
         currentUser = normalizeSession(session);
         renderUser(currentUser);
-        applyRoleUI(currentUser.Role || currentUser.role);
+        applyPermissionsUI();
       }
 
       initScores();
@@ -1140,17 +1236,62 @@
       updateScoreSummary();
     }
 
-    function protectPage() {
+    async function protectPageAndLoadData() {
       const session = getSession();
 
-      if (!session) {
-        window.location.href = "index.html";
+      if (!session || !session.token) {
+        redirectToLogin();
         return;
       }
 
-      currentUser = normalizeSession(session);
-      renderUser(currentUser);
-      applyRoleUI(currentUser.Role || currentUser.role);
+      try {
+        const sessionResult = await apiPost({
+          action: "checkSession",
+          token: session.token
+        });
+
+        if (!sessionResult || !sessionResult.success) {
+          localStorage.removeItem(SESSION_KEY);
+          showMessage((sessionResult && sessionResult.message) || t("sessionExpired"), "error");
+
+          setTimeout(() => {
+            redirectToLogin();
+          }, 800);
+
+          return;
+        }
+
+        currentUser = normalizeSession({
+          ...session,
+          user: sessionResult.user
+        });
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: session.token,
+          user: currentUser
+        }));
+
+        renderUser(currentUser);
+        applyPermissionsUI();
+
+        if (!hasClientPermission("supervisorEvaluation")) {
+          hideLoading();
+          showMessage(t("notAllowed"), "error");
+
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+
+          return;
+        }
+
+        await loadInitialData();
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        showMessage(t("serverError"), "error");
+      }
     }
 
     function renderUser(session) {
@@ -1180,11 +1321,20 @@
       return role || "---";
     }
 
-    function applyRoleUI(role) {
-      const cleanRole = String(role || "").toLowerCase();
+    function hasClientPermission(permissionKey) {
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
 
-      document.querySelectorAll(".admin-only").forEach(el => {
-        el.style.display = cleanRole === "admin" ? "" : "none";
+      if (role === "admin") return true;
+
+      const permissions = currentUser?.Permissions || currentUser?.permissions || {};
+
+      return permissions[permissionKey] === true;
+    }
+
+    function applyPermissionsUI() {
+      document.querySelectorAll("[data-permission]").forEach(element => {
+        const permissionKey = element.getAttribute("data-permission");
+        element.style.display = hasClientPermission(permissionKey) ? "" : "none";
       });
     }
 
@@ -1217,36 +1367,50 @@
       });
     }
 
-    async function loadWorkers() {
+    async function loadInitialData() {
       if (!currentUser || !currentUser.token) {
         hideLoading();
         showMessage(t("tokenMissing"), "error");
         return;
       }
 
+      const cached = getLocalCache_(INITIAL_CACHE_KEY, 300000);
+
+      if (cached) {
+        workers = cached.workers || [];
+        renderWorkersOptions();
+        hideLoading();
+      }
+
       try {
         const result = await apiPost({
-          action: "getWorkers",
-          token: currentUser.token,
-          activeOnly: true
+          action: "getInitialData",
+          token: currentUser.token
         });
 
-        hideLoading();
-
         if (!result || !result.success) {
-          showMessage((result && result.message) || t("loadFailed"), "error");
-          workers = [];
-          renderWorkersOptions();
+          if (!cached) {
+            hideLoading();
+            showMessage((result && result.message) || t("loadFailed"), "error");
+          }
           return;
         }
 
         workers = result.workers || [];
+        setLocalCache_(INITIAL_CACHE_KEY, {
+          workers: workers
+        });
+
         renderWorkersOptions();
+        hideLoading();
 
       } catch (error) {
         console.error(error);
-        hideLoading();
-        showMessage(t("serverError"), "error");
+
+        if (!cached) {
+          hideLoading();
+          showMessage(t("serverError"), "error");
+        }
       }
     }
 
@@ -1282,23 +1446,7 @@
         }
       });
 
-      logoutBtn.addEventListener("click", async () => {
-        const session = getSession();
-
-        try {
-          if (session && session.token && API_URL) {
-            await apiPost({
-              action: "logout",
-              token: session.token
-            });
-          }
-        } catch (error) {
-          console.warn(error);
-        }
-
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = "index.html";
-      });
+      logoutDropdownBtn.addEventListener("click", logoutUser);
     }
 
     async function handleSaveEvaluation(event) {
@@ -1354,6 +1502,10 @@
           showMessage((result && result.message) || t("serverError"), "error");
           return;
         }
+
+        clearPageLocalCache_("dashboard_cache");
+        clearPageLocalCache_("performance_");
+        clearPageLocalCache_("history_cache");
 
         showMessage(result.message || t("saveSuccess"), "success");
         clearForm(false);
@@ -1452,6 +1604,57 @@
       }
     }
 
+    function getLocalCache_(key, maxAgeMs) {
+      try {
+        const raw = localStorage.getItem(key);
+
+        if (!raw) return null;
+
+        const cached = JSON.parse(raw);
+
+        if (!cached || !cached.savedAt || !cached.data) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        const age = Date.now() - cached.savedAt;
+
+        if (age > maxAgeMs) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return cached.data;
+
+      } catch (error) {
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+
+    function setLocalCache_(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          savedAt: Date.now(),
+          data: data
+        }));
+      } catch (error) {
+        console.warn("Local cache failed:", error);
+      }
+    }
+
+    function clearPageLocalCache_(prefix) {
+      Object.keys(localStorage).forEach(function(key) {
+        if (key.indexOf(prefix) === 0) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    function redirectToLogin() {
+      window.location.href = "index.html";
+    }
+
     function initSidebar() {
       menuBtn.addEventListener("click", openSidebar);
       closeSidebarBtn.addEventListener("click", closeSidebar);
@@ -1460,6 +1663,7 @@
       document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
           closeSidebar();
+          closeUserDropdown();
         }
       });
 
@@ -1485,6 +1689,46 @@
         const nextLang = currentLang === "ar" ? "en" : "ar";
         applyLanguage(nextLang);
       });
+    }
+
+    function initUserDropdown() {
+      topUserMenuBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        userDropdown.classList.toggle("show");
+      });
+
+      userDropdown.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", event => {
+        if (!event.target.closest(".user-menu-wrapper")) {
+          closeUserDropdown();
+        }
+      });
+    }
+
+    function closeUserDropdown() {
+      userDropdown.classList.remove("show");
+    }
+
+    async function logoutUser() {
+      const session = getSession();
+
+      try {
+        if (session && session.token && API_URL) {
+          await apiPost({
+            action: "logout",
+            token: session.token
+          });
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(INITIAL_CACHE_KEY);
+      redirectToLogin();
     }
 
     function hideLoading() {
