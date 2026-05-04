@@ -168,11 +168,71 @@
       text-overflow: ellipsis;
     }
 
+    .user-menu-wrapper {
+      position: relative;
+    }
+
     .top-user-box {
+      border: 0;
+      background: transparent;
       display: flex;
       align-items: center;
       gap: 9px;
       min-width: 0;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      inset-inline-end: 0;
+      width: 235px;
+      z-index: 500;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(16,24,39,0.10);
+      box-shadow: 0 18px 48px rgba(16,24,39,0.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .user-dropdown.show {
+      display: grid;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      border-bottom: 1px solid rgba(16,24,39,0.08);
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: start;
+      padding: 0 4px;
+    }
+
+    .user-dropdown a:last-child,
+    .user-dropdown button:last-child {
+      border-bottom: 0;
+    }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      color: var(--blue-dark);
     }
 
     .avatar {
@@ -848,6 +908,10 @@
       .page-title h1 {
         font-size: 24px;
       }
+
+      .user-dropdown {
+        width: 220px;
+      }
     }
   </style>
 </head>
@@ -871,11 +935,30 @@
     <div class="topbar-side">
       <button id="languageToggleBtn" class="language-toggle" type="button">EN</button>
 
-      <div class="top-user-box">
-        <div class="avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <strong id="userName">مستخدم</strong>
-          <span id="userRole">---</span>
+      <div class="user-menu-wrapper">
+        <button class="top-user-box" id="topUserMenuBtn" type="button">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <strong id="userName">مستخدم</strong>
+            <span id="userRole">---</span>
+          </div>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <a href="profile.html">
+            <span>👤</span>
+            <span data-i18n="profile">الملف الشخصي</span>
+          </a>
+
+          <a href="users.html" data-permission="usersPage">
+            <span>👥</span>
+            <span data-i18n="usersManagement">إدارة المستخدمين</span>
+          </a>
+
+          <button type="button" id="logoutDropdownBtn">
+            <span>🚪</span>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </button>
         </div>
       </div>
     </div>
@@ -904,40 +987,40 @@
         <span class="nav-icon">📊</span>
       </a>
 
-      <a href="production.html">
+      <a href="production.html" data-permission="productionEntry">
         <span data-i18n="productionEntry">إدخال الإنتاج</span>
         <span class="nav-icon">🏭</span>
       </a>
 
-      <a href="evaluation.html">
+      <a href="evaluation.html" data-permission="supervisorEvaluation">
         <span data-i18n="supervisorEvaluation">تقييم المشرف</span>
         <span class="nav-icon">⭐</span>
       </a>
 
-      <a href="history.html">
+      <a href="history.html" data-permission="productionHistory">
         <span data-i18n="productionHistory">سجل الإنتاج</span>
         <span class="nav-icon">📋</span>
       </a>
 
-      <a href="workers.html">
+      <a href="performance.html" data-permission="workerPerformance">
+        <span data-i18n="workerPerformance">متابعة أداء العمال</span>
+        <span class="nav-icon">📈</span>
+      </a>
+
+      <a href="workers.html" data-permission="workersPage">
         <span data-i18n="workers">العمال</span>
         <span class="nav-icon">👷</span>
       </a>
 
-      <a href="products.html" class="admin-only">
+      <a href="products.html" data-permission="productsPage">
         <span data-i18n="products">المنتجات</span>
         <span class="nav-icon">📦</span>
       </a>
 
-      <a href="machines.html" class="active admin-only">
+      <a href="machines.html" class="active" data-permission="machinesPage">
         <span data-i18n="machines">المكائن</span>
         <span class="nav-icon">⚙️</span>
       </a>
-
-      <button class="logout-btn" type="button" id="logoutBtn">
-        <span data-i18n="logout">تسجيل الخروج</span>
-        <span class="nav-icon">🚪</span>
-      </button>
     </nav>
   </aside>
 
@@ -956,13 +1039,13 @@
             <h1 data-i18n="machines">المكائن</h1>
           </div>
 
-          <div class="actions admin-only">
-            <button class="btn btn-secondary" type="button" id="openCategoryModalBtn">
+          <div class="actions">
+            <button class="btn btn-secondary" type="button" id="openCategoryModalBtn" data-permission="addMachineCategory">
               <span>＋</span>
               <span data-i18n="addCategory">إضافة صنف</span>
             </button>
 
-            <button class="btn btn-primary" type="button" id="openAddMachineBtn">
+            <button class="btn btn-primary" type="button" id="openAddMachineBtn" data-permission="addMachine">
               <span>＋</span>
               <span data-i18n="addMachine">إضافة مكينة</span>
             </button>
@@ -998,7 +1081,7 @@
                 <th data-i18n="machineCategory">صنف المكينة</th>
                 <th data-i18n="machineName">اسم المكينة</th>
                 <th data-i18n="status">الحالة</th>
-                <th class="admin-only" data-i18n="actions">الإجراء</th>
+                <th data-permission="editMachine" data-i18n="actions">الإجراء</th>
               </tr>
             </thead>
             <tbody id="machinesTableBody"></tbody>
@@ -1071,9 +1154,10 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyqTi-fYEKbC2l_GY0LHk8AFsKhxJgFBCc7ryThqzq6r3QAHTn9liQS3bXMbDDWygvd/exec?";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzCaNtDgfhelEOmgDdX3lQr_wtPbTnyoWKaArFA1WWyB60RUBCBQi4N43S053cqk7li/exec";
     const SESSION_KEY = "factoryUserSession";
     const LANGUAGE_KEY = "factoryLanguage";
+    const MACHINES_CACHE_KEY = "machines_page_data_v3";
 
     const i18n = {
       ar: {
@@ -1089,9 +1173,12 @@
         productionEntry: "إدخال الإنتاج",
         supervisorEvaluation: "تقييم المشرف",
         productionHistory: "سجل الإنتاج",
+        workerPerformance: "متابعة أداء العمال",
         workers: "العمال",
         products: "المنتجات",
         machines: "المكائن",
+        usersManagement: "إدارة المستخدمين",
+        profile: "الملف الشخصي",
         logout: "تسجيل الخروج",
         loadingMachines: "جاري تحميل المكائن...",
         addMachine: "إضافة مكينة",
@@ -1120,6 +1207,8 @@
         tokenMissing: "لم يتم العثور على رمز الجلسة token.",
         serverError: "تعذر الاتصال بالخادم. تحقق من رابط Apps Script أو اتصال الإنترنت.",
         loadFailed: "تعذر تحميل بيانات المكائن.",
+        sessionExpired: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى.",
+        notAllowed: "ليس لديك صلاحية لدخول صفحة المكائن.",
         categoryRequired: "يرجى اختيار صنف المكينة.",
         machineNameRequired: "يرجى إدخال اسم المكينة.",
         categoryNameRequired: "يرجى إدخال اسم الصنف.",
@@ -1145,9 +1234,12 @@
         productionEntry: "Production Entry",
         supervisorEvaluation: "Supervisor Evaluation",
         productionHistory: "Production History",
+        workerPerformance: "Worker Performance",
         workers: "Workers",
         products: "Products",
         machines: "Machines",
+        usersManagement: "Users Management",
+        profile: "Profile",
         logout: "Logout",
         loadingMachines: "Loading machines...",
         addMachine: "Add Machine",
@@ -1176,6 +1268,8 @@
         tokenMissing: "Session token not found.",
         serverError: "Unable to connect to the server. Check Apps Script URL or internet connection.",
         loadFailed: "Unable to load machines data.",
+        sessionExpired: "Session expired. Please login again.",
+        notAllowed: "You do not have permission to access Machines page.",
         categoryRequired: "Please choose machine category.",
         machineNameRequired: "Please enter machine name.",
         categoryNameRequired: "Please enter category name.",
@@ -1207,12 +1301,15 @@
     const userRole = document.getElementById("userRole");
     const userAvatar = document.getElementById("userAvatar");
 
-    const logoutBtn = document.getElementById("logoutBtn");
     const menuBtn = document.getElementById("menuBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
     const languageToggleBtn = document.getElementById("languageToggleBtn");
+
+    const topUserMenuBtn = document.getElementById("topUserMenuBtn");
+    const userDropdown = document.getElementById("userDropdown");
+    const logoutDropdownBtn = document.getElementById("logoutDropdownBtn");
 
     const openAddMachineBtn = document.getElementById("openAddMachineBtn");
     const openCategoryModalBtn = document.getElementById("openCategoryModalBtn");
@@ -1243,27 +1340,15 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(currentLang);
-      protectPage();
       initSidebar();
       initLanguage();
+      initUserDropdown();
       bindEvents();
-      loadData();
+      protectPageAndLoadData();
     });
 
     function t(key) {
-      return i18n[currentLang][key];
-    }
-
-    function normalizeSession(session) {
-      const user = session.user || session.User || {};
-      return {
-        ...user,
-        ...session,
-        token: session.token || user.token || "",
-        Role: session.Role || session.role || user.Role || user.role || "",
-        FullName: session.FullName || session.fullName || user.FullName || user.fullName || user.name || session.name || session.username || user.Username || user.username || "",
-        Username: session.Username || session.username || user.Username || user.username || ""
-      };
+      return i18n[currentLang][key] || key;
     }
 
     function applyLanguage(lang) {
@@ -1286,12 +1371,9 @@
         }
       });
 
-      const session = getSession();
-
-      if (session) {
-        currentUser = normalizeSession(session);
+      if (currentUser) {
         renderUser(currentUser);
-        applyRoleUI(currentUser.Role || currentUser.role);
+        applyPermissionsUI();
       }
 
       renderCategoryFilters();
@@ -1301,32 +1383,84 @@
       updateMachineModalTitle();
     }
 
-    function protectPage() {
+    async function protectPageAndLoadData() {
       const session = getSession();
 
-      if (!session) {
-        window.location.href = "index.html";
+      if (!session || !session.token) {
+        redirectToLogin();
         return;
       }
 
-      currentUser = normalizeSession(session);
-      renderUser(currentUser);
-      applyRoleUI(currentUser.Role || currentUser.role);
+      try {
+        const sessionResult = await apiPost({
+          action: "checkSession",
+          token: session.token
+        });
+
+        if (!sessionResult || !sessionResult.success) {
+          localStorage.removeItem(SESSION_KEY);
+          showMessage((sessionResult && sessionResult.message) || t("sessionExpired"), "error");
+          setTimeout(redirectToLogin, 800);
+          return;
+        }
+
+        currentUser = normalizeSession({
+          ...session,
+          user: sessionResult.user
+        });
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: session.token,
+          user: currentUser
+        }));
+
+        renderUser(currentUser);
+        applyPermissionsUI();
+
+        if (!hasClientPermission("machinesPage")) {
+          hideLoading();
+          showMessage(t("notAllowed"), "error");
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+          return;
+        }
+
+        await loadData();
+
+      } catch (error) {
+        console.error(error);
+        hideLoading();
+        showMessage(t("serverError"), "error");
+      }
     }
 
-    function renderUser(session) {
+    function normalizeSession(session) {
+      const user = session.user || session.User || {};
+
+      return {
+        ...user,
+        token: session.token || user.token || "",
+        UserID: user.UserID || session.UserID || "",
+        FullName: user.FullName || user.fullName || session.FullName || session.fullName || user.name || session.name || user.Username || user.username || "",
+        Username: user.Username || user.username || session.Username || session.username || "",
+        Role: user.Role || user.role || session.Role || session.role || "",
+        Status: user.Status || user.status || session.Status || session.status || "",
+        Permissions: user.Permissions || user.permissions || session.Permissions || session.permissions || {}
+      };
+    }
+
+    function renderUser(user) {
       const name =
-        session.FullName ||
-        session.fullName ||
-        session.name ||
-        session.Username ||
-        session.username ||
+        user.FullName ||
+        user.fullName ||
+        user.name ||
+        user.Username ||
+        user.username ||
         "User";
 
-      const role = session.Role || session.role || "---";
-
       userName.textContent = name;
-      userRole.textContent = normalizeRoleLabel(role);
+      userRole.textContent = normalizeRoleLabel(user.Role || user.role);
 
       const firstLetter = String(name).trim().charAt(0) || "U";
       userAvatar.textContent = firstLetter;
@@ -1341,15 +1475,20 @@
       return role || "---";
     }
 
-    function isAdmin() {
-      return String(currentUser?.Role || currentUser?.role || "").toLowerCase() === "admin";
+    function hasClientPermission(permissionKey) {
+      const role = String(currentUser?.Role || currentUser?.role || "").toLowerCase();
+
+      if (role === "admin") return true;
+
+      const permissions = currentUser?.Permissions || currentUser?.permissions || {};
+
+      return permissions[permissionKey] === true;
     }
 
-    function applyRoleUI(role) {
-      const cleanRole = String(role || "").toLowerCase();
-
-      document.querySelectorAll(".admin-only").forEach(el => {
-        el.style.display = cleanRole === "admin" ? "" : "none";
+    function applyPermissionsUI() {
+      document.querySelectorAll("[data-permission]").forEach(element => {
+        const permissionKey = element.getAttribute("data-permission");
+        element.style.display = hasClientPermission(permissionKey) ? "" : "none";
       });
     }
 
@@ -1358,6 +1497,18 @@
         hideLoading();
         showMessage(t("tokenMissing"), "error");
         return;
+      }
+
+      const cached = getLocalCache_(MACHINES_CACHE_KEY, 300000);
+
+      if (cached) {
+        machines = cached.machines || [];
+        categories = cached.categories || [];
+        renderCategoryFilters();
+        renderMachineFormCategories();
+        renderMachinesTable();
+        renderCategoriesList();
+        hideLoading();
       }
 
       try {
@@ -1374,30 +1525,40 @@
           })
         ]);
 
-        hideLoading();
-
         if (!machinesResult || !machinesResult.success) {
-          showMessage((machinesResult && machinesResult.message) || t("loadFailed"), "error");
+          if (!cached) {
+            hideLoading();
+            showMessage((machinesResult && machinesResult.message) || t("loadFailed"), "error");
+          }
           return;
         }
 
         machines = machinesResult.machines || [];
         categories = categoriesResult && categoriesResult.success ? categoriesResult.categories || [] : [];
 
+        setLocalCache_(MACHINES_CACHE_KEY, {
+          machines: machines,
+          categories: categories
+        });
+
         renderCategoryFilters();
         renderMachineFormCategories();
         renderMachinesTable();
         renderCategoriesList();
+        hideLoading();
 
       } catch (error) {
         console.error(error);
-        hideLoading();
-        showMessage(t("serverError"), "error");
+
+        if (!cached) {
+          hideLoading();
+          showMessage(t("serverError"), "error");
+        }
       }
     }
 
     function bindEvents() {
-      openAddMachineBtn.addEventListener("click", openAddMachineModal);
+      if (openAddMachineBtn) openAddMachineBtn.addEventListener("click", openAddMachineModal);
       closeMachineModalBtn.addEventListener("click", closeMachineModal);
       cancelMachineBtn.addEventListener("click", closeMachineModal);
       machineForm.addEventListener("submit", handleSaveMachine);
@@ -1420,7 +1581,7 @@
         }
       });
 
-      openCategoryModalBtn.addEventListener("click", openCategoryModal);
+      if (openCategoryModalBtn) openCategoryModalBtn.addEventListener("click", openCategoryModal);
       closeCategoryModalBtn.addEventListener("click", closeCategoryModal);
       cancelCategoryBtn.addEventListener("click", closeCategoryModal);
       categoryForm.addEventListener("submit", handleAddCategory);
@@ -1429,24 +1590,6 @@
         if (event.target === categoryModal) {
           closeCategoryModal();
         }
-      });
-
-      logoutBtn.addEventListener("click", async () => {
-        const session = getSession();
-
-        try {
-          if (session && session.token && API_URL) {
-            await apiPost({
-              action: "logout",
-              token: session.token
-            });
-          }
-        } catch (error) {
-          console.warn(error);
-        }
-
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = "index.html";
       });
     }
 
@@ -1558,9 +1701,10 @@
       machinesTableBody.innerHTML = "";
 
       const filteredMachines = getFilteredMachines();
+      const canEdit = hasClientPermission("editMachine");
 
       if (!filteredMachines.length) {
-        const colspan = isAdmin() ? 5 : 4;
+        const colspan = canEdit ? 5 : 4;
         machinesTableBody.innerHTML = `
           <tr>
             <td colspan="${colspan}">
@@ -1587,7 +1731,7 @@
             </span>
           </td>
           ${
-            isAdmin()
+            canEdit
               ? `
                 <td>
                   <div class="table-actions">
@@ -1638,7 +1782,11 @@
 
     function closeMachineModal() {
       machineModal.classList.remove("show");
-      document.body.style.overflow = "";
+
+      if (!categoryModal.classList.contains("show") && !sidebar.classList.contains("open")) {
+        document.body.style.overflow = "";
+      }
+
       editingMachineId = "";
       machineForm.reset();
       machineStatusInput.value = "Active";
@@ -1653,6 +1801,9 @@
     async function handleSaveMachine(event) {
       event.preventDefault();
       clearMessage();
+
+      if (editingMachineId && !hasClientPermission("editMachine")) return;
+      if (!editingMachineId && !hasClientPermission("addMachine")) return;
 
       const machineCategory = machineCategoryInput.value.trim();
       const machineName = machineNameInput.value.trim();
@@ -1699,6 +1850,7 @@
           return;
         }
 
+        clearRelatedLocalCaches_();
         closeMachineModal();
         showMessage(result.message || (editingMachineId ? t("updateSuccess") : t("addSuccess")), "success");
         await loadData();
@@ -1734,13 +1886,19 @@
 
     function closeCategoryModal() {
       categoryModal.classList.remove("show");
-      document.body.style.overflow = "";
+
+      if (!machineModal.classList.contains("show") && !sidebar.classList.contains("open")) {
+        document.body.style.overflow = "";
+      }
+
       categoryForm.reset();
     }
 
     async function handleAddCategory(event) {
       event.preventDefault();
       clearMessage();
+
+      if (!hasClientPermission("addMachineCategory")) return;
 
       const categoryName = categoryNameInput.value.trim();
 
@@ -1760,6 +1918,7 @@
         const result = await apiPost({
           action: "addCategory",
           token: currentUser.token,
+          scope: "machines",
           category: {
             categoryName,
             status: "Active"
@@ -1774,6 +1933,7 @@
         }
 
         categoryNameInput.value = "";
+        clearRelatedLocalCaches_();
         showMessage(result.message || t("categoryAddSuccess"), "success");
         await loadData();
         renderCategoriesList();
@@ -1790,6 +1950,60 @@
 
       return categories.some(category => {
         return normalizeText(category.CategoryName) === cleanName;
+      });
+    }
+
+    function getLocalCache_(key, maxAgeMs) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+
+        const cached = JSON.parse(raw);
+
+        if (!cached || !cached.savedAt || !cached.data) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        if (Date.now() - cached.savedAt > maxAgeMs) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return cached.data;
+
+      } catch (error) {
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+
+    function setLocalCache_(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          savedAt: Date.now(),
+          data: data
+        }));
+      } catch (error) {
+        console.warn("Local cache failed:", error);
+      }
+    }
+
+    function clearRelatedLocalCaches_() {
+      [
+        "dashboard_cache",
+        "production_initial_data",
+        "products_page_data",
+        "machines_page_data",
+        "workers_page_data",
+        "history_cache",
+        MACHINES_CACHE_KEY
+      ].forEach(prefix => {
+        Object.keys(localStorage).forEach(key => {
+          if (key.indexOf(prefix) === 0 || key === prefix) {
+            localStorage.removeItem(key);
+          }
+        });
       });
     }
 
@@ -1820,6 +2034,10 @@
       }
     }
 
+    function redirectToLogin() {
+      window.location.href = "index.html";
+    }
+
     function initSidebar() {
       menuBtn.addEventListener("click", openSidebar);
       closeSidebarBtn.addEventListener("click", closeSidebar);
@@ -1830,6 +2048,7 @@
           closeSidebar();
           closeMachineModal();
           closeCategoryModal();
+          closeUserDropdown();
         }
       });
 
@@ -1858,6 +2077,48 @@
         const nextLang = currentLang === "ar" ? "en" : "ar";
         applyLanguage(nextLang);
       });
+    }
+
+    function initUserDropdown() {
+      topUserMenuBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        userDropdown.classList.toggle("show");
+      });
+
+      userDropdown.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", event => {
+        if (!event.target.closest(".user-menu-wrapper")) {
+          closeUserDropdown();
+        }
+      });
+
+      logoutDropdownBtn.addEventListener("click", logoutUser);
+    }
+
+    function closeUserDropdown() {
+      userDropdown.classList.remove("show");
+    }
+
+    async function logoutUser() {
+      const session = getSession();
+
+      try {
+        if (session && session.token && API_URL) {
+          await apiPost({
+            action: "logout",
+            token: session.token
+          });
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+
+      localStorage.removeItem(SESSION_KEY);
+      clearRelatedLocalCaches_();
+      redirectToLogin();
     }
 
     function normalizeStatus(status) {
